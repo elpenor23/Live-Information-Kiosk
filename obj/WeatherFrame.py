@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 from network_access import get_weather, get_location
 import os, time
 from controllers.WeatherController import WeatherController
-lableStyle = "QLabel { color : white; }"
+lableStyle = "QLabel { color : white; font-size: 30px;}"
 
 class Weather(QFrame):
     def __init__(self, weatherConfig):
@@ -45,7 +45,7 @@ class Weather(QFrame):
     def updateDisplay(self):
         if self.wc.weatherIcon is not None:
             image = QPixmap(self.wc.weatherIcon)
-            small_image = image.scaled(100, 100, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
+            small_image = image.scaled(200, 200, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
             self.iconLbl.setPixmap(small_image)
         else:
             # remove image
