@@ -6,4 +6,5 @@ from UISetup import SmartMirrorUI
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ui = SmartMirrorUI()
+    # ui.run()
     sys.exit(app.exec_())

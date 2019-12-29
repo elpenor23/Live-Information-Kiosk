@@ -11,5 +11,22 @@
             "feel": "inbetween"
         }
     ],
-    "intensities": ["easy", "long_run", "race", "hard_workout"]
+    "intensities": [
+        {
+            "type": "easy", 
+            "name": "Easy"
+        },
+        {
+            "type": "long_run",
+            "name": "Long Run"
+         },
+         {
+            "type": "rade",
+            "name": "Race"
+         },
+         {
+            "type": "hard_workout",
+            "name": "Hard Workout"
+         }
+    ]
 }

@@ -7,6 +7,8 @@ from PyQt5.QtWidgets import (QWidget, QProgressBar, QLabel, QLineEdit, QRadioBut
 
 from obj.WeatherFrame import Weather
 from obj.RunningClothesFrame import RunningClothes
+from UpdateThread import UpdateThread
+import time
 
 class SmartMirrorUI(QWidget):
     def __init__(self):
@@ -18,15 +20,13 @@ class SmartMirrorUI(QWidget):
     #####################################
     #Add all the sections to the main window 
     def initUI(self):
-        # self.tk.bind("<Return>", self.toggle_fullscreen)
-        # self.tk.bind("<Escape>", self.end_fullscreen)
         windowLayout = QGridLayout()
         windowLayout.setAlignment(QtCore.Qt.AlignTop)
-        weatherFrame = Weather("config/weatherConfig.json")
-        windowLayout.addWidget(weatherFrame, 0, 0)
+        self.weatherFrame = Weather("config/weatherConfig.json")
+        windowLayout.addWidget(self.weatherFrame, 0, 0)
 
-        runningClothesFrame = RunningClothes("config/peopleConfig.json", "config/tempAdjustConfig.json", weatherFrame._weatherConfig)
-        windowLayout.addWidget(runningClothesFrame, 1, 0)
+        self.runningClothesFrame = RunningClothes("config/peopleConfig.json", "config/tempAdjustConfig.json", self.weatherFrame._weatherConfig)
+        windowLayout.addWidget(self.runningClothesFrame, 1, 0)
 
         p = self.palette()
         p.setColor(self.backgroundRole(), QtCore.Qt.black)
@@ -39,10 +39,38 @@ class SmartMirrorUI(QWidget):
         self.setWindowTitle("This should eventuallt be invisible!")    
         self.show()
 
+        # kick off the thread
+        self.updateThread = UpdateThread()
+        # self.updateThread.updateClock.connect(self.callbackUpdateClock)
+        self.updateThread.updateWeatherAndClothes.connect(self.callbackUpdateWeatherAndClothes)
+        self.updateThread.updatePerson.connect(self.callbackUpdatePerson)
+        self.updateThread.start()
+    
+    def callbackUpdatePerson(self):
+        people = self.runningClothesFrame.runnerWidgetList
+        numberOfpeople = len(people)
+        j = 0
+        indexToSetVisible = 0
+        while j < numberOfpeople:
+            if people[j].isVisible():
+                people[j].setVisible(False)
+                indexToSetVisible = j + 1
+            j += 1
+
+        if indexToSetVisible > numberOfpeople-1: indexToSetVisible = 0
+        people[indexToSetVisible].setVisible(True)
+        return
+
+    def callbackUpdateWeatherAndClothes(self):
+        self.weatherFrame.getWeatherData()
+        self.weatherFrame.updateDisplay()
+        return
+
     def keyPressEvent(self, e):
         if str(e.key()) == str(QtCore.Qt.Key_Escape):
-            self.showNormal()
-            self.setGeometry(300, 150, 500, 500)  
-            # self.move(300, 150)
+            self.close()
         elif str(e.key()) == str(QtCore.Qt.Key_Return):
             self.showFullScreen()
+        elif str(e.key()) == str(QtCore.Qt.Key_Shift):
+            self.showNormal()
+            self.setGeometry(300, 150, 500, 500)  

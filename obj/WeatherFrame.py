@@ -22,10 +22,27 @@ class Weather(QFrame):
         self.currentlyLbl = QLabel(self)
         self.forecastLbl = QLabel(self)
         self.locationLbl = QLabel(self)
-        self.wc = WeatherController(weatherConfig)
+        self.weatherConfig = weatherConfig
+        self.getWeatherData()
+        self.updateDisplay()
+        
+        # self.after(600000, self.parse_weather)
+
+        frameLayout.addWidget(self.iconLbl, 0, 0, 5, 1)
+        frameLayout.addWidget(self.degreeFrm, 0, 1)
+        frameLayout.addWidget(self.temperatureLbl, 1, 1)
+        frameLayout.addWidget(self.currentlyLbl, 2, 1)
+        frameLayout.addWidget(self.forecastLbl, 3, 1)
+        frameLayout.addWidget(self.locationLbl, 4, 1)
+
+        self.setLayout(frameLayout)
+
+    def getWeatherData(self):
+        self.wc = WeatherController(self.weatherConfig)
         self.wc.parse_weather()
         self._weatherConfig = self.wc._weather_obj
 
+    def updateDisplay(self):
         if self.wc.weatherIcon is not None:
             image = QPixmap(self.wc.weatherIcon)
             small_image = image.scaled(100, 100, QtCore.Qt.KeepAspectRatio, QtCore.Qt.FastTransformation)
@@ -39,15 +56,3 @@ class Weather(QFrame):
         self.temperatureLbl.setText(self.wc.summaryText)
 
         self.locationLbl.setText(self.wc.location)
-        
-        # self.after(600000, self.parse_weather)
-
-        frameLayout.addWidget(self.iconLbl, 0, 0, 5, 1)
-        frameLayout.addWidget(self.degreeFrm, 0, 1)
-        frameLayout.addWidget(self.temperatureLbl, 1, 1)
-        frameLayout.addWidget(self.currentlyLbl, 2, 1)
-        frameLayout.addWidget(self.forecastLbl, 3, 1)
-        frameLayout.addWidget(self.locationLbl, 4, 1)
-
-        self.setLayout(frameLayout)
-

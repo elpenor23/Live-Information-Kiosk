@@ -10,13 +10,14 @@ import json
 from controllers.TemperatureAdjustmentController import TemperatureAdjustmentController
 from controllers.ClothingController import ClothingController
 
-lableStyle = "QLabel { color : white; }"
+lableStyle = "QLabel { color : white; font-size: 30px;} QGroupBox { color : white; font-size: 30px; font-weight: bold; margin-top: 1.5ex;} QGroupBox::title { subcontrol-origin: margin;subcontrol-position: top left; /* position at the top center */ padding: 0 8px; font-weight: bold;}"
 
 class RunningClothes(QFrame):
     def __init__(self, peopleConfigFileName, tempAdjustConfigFileName, weatherConfigJSON):
         QFrame.__init__(self)
         self.setFrameStyle(QFrame.Panel);
         self.setStyleSheet(lableStyle)
+        self.runnerWidgetList = []
         frameLayout = QGridLayout()
         frameLayout.setAlignment(QtCore.Qt.AlignTop)
 
@@ -38,11 +39,11 @@ class RunningClothes(QFrame):
             col = 0
             row = 0
             for intensity in peopleController.intensities:
-                tempAdjuster = TemperatureAdjustmentController(s.timeOfDay(), weatherConfigJSON["currently"]["icon"], wind, runner["gender"], runner["feel"], intensity, weatherConfigJSON["currently"]["temperature"], tempAdjustConfig)
-                cc = ClothingController(tempAdjuster.adjustedTemperature, "config/clothingConfig.json", runner["gender"], intensity, weatherConfigJSON["currently"]["icon"], s.timeOfDay())
+                tempAdjuster = TemperatureAdjustmentController(s.timeOfDay(), weatherConfigJSON["currently"]["icon"], wind, runner["gender"], runner["feel"], intensity["type"], weatherConfigJSON["currently"]["temperature"], tempAdjustConfig)
+                cc = ClothingController(tempAdjuster.adjustedTemperature, "config/clothingConfig.json", runner["gender"], intensity["type"], weatherConfigJSON["currently"]["icon"], s.timeOfDay())
                 clothes = cc.calculateItems()
 
-                intensityFrame = QGroupBox(intensity)
+                intensityFrame = QGroupBox(intensity["name"])
                 intensityLayout = QGridLayout()
                 intensityLayout.setAlignment(QtCore.Qt.AlignTop)
 
@@ -58,9 +59,10 @@ class RunningClothes(QFrame):
 
             runnerFrame.setLayout(runnerLayout)
             frameLayout.addWidget(runnerFrame, runnerRow, 0)
+            self.runnerWidgetList.append(runnerFrame)
             runnerRow += 1
-            # if runnerRow == 2:
-                # runnerFrame.setVisible(False)
+            if runnerRow != 2:
+                runnerFrame.setVisible(False)
 
         self.setLayout(frameLayout)
 
@@ -85,6 +87,7 @@ class RunningClothes(QFrame):
         configData = json.loads(configFile.read())
         configFile.close
         return configData       
+    
 
 
 
