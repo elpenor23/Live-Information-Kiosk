@@ -10,7 +10,7 @@ import json
 from controllers.TemperatureAdjustmentController import TemperatureAdjustmentController
 from controllers.ClothingController import ClothingController
 
-lableStyle = "QLabel { color : white; font-size: 30px;} QGroupBox { color : white; font-size: 30px; font-weight: bold; margin-top: 1.5ex;} QGroupBox::title { subcontrol-origin: margin;subcontrol-position: top left; /* position at the top center */ padding: 0 8px; font-weight: bold;}"
+lableStyle = "QLabel { color : white; font-size: 30px;} QGroupBox { color : white; font-size: 30px; font-weight: bold; margin-top: 1.5ex; border: 2px solid gray; border-radius: 3px; } QGroupBox::title { subcontrol-origin: margin;subcontrol-position: top left; /* position at the top center */ padding: 0 8px; font-weight: bold;}"
 
 class RunningClothes(QFrame):
     def __init__(self, peopleConfigFileName, tempAdjustConfigFileName, weatherConfigJSON):
