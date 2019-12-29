@@ -1,0 +1,128 @@
+{
+    "head":[
+        {
+            "name": "winter_hat",
+            "min_temp": -1000,
+            "max_temp": 37.9,
+            "title": "Winter Hat",
+            "special": "not_rain"
+        },
+        {
+            "name": "hat",
+            "min_temp": 38,
+            "max_temp": 1000,
+            "title": "Hat with visor",
+            "conditions": "rain,light-rain"
+        }
+    ],
+    "face": [
+        {
+            "name": "sunglasses",
+            "min_temp": -1000,
+            "max_temp": 1000,
+            "title": "Sunglasses",
+            "special": "sunny"
+        }
+    ],
+    "outer_torso": [
+        {
+            "name": "heavy_jacket",
+            "min_temp": -1000,
+            "max_temp": 20,
+            "title": "Heavy Jacket"
+        },
+        {
+            "name": "light_jacket",
+            "min_temp": 20,
+            "max_temp": 35,
+            "title": "Light Jacket"
+        },
+        {
+            "name": "vest",
+            "min_temp": 35,
+            "max_temp": 40,
+            "title": "Vest"
+        }],
+    "inner_torso":[
+        {
+            "name": "singlet",
+            "min_temp": 65,
+            "max_temp": 80,
+            "title": "Singlet",
+            "special": "singlet",
+            "requirements": "data => {return data.gender == 'm' && data.intensity == 'r' && data.adjusted > 35 || data.gender == 'f' && data.adjusted >= 80 && data.adjusted <= 85;}"
+        },
+        {
+            "name": "long_sleeve_shirt",
+            "min_temp": -1000,
+            "max_temp": 50,
+            "title": "Long-Sleeve Shirt"
+        },
+        {
+            "name": "short_sleeve_shirt",
+            "min_temp": 54,
+            "max_temp": 65,
+            "title": "Short-Sleeve Shirt"
+        }],
+    "undergarments":[
+        {
+            "name": "bra",
+            "min_temp": -1000,
+            "max_temp": 1000,
+            "title": "Sports Bra",
+            "gender": "woman"
+        }
+    ],
+    "legs": [
+        {
+            "name": "capris",
+            "min_temp": 35,
+            "max_temp": 50,
+            "title": "Capri Tights",
+            "gender": "woman"
+        },
+        {
+            "name": "tights",
+            "min_temp": -1000,
+            "max_temp": 39.9,
+            "title": "Tights"
+        },
+        {
+            "name": "shorts",
+            "min_temp": 40,
+            "max_temp": 1000,
+            "title": "Shorts"
+        }
+    ],
+    "feet":[
+        {
+            "name": "shoes",
+            "min_temp": -1000,
+            "max_temp": 1000,
+            "title": "Running Shoes"
+        }
+    ],
+    "hands":[
+        {
+            "name": "mittens",
+            "min_temp": -1000,
+            "max_temp": 19.9,
+            "title": "Mittens"
+        },
+        {
+            "name": "gloves",
+            "min_temp": 20,
+            "max_temp": 60,
+            "title": "Gloves"
+        }
+    ],
+    "other":[
+        {
+            "name": "sunblock",
+            "min_temp": -1000,
+            "max_temp": 1000,
+            "title": "Sunblock",
+            "special": "sunny"
+        }
+    ]
+}

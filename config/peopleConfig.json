@@ -1,0 +1,15 @@
+{
+    "people":[
+        {
+            "name": "Eric",
+            "gender": "man",
+            "feel": "inbetween"
+        },
+        {
+            "name": "Sara",
+            "gender": "woman",
+            "feel": "inbetween"
+        }
+    ],
+    "intensities": ["easy", "long_run", "race", "hard_workout"]
+}
