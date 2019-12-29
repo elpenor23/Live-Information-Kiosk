@@ -19,7 +19,7 @@ class RunningClothes(QFrame):
         self.setStyleSheet(lableStyle)
         frameLayout = QGridLayout()
         frameLayout.setAlignment(QtCore.Qt.AlignTop)
- 
+
         tempAdjustConfig = self.openConfigFile(tempAdjustConfigFileName)
 
         peopleController = PeopleController(peopleConfigFileName)
@@ -27,7 +27,7 @@ class RunningClothes(QFrame):
         s = sun(lat=weatherConfigJSON["latitude"],long=weatherConfigJSON["longitude"])
 
         wind = self.getWind(weatherConfigJSON["currently"]["windSpeed"], tempAdjustConfig["wind_speed"])
-        
+
         runnerRow = 1
         for runner in peopleController.people:
             runnerFrame = QFrame()
@@ -45,8 +45,8 @@ class RunningClothes(QFrame):
                 intensityFrame = QGroupBox(intensity)
                 intensityLayout = QGridLayout()
                 intensityLayout.setAlignment(QtCore.Qt.AlignTop)
-                
-                #print(clothes)
+
+                # print(clothes)
                 for bodyPart in clothes:
                     row += 1
                     item = QLabel(clothes[bodyPart])
@@ -59,8 +59,8 @@ class RunningClothes(QFrame):
             runnerFrame.setLayout(runnerLayout)
             frameLayout.addWidget(runnerFrame, runnerRow, 0)
             runnerRow += 1
-            if runnerRow == 2:
-                runnerFrame.setVisible(False)
+            # if runnerRow == 2:
+                # runnerFrame.setVisible(False)
 
         self.setLayout(frameLayout)
 
