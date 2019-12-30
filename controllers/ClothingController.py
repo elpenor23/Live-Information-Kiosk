@@ -2,11 +2,11 @@
 import json
 import sys
 import os
-
+from lib.utils import openConfigFile
 class ClothingController:
     def __init__(self, adjustedTemperature, clothingConfigFileName, gender, intensity, conditions, timeOfDay):
         #open config files
-        self.clothingConfig = self.openConfigFile(clothingConfigFileName)
+        self.clothingConfig = openConfigFile(clothingConfigFileName)
         self.gender = gender
         self.intensity = intensity
         self.conditions = conditions
@@ -14,20 +14,6 @@ class ClothingController:
         self.adjustedTemperature = adjustedTemperature
         
         return
-
-    def openConfigFile(self, configFileName):
-        try:
-            configFile = open(configFileName, 'r')
-        except IOError as ex:
-            errorText = "Could not read config file: " + configFileName
-            print(errorText)
-            print(ex)
-            sys.exit()
-
-        #get the data
-        configData = json.loads(configFile.read())
-        configFile.close
-        return configData
 
     def calculateItems(self):
         clothes = {}

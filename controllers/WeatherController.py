@@ -2,7 +2,7 @@
 import json
 import sys
 import os
-from network_access import get_weather, get_location
+from lib.utils import get_weather, get_location, openConfigFile
 
 # maps open weather icons to
 # icon reading is not impacted by the 'lang' parameter
@@ -40,23 +40,9 @@ class WeatherController:
         self.location = ""
 
         #open config files
-        self.weatherConfig = self.openConfigFile(weatherConfig)
+        self.weatherConfig = openConfigFile(weatherConfig)
         return
         
-    def openConfigFile(self, configFileName):
-        try:
-            configFile = open(configFileName, 'r')
-        except IOError as ex:
-            errorText = "Could not read config file: " + configFileName
-            print(errorText)
-            print(ex)
-            sys.exit()
-
-        #get the data
-        configData = json.loads(configFile.read())
-        configFile.close
-        return configData
-
     def parse_weather(self):
         latitude = self.weatherConfig["latitude"]
         longitude = self.weatherConfig["longitude"]

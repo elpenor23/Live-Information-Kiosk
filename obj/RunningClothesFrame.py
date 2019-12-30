@@ -9,6 +9,7 @@ from obj.sunrise import sun
 import json
 from controllers.TemperatureAdjustmentController import TemperatureAdjustmentController
 from controllers.ClothingController import ClothingController
+from lib.utils import openConfigFile
 
 lableStyle = "QLabel { color : white; font-size: 30px;} QGroupBox { color : white; font-size: 30px; font-weight: bold; margin-top: 1.5ex; border: 2px solid gray; border-radius: 3px; } QGroupBox::title { subcontrol-origin: margin;subcontrol-position: top left; /* position at the top center */ padding: 0 8px; font-weight: bold;}"
 
@@ -20,7 +21,7 @@ class RunningClothes(QFrame):
         frameLayout = QGridLayout()
         frameLayout.setAlignment(QtCore.Qt.AlignTop)
 
-        tempAdjustConfig = self.openConfigFile(tempAdjustConfigFileName)
+        tempAdjustConfig = openConfigFile(tempAdjustConfigFileName)
 
         peopleController = PeopleController(peopleConfigFileName)
 
@@ -73,21 +74,3 @@ class RunningClothes(QFrame):
             return "windy"
         elif windSpeedConfig["heavy_min"] <= windSpeed <= windSpeedConfig["heavy_max"]:
             return "heavy_wind"
-
-    def openConfigFile(self, configFileName):
-        try:
-            configFile = open(configFileName, 'r')
-        except IOError as ex:
-            errorText = "Could not read config file: " + configFileName
-            print(errorText)
-            print(ex)
-            sys.exit()
-
-        #get the data
-        configData = json.loads(configFile.read())
-        configFile.close
-        return configData       
-    
-
-
-
