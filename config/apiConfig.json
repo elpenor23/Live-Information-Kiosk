@@ -1,11 +1,7 @@
 {
     "weather_req_url": "https://api.darksky.net/forecast/%s/%s,%s?lang=%s&units=%s&exclude=%s",
-    "weather_api_token": "<DarkSky API KEY>",
-    "ip_url": "http://jsonip.com/",
-    "location_req_url": "http://api.ipstack.com/%s?access_key=%s",
-    "location_api_token": "<IPStack API Key>",
+    "weather_api_token": "<darksky.net api key>",
     "weather_lang": "en",
     "weather_unit": "us",
-    "weather_exclude_list":"minutely,daily",
-    "headlines_url": "https://news.google.com/news?ned=%s&output=rss"
+    "weather_exclude_list":"minutely,daily"
 }
