@@ -25,7 +25,7 @@ class FutureForecast(QFrame):
             lon = longitude
             loclbl = location
         
-        weather_obj = get_weather(lat, lon)
+        #weather_obj = get_weather(lat, lon)
         
         i=1
         for day_weather in weather_obj['daily']['data']:

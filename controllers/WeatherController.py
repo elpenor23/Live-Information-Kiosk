@@ -58,6 +58,7 @@ class WeatherController:
             lon = longitude
             self.location = location
         
+        print("getting weather from parse_weather in WeatherController")
         self._weather_obj = get_weather(lat, lon)
         # print(self._weather_obj)
 

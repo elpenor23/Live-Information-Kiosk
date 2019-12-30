@@ -11,9 +11,9 @@ from obj.ClockFrame import Clock
 from UpdateThread import UpdateThread
 import time
 
-class SmartMirrorUI(QWidget):
+class AppUI(QWidget):
     def __init__(self):
-        super(SmartMirrorUI, self).__init__()
+        super(AppUI, self).__init__()
         self.initUI()
           
     #####################################
@@ -36,9 +36,9 @@ class SmartMirrorUI(QWidget):
         #Set the layout and window
         self.setLayout(windowLayout)
         self.move(300, 150)
-        # self.setFixedSize(500, 500) #should be fullscreen
-        self.setWindowTitle("This should eventually be invisible!")    
         self.show()
+        #start Fullscreen
+        self.showFullScreen()
 
         # kick off the thread
         self.updateThread = UpdateThread()

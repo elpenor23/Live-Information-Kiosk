@@ -3,6 +3,7 @@ import traceback
 import requests
 import json
 import feedparser
+from datetime import datetime
 
 # weather_api_token = '9892adac56293471dcd6710d24c9d8b2' # create account at https://darksky.net/dev/
 # location_api_token = '25c9c58528671d739c2ec6542efeaf9a'
@@ -32,6 +33,16 @@ def get_weather(lat, lon):
     weather_exclude_list = configData["weather_exclude_list"]
     try:
         # get weather
+        debug = False
+        if debug:
+            # this is here to make it easy to be sure 
+            # that we are hitting the api as little as possible
+            # for free we only get 1000 calls a day (1 every 1.5 minutes)
+            # so we do not want an error that uses them all up on us
+            now = datetime.now()
+            dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+            print(dt_string + " - Getting Weather From API!")
+
         weather_req_url = weather_req_url % (weather_api_token, lat, lon, weather_lang, weather_unit, weather_exclude_list)
         r = requests.get(weather_req_url)
         return json.loads(r.text)

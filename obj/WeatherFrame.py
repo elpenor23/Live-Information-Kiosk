@@ -3,7 +3,7 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import (QWidget, QProgressBar, QLabel, QLineEdit, QRadioButton, QFrame, QApplication,
             QPlainTextEdit, QGridLayout, QGroupBox, QCheckBox, QPushButton, QSizePolicy, QDial)
 from PyQt5.QtGui import QIcon, QPixmap
-from lib.utils import get_weather, get_location
+from lib.utils import get_location
 import os, time
 from controllers.WeatherController import WeatherController
 from obj.ClockFrame import Clock
@@ -17,8 +17,6 @@ class Weather(QFrame):
         overallLayout.setAlignment(QtCore.Qt.AlignTop)
 
         weatherArea = QFrame()
-
-        #weatherArea.setFrameStyle(QFrame.Panel);
         weatherArea.setStyleSheet(lableStyle)
 
         frameLayout = QGridLayout()
@@ -32,6 +30,7 @@ class Weather(QFrame):
         self.forecastLbl = QLabel(self)
         self.locationLbl = QLabel(self)
         self.weatherConfig = weatherConfig
+        print("Getting weather in Initialize of Weather Class")
         self.getWeatherData()
         self.updateDisplay()
         
@@ -53,6 +52,7 @@ class Weather(QFrame):
 
     def getWeatherData(self):
         self.wc = WeatherController(self.weatherConfig)
+        print("Getting weather from getWeatherData in Weather Class")
         self.wc.parse_weather()
         self._weatherConfig = self.wc._weather_obj
 

@@ -18,7 +18,7 @@ class UpdateThread(QtCore.QThread):
         updatePersonSeconds = 30
         updateClockSeconds = 1
         updateWeatherSeconds = 300
-        i = 0
+        i = 1
         while self.keep_going:
             if i % updatePersonSeconds == 0:
                 self.updatePerson.emit()
