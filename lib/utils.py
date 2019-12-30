@@ -1,11 +1,8 @@
-import sys, json
-import traceback
-import requests
-import json
-import feedparser
+import sys, json, traceback, requests, feedparser, os
 from datetime import datetime
 
-apiConfigFileName = "config/apiConfig.json"
+dirname = os.path.dirname(__file__)
+apiConfigFileName = os.path.join(dirname,"../config/apiConfig.json")
 
 def get_weather(lat, lon):
     configData = openConfigFile(apiConfigFileName)

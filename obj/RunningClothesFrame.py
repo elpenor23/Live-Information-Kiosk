@@ -6,12 +6,14 @@ from PyQt5.QtGui import QIcon, QPixmap
 
 from controllers.PeopleController import PeopleController
 from obj.sunrise import sun
-import json
+import json, os
 from controllers.TemperatureAdjustmentController import TemperatureAdjustmentController
 from controllers.ClothingController import ClothingController
 from lib.utils import openConfigFile
 
 lableStyle = "QLabel { color : white; font-size: 30px;} QGroupBox { color : white; font-size: 30px; font-weight: bold; margin-top: 1.5ex; border: 2px solid gray; border-radius: 3px; } QGroupBox::title { subcontrol-origin: margin;subcontrol-position: top left; /* position at the top center */ padding: 0 8px; font-weight: bold;}"
+dirname = os.path.dirname(__file__)
+clothingConfigFileName = os.path.join(dirname,"../config/clothingConfig.json")
 
 class RunningClothes(QFrame):
     def __init__(self, peopleConfigFileName, tempAdjustConfigFileName, weatherConfigJSON):
@@ -42,7 +44,7 @@ class RunningClothes(QFrame):
             # print("*********" + runner["name"] + "*************")
             for intensity in peopleController.intensities:
                 tempAdjuster = TemperatureAdjustmentController(s.timeOfDay(), weatherConfigJSON["currently"]["icon"], wind, runner["gender"], runner["feel"], intensity["type"], weatherConfigJSON["currently"]["temperature"], tempAdjustConfig)
-                cc = ClothingController(tempAdjuster.adjustedTemperature, "config/clothingConfig.json", runner["gender"], intensity["type"], weatherConfigJSON["currently"]["icon"], s.timeOfDay())
+                cc = ClothingController(tempAdjuster.adjustedTemperature, clothingConfigFileName, runner["gender"], intensity["type"], weatherConfigJSON["currently"]["icon"], s.timeOfDay())
                 clothes = cc.calculateItems()
 
                 degree_sign= u'\N{DEGREE SIGN}'
