@@ -3,7 +3,6 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import (QWidget, QProgressBar, QLabel, QLineEdit, QRadioButton, QFrame, QApplication,
             QPlainTextEdit, QGridLayout, QGroupBox, QCheckBox, QPushButton, QSizePolicy, QDial)
 from PyQt5.QtGui import QIcon, QPixmap
-from lib.utils import get_location
 import os, time
 from controllers.WeatherController import WeatherController
 from obj.ClockFrame import Clock

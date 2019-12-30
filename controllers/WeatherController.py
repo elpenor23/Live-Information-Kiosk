@@ -2,7 +2,7 @@
 import json
 import sys
 import os
-from lib.utils import get_weather, get_location, openConfigFile
+from lib.utils import get_weather, openConfigFile
 
 # maps open weather icons to
 # icon reading is not impacted by the 'lang' parameter
@@ -48,17 +48,9 @@ class WeatherController:
         longitude = self.weatherConfig["longitude"]
         location = self.weatherConfig["location"]
 
-        if latitude is None and longitude is None:
-            loc = get_location()
-            lat = loc['lat']
-            lon = loc['lon']
-            self.location = loc['location']
-        else:
-            lat = latitude
-            lon = longitude
-            self.location = location
+        self.location = location
         
-        self._weather_obj = get_weather(lat, lon)
+        self._weather_obj = get_weather(latitude, longitude)
 
         #temp and formatted temp
         degree_sign= u'\N{DEGREE SIGN}'
