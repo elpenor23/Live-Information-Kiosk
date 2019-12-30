@@ -9,7 +9,12 @@ from obj.WeatherFrame import Weather
 from obj.RunningClothesFrame import RunningClothes
 from obj.ClockFrame import Clock
 from UpdateThread import UpdateThread
-import time
+import time, os
+
+dirname = os.path.dirname(__file__)
+locationConfigFileName = os.path.join(dirname,"config/locationConfig.json")
+peopleConfigFileName = os.path.join(dirname,"config/peopleConfig.json")
+tempAdjustmentConfigFileName = os.path.join(dirname,"config/tempAdjustConfig.json")
 
 class AppUI(QWidget):
     def __init__(self):
@@ -23,10 +28,10 @@ class AppUI(QWidget):
     def initUI(self):
         windowLayout = QGridLayout()
         windowLayout.setAlignment(QtCore.Qt.AlignTop)
-        self.weatherFrame = Weather("config/locationConfig.json")
+        self.weatherFrame = Weather(locationConfigFileName)
         windowLayout.addWidget(self.weatherFrame, 0, 0)
 
-        self.runningClothesFrame = RunningClothes("config/peopleConfig.json", "config/tempAdjustConfig.json", self.weatherFrame._weatherConfig)
+        self.runningClothesFrame = RunningClothes(peopleConfigFileName, tempAdjustmentConfigFileName, self.weatherFrame._weatherConfig)
         windowLayout.addWidget(self.runningClothesFrame, 1, 0)
 
         p = self.palette()

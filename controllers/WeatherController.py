@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-import json
-import sys
 import os
 from lib.utils import get_weather, openConfigFile
 
