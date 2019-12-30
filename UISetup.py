@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import (QWidget, QProgressBar, QLabel, QLineEdit, QRadioBut
 
 from obj.WeatherFrame import Weather
 from obj.RunningClothesFrame import RunningClothes
+from obj.ClockFrame import Clock
 from UpdateThread import UpdateThread
 import time
 
@@ -36,16 +37,20 @@ class SmartMirrorUI(QWidget):
         self.setLayout(windowLayout)
         self.move(300, 150)
         # self.setFixedSize(500, 500) #should be fullscreen
-        self.setWindowTitle("This should eventuallt be invisible!")    
+        self.setWindowTitle("This should eventually be invisible!")    
         self.show()
 
         # kick off the thread
         self.updateThread = UpdateThread()
-        # self.updateThread.updateClock.connect(self.callbackUpdateClock)
+        self.updateThread.updateClock.connect(self.callbackUpdateClock)
         self.updateThread.updateWeatherAndClothes.connect(self.callbackUpdateWeatherAndClothes)
         self.updateThread.updatePerson.connect(self.callbackUpdatePerson)
         self.updateThread.start()
     
+    def callbackUpdateClock(self):
+        self.weatherFrame.updateClock()
+        return
+
     def callbackUpdatePerson(self):
         people = self.runningClothesFrame.runnerWidgetList
         numberOfpeople = len(people)

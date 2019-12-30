@@ -15,7 +15,6 @@ lableStyle = "QLabel { color : white; font-size: 30px;} QGroupBox { color : whit
 class RunningClothes(QFrame):
     def __init__(self, peopleConfigFileName, tempAdjustConfigFileName, weatherConfigJSON):
         QFrame.__init__(self)
-        self.setFrameStyle(QFrame.Panel);
         self.setStyleSheet(lableStyle)
         self.runnerWidgetList = []
         frameLayout = QGridLayout()

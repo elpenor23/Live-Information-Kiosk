@@ -3,7 +3,7 @@ import time
 from PyQt5 import QtCore
 
 class UpdateThread(QtCore.QThread):
-    # updateClock = QtCore.pyqtSignal(str)
+    updateClock = QtCore.pyqtSignal()
     updatePerson = QtCore.pyqtSignal()
     updateWeatherAndClothes = QtCore.pyqtSignal()
         
@@ -25,6 +25,10 @@ class UpdateThread(QtCore.QThread):
             
             if i % updateWeatherSeconds == 0:
                 self.updateWeatherAndClothes.emit()
+
+            if i % updateClockSeconds == 0:
+                self.updateClock.emit()
+                
             i += 1
             time.sleep(1)
         # return

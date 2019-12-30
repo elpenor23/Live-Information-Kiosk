@@ -6,16 +6,25 @@ from PyQt5.QtGui import QIcon, QPixmap
 from network_access import get_weather, get_location
 import os, time
 from controllers.WeatherController import WeatherController
+from obj.ClockFrame import Clock
 lableStyle = "QLabel { color : white; font-size: 30px;}"
 
 class Weather(QFrame):
     def __init__(self, weatherConfig):
         QFrame.__init__(self)
-        self.setFrameStyle(QFrame.Panel);
-        self.setStyleSheet(lableStyle)
+
+        overallLayout = QGridLayout()
+        overallLayout.setAlignment(QtCore.Qt.AlignTop)
+
+        weatherArea = QFrame()
+
+        #weatherArea.setFrameStyle(QFrame.Panel);
+        weatherArea.setStyleSheet(lableStyle)
+
         frameLayout = QGridLayout()
         frameLayout.setAlignment(QtCore.Qt.AlignTop)
         frameLayout.setAlignment(QtCore.Qt.AlignLeft)
+
         self.degreeFrm = QFrame(self)
         self.temperatureLbl = QLabel(self.degreeFrm)
         self.iconLbl = QLabel(self.degreeFrm)
@@ -26,8 +35,6 @@ class Weather(QFrame):
         self.getWeatherData()
         self.updateDisplay()
         
-        # self.after(600000, self.parse_weather)
-
         frameLayout.addWidget(self.iconLbl, 0, 0, 5, 1)
         frameLayout.addWidget(self.degreeFrm, 0, 1)
         frameLayout.addWidget(self.temperatureLbl, 1, 1)
@@ -35,7 +42,13 @@ class Weather(QFrame):
         frameLayout.addWidget(self.forecastLbl, 3, 1)
         frameLayout.addWidget(self.locationLbl, 4, 1)
 
-        self.setLayout(frameLayout)
+        weatherArea.setLayout(frameLayout)
+        overallLayout.addWidget(weatherArea, 0, 0, QtCore.Qt.AlignLeft)
+
+        self.clockFrame = Clock()
+        overallLayout.addWidget(self.clockFrame, 0, 0, QtCore.Qt.AlignRight)
+
+        self.setLayout(overallLayout)
 
     def getWeatherData(self):
         self.wc = WeatherController(self.weatherConfig)
@@ -56,3 +69,6 @@ class Weather(QFrame):
         self.temperatureLbl.setText(self.wc.summaryText)
 
         self.locationLbl.setText(self.wc.location)
+
+    def updateClock(self):
+        self.clockFrame.tick()
