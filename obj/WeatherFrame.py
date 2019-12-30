@@ -30,7 +30,6 @@ class Weather(QFrame):
         self.forecastLbl = QLabel(self)
         self.locationLbl = QLabel(self)
         self.weatherConfig = weatherConfig
-        print("Getting weather in Initialize of Weather Class")
         self.getWeatherData()
         self.updateDisplay()
         
@@ -52,7 +51,6 @@ class Weather(QFrame):
 
     def getWeatherData(self):
         self.wc = WeatherController(self.weatherConfig)
-        print("Getting weather from getWeatherData in Weather Class")
         self.wc.parse_weather()
         self._weatherConfig = self.wc._weather_obj
 
