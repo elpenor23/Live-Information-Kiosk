@@ -1,5 +1,7 @@
 # RunnerClothing
 What to wear while running based on weather and person
+    <return>    - Enters/Leaves Full Screen Mode
+    <esc>       - Closes program
 
 To run this you need to update the config files:
 
