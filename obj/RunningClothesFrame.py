@@ -42,7 +42,8 @@ class RunningClothes(QFrame):
                 cc = ClothingController(tempAdjuster.adjustedTemperature, "config/clothingConfig.json", runner["gender"], intensity["type"], weatherConfigJSON["currently"]["icon"], s.timeOfDay())
                 clothes = cc.calculateItems()
 
-                intensityFrame = QGroupBox(intensity["name"])
+                degree_sign= u'\N{DEGREE SIGN}'
+                intensityFrame = QGroupBox(intensity["name"] + " - " + str(round(tempAdjuster.adjustedTemperature)) + degree_sign)
                 intensityLayout = QGridLayout()
                 intensityLayout.setAlignment(QtCore.Qt.AlignTop)
 
