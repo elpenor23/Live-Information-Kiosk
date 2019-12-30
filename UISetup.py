@@ -75,7 +75,8 @@ class AppUI(QWidget):
         if str(e.key()) == str(QtCore.Qt.Key_Escape):
             self.close()
         elif str(e.key()) == str(QtCore.Qt.Key_Return):
-            self.showFullScreen()
-        elif str(e.key()) == str(QtCore.Qt.Key_Shift):
-            self.showNormal()
-            self.setGeometry(300, 150, 500, 500)  
+            if self.isFullScreen():
+                self.showNormal()
+                self.setGeometry(300, 150, 500, 500) 
+            else:
+                self.showFullScreen()
