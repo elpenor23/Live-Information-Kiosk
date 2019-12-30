@@ -49,8 +49,7 @@
             "min_temp": 65,
             "max_temp": 80,
             "title": "Singlet",
-            "special": "singlet",
-            "requirements": "data => {return data.gender == 'm' && data.intensity == 'r' && data.adjusted > 35 || data.gender == 'f' && data.adjusted >= 80 && data.adjusted <= 85;}"
+            "special": "singlet"
         },
         {
             "name": "long_sleeve_shirt",

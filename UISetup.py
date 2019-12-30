@@ -23,7 +23,7 @@ class AppUI(QWidget):
     def initUI(self):
         windowLayout = QGridLayout()
         windowLayout.setAlignment(QtCore.Qt.AlignTop)
-        self.weatherFrame = Weather("config/weatherConfig.json")
+        self.weatherFrame = Weather("config/locationConfig.json")
         windowLayout.addWidget(self.weatherFrame, 0, 0)
 
         self.runningClothesFrame = RunningClothes("config/peopleConfig.json", "config/tempAdjustConfig.json", self.weatherFrame._weatherConfig)

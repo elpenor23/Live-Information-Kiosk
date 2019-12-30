@@ -1,14 +1,14 @@
 {
     "people":[
         {
-            "name": "Eric",
+            "name": "Runner 1",
             "gender": "man",
             "feel": "inbetween"
         },
         {
-            "name": "Sara",
+            "name": "Runner 2",
             "gender": "woman",
-            "feel": "inbetween"
+            "feel": "warm"
         }
     ],
     "intensities": [
