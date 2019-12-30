@@ -39,8 +39,9 @@ class Weather(QFrame):
         frameLayout.addWidget(self.degreeFrm, 0, 1)
         frameLayout.addWidget(self.temperatureLbl, 1, 1)
         frameLayout.addWidget(self.currentlyLbl, 2, 1)
-        frameLayout.addWidget(self.forecastLbl, 3, 1)
-        frameLayout.addWidget(self.locationLbl, 4, 1)
+        frameLayout.addWidget(self.locationLbl, 3, 1)
+        frameLayout.addWidget(self.forecastLbl, 4, 1)
+        
 
         weatherArea.setLayout(frameLayout)
         overallLayout.addWidget(weatherArea, 0, 0, QtCore.Qt.AlignLeft)

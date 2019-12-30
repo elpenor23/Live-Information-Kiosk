@@ -74,15 +74,13 @@ class TemperatureAdjustmentController:
         if debug:
             print("Real Temp: " + str(self.currentTemp))
             print("TimeofDay and Conditions Adjust(" + self.timeOfDay + ", " + self.precip + "): " + str(tempAdjustmentTimeOfDayAndConditions))
-            print("Wind Adjust: " + str(tempAdjustmentWind))
-            print("Intensity Adjust: " + str(tempAdjustmentIntensity))
-            print("Feel Adjust: " + str(tempAdjustmentFeel))
-            print("Gender Adjust: " + str(tempAdjustmentGender))
+            print("Wind Adjust (" + self.wind + "): " + str(tempAdjustmentWind))
+            print("Intensity Adjust (" + self.intensity + "): " + str(tempAdjustmentIntensity))
+            print("Feel Adjust (" + self.feel + "): " + str(tempAdjustmentFeel))
+            print("Gender Adjust (" + self.gender + "): " + str(tempAdjustmentGender))
 
         return finalAdjustedTemp
     
-    #adjustedTemperature = property(get_adjustedTemperature)
-
     def get_headwear(self):
         return ""
     

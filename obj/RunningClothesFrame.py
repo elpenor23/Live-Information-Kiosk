@@ -35,16 +35,18 @@ class RunningClothes(QFrame):
             runnerLayout = QGridLayout()
             runnerLayout.setAlignment(QtCore.Qt.AlignTop)
             runnerName = QLabel(runner["name"])
+            runnerName.setStyleSheet("QLabel { color: green; font-size: 35px; font-weight: bold; text-decoration: underline;}")
             runnerLayout.addWidget(runnerName, 0, 0)
             col = 0
             row = 0
+            # print("*********" + runner["name"] + "*************")
             for intensity in peopleController.intensities:
                 tempAdjuster = TemperatureAdjustmentController(s.timeOfDay(), weatherConfigJSON["currently"]["icon"], wind, runner["gender"], runner["feel"], intensity["type"], weatherConfigJSON["currently"]["temperature"], tempAdjustConfig)
                 cc = ClothingController(tempAdjuster.adjustedTemperature, "config/clothingConfig.json", runner["gender"], intensity["type"], weatherConfigJSON["currently"]["icon"], s.timeOfDay())
                 clothes = cc.calculateItems()
 
                 degree_sign= u'\N{DEGREE SIGN}'
-                intensityFrame = QGroupBox(intensity["name"] + " - " + str(round(tempAdjuster.adjustedTemperature)) + degree_sign)
+                intensityFrame = QGroupBox(intensity["name"]) # + " - " + str(round(tempAdjuster.adjustedTemperature)) + degree_sign)
                 intensityLayout = QGridLayout()
                 intensityLayout.setAlignment(QtCore.Qt.AlignTop)
 
