@@ -1,5 +1,10 @@
-# RunnerClothing
-What to wear while running based on weather and person
+# Live Information Kiosk
+Counter top kiosk meant to show you useful imformation that you need on the regular.
+Current modules show:
+    Weather and time information
+    what to wear while running based on weather and person
+
+Use:
     <return>    - Enters/Leaves Full Screen Mode
     <esc>       - Closes program
 
