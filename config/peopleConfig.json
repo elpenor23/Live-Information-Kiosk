@@ -20,7 +20,7 @@
         },
         {
             "type": "long_run",
-            "name": "Long Run"
+            "name": "Long"
          },
          {
             "type": "race",
@@ -28,7 +28,7 @@
          },
          {
             "type": "hard_workout",
-            "name": "Hard Workout"
+            "name": "Workout"
          }
     ]
 }
