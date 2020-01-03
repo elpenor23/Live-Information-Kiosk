@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """ base application start """
 import sys
 from PyQt5.QtWidgets import QApplication
