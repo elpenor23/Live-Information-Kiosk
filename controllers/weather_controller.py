@@ -65,7 +65,7 @@ class WeatherController(object):
 
         #summary and forecast
         self.summary_text = self.weather_obj['currently']['summary']
-        self.forecast_text = self.weather_obj["hourly"]["summary"]
+        self.forecast_text = self.weather_obj["daily"]["data"][0]["summary"] + "\n" + self.weather_obj["daily"]["summary"]
 
         #weather icon
         icon_id = self.weather_obj['currently']['icon']
