@@ -1,9 +1,10 @@
-# smartmirror.py
+""" base application start """
 import sys
 from PyQt5.QtWidgets import QApplication
-from UISetup import AppUI
+from ui_setup import AppUI
+
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ui = AppUI()
-    sys.exit(app.exec_())
+    APP = QApplication(sys.argv)
+    UI = AppUI()
+    sys.exit(APP.exec_())

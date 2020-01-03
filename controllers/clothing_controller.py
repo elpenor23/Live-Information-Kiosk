@@ -1,26 +1,28 @@
 #!/usr/bin/python3
-import json
-import sys
-import os
-from lib.utils import openConfigFile
+""" determines what clothing is necessary for a person and an intensity """
+
+from lib.utils import open_config_file
+
 class ClothingController:
-    def __init__(self, adjustedTemperature, clothingConfigFileName, gender, intensity, conditions, timeOfDay):
+    """ Calculates the clothing a person should wear"""
+    def __init__(self, adjusted_temperature, clothing_config_filename, gender, intensity, conditions, time_of_day):
         #open config files
-        self.clothingConfig = openConfigFile(clothingConfigFileName)
+        self.clothing_config = open_config_file(clothing_config_filename)
         self.gender = gender
         self.intensity = intensity
         self.conditions = conditions
-        self.timeOfDay = timeOfDay
-        self.adjustedTemperature = adjustedTemperature
-        
+        self.time_of_day = time_of_day
+        self.adjusted_temperature = adjusted_temperature
+
         return
 
-    def calculateItems(self):
+    def calculate_items(self):
+        """ Actually does the calculating"""
         clothes = {}
-        for bodyPart in self.clothingConfig:
+        for bodyPart in self.clothing_config:
             #print("--" + bodyPart + "--")
-            for item in self.clothingConfig[bodyPart]:
-                if item["min_temp"] <= self.adjustedTemperature <= item["max_temp"]:
+            for item in self.clothing_config[bodyPart]:
+                if item["min_temp"] <= self.adjusted_temperature <= item["max_temp"]:
                     if "gender" in item:
                         if item["gender"] == self.gender:
                             #print(item["title"] + " added with special gender!")
@@ -38,7 +40,7 @@ class ClothingController:
                             break
                     elif "special" in item:
                         if item["special"] == "sunny":
-                            if (self.conditions.find("clear") > -1 or self.conditions.find("partially-cloudy") > -1) and self.timeOfDay == "day":
+                            if (self.conditions.find("clear") > -1 or self.conditions.find("partially-cloudy") > -1) and self.time_of_day == "day":
                                 # print(item["title"] + " added with special special sunny!")
                                 clothes[bodyPart] = item["title"]
                                 break
@@ -51,5 +53,5 @@ class ClothingController:
                         # print(item["title"] + " added normally!")
                         clothes[bodyPart] = item["title"]
                         break
-        
+
         return clothes
