@@ -51,7 +51,7 @@ class RunningClothes(QFrame):
             runner_layout.setAlignment(QtCore.Qt.AlignTop)
 
             runner_name = QLabel(runner["name"])
-            runner_name.setStyleSheet("QLabel { color: green; "
+            runner_name.setStyleSheet("QLabel { color: " + runner['color'] + "; "
                                       "font-size: 35px; "
                                       "font-weight: bold; "
                                       "text-decoration: underline;}")
