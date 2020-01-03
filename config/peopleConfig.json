@@ -3,12 +3,14 @@
         {
             "name": "Runner 1",
             "gender": "man",
-            "feel": "inbetween"
+            "feel": "inbetween",
+            "color": "green"
         },
         {
             "name": "Runner 2",
             "gender": "woman",
-            "feel": "warm"
+            "feel": "warm",
+            "color": "red"
         }
     ],
     "intensities": [
