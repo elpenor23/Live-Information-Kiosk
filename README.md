@@ -34,3 +34,5 @@ To run this you need to update the config files:
 
 ###### locationConfig - (requires updates)
     Holds location information to get your weather
+    - Lat and Long to get the weather for the correct location
+    - location name, this is the value that is displayed
