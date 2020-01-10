@@ -1,6 +1,12 @@
 # Live Information Kiosk
 Counter top kiosk meant to show you useful imformation that you need on the regular.
 
+## Requirements
+ - Python3
+ - PyQt5
+ - dateutils
+
+# Modules
 Current modules show:
 
     * Weather and time information
