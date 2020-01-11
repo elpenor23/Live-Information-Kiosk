@@ -2,6 +2,7 @@
 """ Sets up the UI and controls UI changes """
 
 import os
+import logging
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QGridLayout
 from obj.weather_frame import Weather
@@ -25,6 +26,8 @@ class AppUI(QWidget):
     # Add all the sections to the main window
     def init_ui(self):
         """ Initializes all the secions in the layout """
+        self.logger = logging.getLogger('kiosk_log')
+
         window_layout = QGridLayout()
         window_layout.setAlignment(QtCore.Qt.AlignTop)
         self.weather_frame = Weather(LOCATION_CONFIG_FILENAME)
