@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ Adjusts the temp based on all the things """
+import logging
 
 class TemperatureAdjustmentController:
     """ Adjusts the temp based on things"""
@@ -12,6 +13,7 @@ class TemperatureAdjustmentController:
                  intensity,
                  current_temp,
                  temp_adjust_config):
+        self.logger = logging.getLogger('kiosk_log')
         self.wind = wind
         self.time_of_day = time_of_day
         self.precip = precip
@@ -31,7 +33,7 @@ class TemperatureAdjustmentController:
         if self.time_of_day == "day" and self.precip.startswith("clear"):
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["clear_day"])
-        elif self.time_of_day == "day" and self.precip.startswith("partly_cloudy"):
+        elif self.time_of_day == "day" and self.precip.startswith("partly-cloudy"):
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["partially_cloudy_day"])
         elif ((self.time_of_day == "dawn" or self.time_of_day == "dusk") and
@@ -91,15 +93,14 @@ class TemperatureAdjustmentController:
                                temp_adjustment_feel +
                                temp_adjustment_gender)
 
-        debug = False
-        if debug:
-            print("Real Temp: " + str(self.current_temp))
-            print("TimeofDay and Conditions Adjust(" +
-                  self.time_of_day + ", " + self.precip +
-                  "): " + str(temp_adjustment_time_of_day_and_conditions))
-            print("Wind Adjust (" + self.wind + "): " + str(temp_adjustment_wind))
-            print("Intensity Adjust (" + self.intensity + "): " + str(temp_adjustment_intensity))
-            print("Feel Adjust (" + self.feel + "): " + str(temp_adjustment_feel))
-            print("Gender Adjust (" + self.gender + "): " + str(temp_adjustment_gender))
+
+        self.logger.info("Real Temp: " + str(self.current_temp))
+        self.logger.info("TimeofDay and Conditions Adjust(" +
+                self.time_of_day + ", " + self.precip +
+                "): " + str(temp_adjustment_time_of_day_and_conditions))
+        self.logger.info("Wind Adjust (" + self.wind + "): " + str(temp_adjustment_wind))
+        self.logger.info("Intensity Adjust (" + self.intensity + "): " + str(temp_adjustment_intensity))
+        self.logger.info("Feel Adjust (" + self.feel + "): " + str(temp_adjustment_feel))
+        self.logger.info("Gender Adjust (" + self.gender + "): " + str(temp_adjustment_gender))
 
         return final_adjusted_temp

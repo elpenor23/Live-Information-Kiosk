@@ -65,7 +65,8 @@ class RunningClothes(QFrame):
                 # and calculate adjusted temperature and clothing
                 temp_adjuster = TemperatureAdjustmentController(sunrise_sunset.time_of_day(),
                                                                 weather_config_json["currently"]["icon"],
-                                                                wind, runner["gender"],
+                                                                wind, 
+                                                                runner["gender"],
                                                                 runner["feel"],
                                                                 intensity["type"],
                                                                 weather_config_json["currently"]["temperature"],

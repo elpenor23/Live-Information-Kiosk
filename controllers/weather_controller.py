@@ -4,6 +4,7 @@ parses the weather data from the api
 and makes it available to the weather frame
 """
 import os
+import logging
 from lib.utils import get_weather, open_config_file
 
 # maps open weather icons to
@@ -31,6 +32,7 @@ class WeatherController(object):
     def __init__(self, weather_config):
         """ initializes all of the weather data """
         #data for clothing calculations
+        self.logger = logging.getLogger('kiosk_log')
         self.wind = ""
         self.time_of_day = ""
         self.precip = ""
@@ -50,6 +52,7 @@ class WeatherController(object):
 
     def parse_weather(self):
         """ Parses the weather data """
+        self.logger.debug("Parsing weather")
         latitude = self.weather_config["latitude"]
         longitude = self.weather_config["longitude"]
         location = self.weather_config["location"]
@@ -69,6 +72,7 @@ class WeatherController(object):
 
         #weather icon
         icon_id = self.weather_obj['currently']['icon']
+
         if icon_id in ICON_LOOKUP:
             self.weather_icon = ICON_LOOKUP[icon_id]
 
