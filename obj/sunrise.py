@@ -2,6 +2,7 @@
 This module deals with calculating sunrises and sunsets
 and determining if it is day/night/duck/dawn
 """
+import logging
 from math import cos, sin, acos, asin, tan
 from math import degrees as deg, radians as rad
 from datetime import date, datetime, time, timedelta
@@ -24,6 +25,7 @@ class Sun():
     print('sunrise at ',s.sunrise(when=datetime.datetime.now())
     """
     def __init__(self, lat=52.37, long=4.90): # default Amsterdam
+        self.logger = logging.getLogger('kiosk_log')
         self.lat = lat
         self.long = long
         self.from_timezone = tz.tzutc()
@@ -72,6 +74,7 @@ class Sun():
         thirty_min_before_sunset = (sunset_full_date + timedelta(minutes=-30)).replace(tzinfo=self.to_timezone)
         thirty_min_after_sunset = (sunset_full_date + timedelta(minutes=30)).replace(tzinfo=self.to_timezone)
 
+        self.logger.debug(f'is_dusk?\nthirty_min_before_sunset:{thirty_min_before_sunset}\n<=\nwhen:{when}\n<=\nthirty_min_after_sunset:{thirty_min_after_sunset}')
         return thirty_min_before_sunset <= when <= thirty_min_after_sunset
 
     def is_dawn(self, when=None):
@@ -85,6 +88,7 @@ class Sun():
         thirty_min_before_sunrise = (sunrise_full_date + timedelta(minutes=-30)).replace(tzinfo=self.to_timezone)
         thirty_min_after_sunrise = (sunrise_full_date + timedelta(minutes=30)).replace(tzinfo=self.to_timezone)
 
+        self.logger.debug(f'is_dawn?\nthirty_min_before_sunrise:{thirty_min_before_sunrise}\n<=\nwhen:{when}\n<=\thirty_min_after_sunrise:{thirty_min_after_sunrise}')
         return thirty_min_before_sunrise <= when <= thirty_min_after_sunrise
 
     def is_day(self, when=None):
@@ -95,7 +99,12 @@ class Sun():
         sunrise_full_date = datetime.strptime(when.strftime("%m/%d/%Y ") + sunrise.strftime("%H:%M:%S"), "%m/%d/%Y %H:%M:%S")
         sunrise_timezone = sunrise_full_date.replace(tzinfo=self.to_timezone)
 
-        return sunrise_timezone >= when <= self.sunset(when)
+        sunset = self.sunset(when)
+        sunset_full_date = datetime.strptime(when.strftime("%m/%d/%Y ") + sunset.strftime("%H:%M:%S"), "%m/%d/%Y %H:%M:%S")
+        sunset_timezone = sunset_full_date.replace(tzinfo=self.to_timezone)
+
+        self.logger.debug(f'is_day?\nsunrise_timezone:{sunrise_timezone}\n>=\nwhen:{when}\n<=\nsunset_timezone):{sunset_timezone}')
+        return sunrise_timezone <= when <= sunset_timezone
 
     def is_night(self, when=None):
         """ checks if it is night """
@@ -115,6 +124,7 @@ class Sun():
         if when is None:
             when = datetime.now(tz=self.to_timezone)
 
+        self.logger.debug(f'When: {when}')
         if self.is_dawn(when):
             return "dawn"
         elif self.is_dusk(when):
