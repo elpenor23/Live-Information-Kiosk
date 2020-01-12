@@ -3,8 +3,9 @@ Counter top kiosk meant to show you useful imformation that you need on the regu
 
 ## Requirements
  - Python3
- - PyQt5
- - dateutils
+ - PyQt5 (pip3 install PyQt5)
+ - dateutils (pip3 install python-dateutil)
+ - requests (pip3 install requests)
 
 # Modules
 Current modules show:
