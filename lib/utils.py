@@ -41,17 +41,23 @@ def get_weather(lat, lon):
 
     try:
         request = requests.get(weather_req_url)
+        json_results = json.loads(request.text)
     except HTTPError as http_err:
         error_text = f"HTTP Error Could not get weather:{http_err}"
         LOGGER.critical(error_text)
+    except ConnectionError as http_con_err:
+        error_text = f"HTTP Connection Pool Error Could not get weather:{http_con_err}"
+        LOGGER.critical(error_text)
+    except json.JSONDecodeError as err:
+        error_text = f'JSON Decoding error occurred: {err}'
+        LOGGER.critical(error_text)
+        json_results = create_empty_results()
     except Exception as err:
         error_text = f'Unknown error occurred: {err}'
         LOGGER.critical(error_text)
-    else:
-        json_results = json.loads(request.text)
-    finally:
-        if json_results == "":
-            json_results = create_empty_results()
+
+    if json_results == "" or json_results is None:
+        json_results = create_empty_results()
 
     return json_results
 
