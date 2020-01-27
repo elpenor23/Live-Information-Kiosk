@@ -92,10 +92,10 @@ class AppUI(QWidget):
         """callback to update the weather and clothing from the timeing thread"""
         self.weather_controller.parse_weather()
         self.weather_frame.update_display(self.weather_controller)
-
-        temp_adjust_config = open_config_file(TEMP_ADJUSTMENT_CONFIG_FILENAME)
-        self.running_clothes_frame.build_runner_layout(self.weather_controller.weather_obj,
-                                                       temp_adjust_config)
+        
+        self.running_clothes_frame = RunningClothes(PEOPLE_CONFIG_FILENAME,
+                                                    TEMP_ADJUSTMENT_CONFIG_FILENAME,
+                                                    self.weather_controller.weather_obj)
 
     def keyPressEvent(self, event):
         """

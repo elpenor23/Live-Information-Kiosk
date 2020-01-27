@@ -30,19 +30,17 @@ class RunningClothes(QFrame):
         self.logger = logging.getLogger('kiosk_log')
         self.setStyleSheet(LABLE_STYLE)
         self.runner_widget_list = []
+        self.frame_layout = None
 
         temp_adjust_config = open_config_file(temp_adjust_config_filename)
 
         self.people_controller = PeopleController(people_config_filename)
 
-        frame_layout = self.build_runner_layout(weather_object, temp_adjust_config)
-
-        self.setLayout(frame_layout)
+        self.build_runner_layout(weather_object, temp_adjust_config)
 
     def build_runner_layout(self, weather_object, temp_adjust_config):
         """ Build the layout with all the runner frames in it """
-        
-        self.runner_widget_list = []
+        self.logger.info(f'build_runner_layout')
 
         sunrise_sunset = Sun(lat=weather_object["latitude"],
                                 long=weather_object["longitude"])
@@ -50,8 +48,8 @@ class RunningClothes(QFrame):
         wind = get_wind(weather_object["currently"]["windSpeed"],
                         temp_adjust_config["wind_speed"])
 
-        frame_layout = QGridLayout()
-        frame_layout.setAlignment(QtCore.Qt.AlignTop)
+        self.frame_layout = QGridLayout()
+        self.frame_layout.setAlignment(QtCore.Qt.AlignTop)
         runner_row = 1
         for runner in self.people_controller.people:
             
@@ -73,9 +71,9 @@ class RunningClothes(QFrame):
             if runner_row > 2:
                 runner_frame.setVisible(False)
 
-            frame_layout.addWidget(runner_frame, runner_row, 0)
+            self.frame_layout.addWidget(runner_frame, runner_row, 0)
         
-        return frame_layout
+        self.setLayout(self.frame_layout)
 
 def build_runner_frame(runner, wind, weather_object, temp_adjust_config, time_of_day, people_controller, logger):
     """ build each runner frame """
@@ -139,7 +137,7 @@ def build_intensity_frame(intensity, runner, wind, weather_object, temp_adjust_c
     intensity_frame = QGroupBox(intensity["name"])
     row = 0
     for body_part in clothes:
-        logger.info(f"body part: {body_part}")
+        logger.debug(f"body part: {body_part}")
         # once we have the calculated clothing for a runner for an intensity
         # we add it to the UI
         row += 1
