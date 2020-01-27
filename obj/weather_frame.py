@@ -50,7 +50,7 @@ class Weather(QFrame):
         self.update_display(weather_controller)
 
     def update_display(self, weather_controller):
-        """ Updates the weather Ifon and all the weather data """
+        """ Updates the weather and all the weather data """
         if weather_controller.weather_icon is not None:
             image = QPixmap(weather_controller.weather_icon)
             small_image = image.scaled(200,
