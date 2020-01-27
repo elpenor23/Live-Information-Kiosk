@@ -2,9 +2,9 @@
 """ Sets up and displays the running clothes for each person"""
 
 import os
-from PyQt5 import QtGui, QtCore
+import logging
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout, QGroupBox
-from PyQt5.QtGui import QPixmap
 
 from controllers.people_controller import PeopleController
 from controllers.temperature_adjustment_controller import TemperatureAdjustmentController
@@ -24,78 +24,47 @@ CLOTHING_CONFIG_FILENAME = os.path.join(DIRNAME, "../config/clothingConfig.json"
 
 class RunningClothes(QFrame):
     """ Class that displays the runnsers clothing"""
-    def __init__(self, people_config_filename, temp_adjust_config_filename, weather_config_json):
+    def __init__(self, people_config_filename, temp_adjust_config_filename, weather_object):
         """ Initializes all of the things needed for this frame"""
         QFrame.__init__(self)
+        self.logger = logging.getLogger('kiosk_log')
         self.setStyleSheet(LABLE_STYLE)
         self.runner_widget_list = []
-        frame_lyout = QGridLayout()
-        frame_lyout.setAlignment(QtCore.Qt.AlignTop)
 
         temp_adjust_config = open_config_file(temp_adjust_config_filename)
 
-        people_controller = PeopleController(people_config_filename)
+        self.people_controller = PeopleController(people_config_filename)
 
-        sunrise_sunset = Sun(lat=weather_config_json["latitude"],
-                             long=weather_config_json["longitude"])
+        frame_layout = self.build_runner_layout(weather_object, temp_adjust_config)
 
-        wind = get_wind(weather_config_json["currently"]["windSpeed"],
+        self.setLayout(frame_layout)
+
+    def build_runner_layout(self, weather_object, temp_adjust_config):
+        """ Build the layout with all the runner frames in it """
+        
+        self.runner_widget_list = []
+
+        sunrise_sunset = Sun(lat=weather_object["latitude"],
+                                long=weather_object["longitude"])
+
+        wind = get_wind(weather_object["currently"]["windSpeed"],
                         temp_adjust_config["wind_speed"])
 
+        frame_layout = QGridLayout()
+        frame_layout.setAlignment(QtCore.Qt.AlignTop)
         runner_row = 1
-        for runner in people_controller.people:
-            # loop through each runner and make their Frame
-            runner_frame = QFrame()
+        for runner in self.people_controller.people:
+            
+            self.logger.info(f"making runner frame: {runner}")
 
-            runner_layout = QGridLayout()
-            runner_layout.setAlignment(QtCore.Qt.AlignTop)
+            runner_frame = build_runner_frame(runner,
+                                                wind,
+                                                weather_object,
+                                                temp_adjust_config,
+                                                sunrise_sunset.time_of_day(),
+                                                self.people_controller,
+                                                self.logger)
 
-            runner_name = QLabel(runner["name"])
-            runner_name.setStyleSheet("QLabel { color: " + runner['color'] + "; "
-                                      "font-size: 35px; "
-                                      "font-weight: bold; "
-                                      "text-decoration: underline;}")
-            runner_layout.addWidget(runner_name, 0, 0)
-
-            col = 0
-            row = 0
-
-            for intensity in people_controller.intensities:
-                # for each runner we then have to loop through each intensity
-                # and calculate adjusted temperature and clothing
-                temp_adjuster = TemperatureAdjustmentController(sunrise_sunset.time_of_day(),
-                                                                weather_config_json["currently"]["icon"],
-                                                                wind, 
-                                                                runner["gender"],
-                                                                runner["feel"],
-                                                                intensity["type"],
-                                                                weather_config_json["currently"]["temperature"],
-                                                                temp_adjust_config)
-                clothing_controller = ClothingController(temp_adjuster.adjusted_temperature,
-                                                         CLOTHING_CONFIG_FILENAME, runner["gender"], 
-                                                         intensity["type"],
-                                                         weather_config_json["currently"]["icon"],
-                                                         sunrise_sunset.time_of_day())
-                clothes = clothing_controller.calculate_items()
-
-                # degree_sign= u'\N{DEGREE SIGN}'
-                intensity_frame = QGroupBox(intensity["name"])
-                intensity_layout = QGridLayout()
-                intensity_layout.setAlignment(QtCore.Qt.AlignTop)
-
-                for body_part in clothes:
-                    # once we have the calculated clothing for a runner for an intensity
-                    # we add it to the UI
-                    row += 1
-                    item = QLabel(clothes[body_part])
-                    intensity_layout.addWidget(item, row, 0)
-
-                intensity_frame.setLayout(intensity_layout)
-                runner_layout.addWidget(intensity_frame, 1, col)
-                col += 1
-
-            runner_frame.setLayout(runner_layout)
-            frame_lyout.addWidget(runner_frame, runner_row, 0)
             self.runner_widget_list.append(runner_frame)
             runner_row += 1
 
@@ -104,16 +73,94 @@ class RunningClothes(QFrame):
             if runner_row > 2:
                 runner_frame.setVisible(False)
 
-        self.setLayout(frame_lyout)
+            frame_layout.addWidget(runner_frame, runner_row, 0)
+        
+        return frame_layout
+
+def build_runner_frame(runner, wind, weather_object, temp_adjust_config, time_of_day, people_controller, logger):
+    """ build each runner frame """
+    # loop through each runner and make their Frame
+    runner_frame = QFrame()
+
+    runner_layout = QGridLayout()
+    runner_layout.setAlignment(QtCore.Qt.AlignTop)
+
+    runner_name = QLabel(runner["name"])
+    runner_name.setStyleSheet("QLabel { color: " + runner['color'] + "; "
+                              "font-size: 35px; "
+                              "font-weight: bold; "
+                              "text-decoration: underline;}")
+    runner_layout.addWidget(runner_name, 0, 0)
+
+    col = 0
+    #row = 0
+
+    for intensity in people_controller.intensities:
+        # for each runner we then have to loop through each intensity
+        # and calculate adjusted temperature and clothing
+
+        logger.info(f"looping through intensities: {intensity}")
+        intensity_frame = build_intensity_frame(intensity,
+                                                runner,
+                                                wind,
+                                                weather_object,
+                                                temp_adjust_config,
+                                                time_of_day,
+                                                logger)
+
+        runner_layout.addWidget(intensity_frame, 1, col)
+        col += 1
+
+    runner_frame.setLayout(runner_layout)
+
+    return runner_frame
+
+def build_intensity_frame(intensity, runner, wind, weather_object, temp_adjust_config, time_of_day, logger):
+    """ builds each intensity frame """
+
+    temp_adjuster = TemperatureAdjustmentController(time_of_day,
+                                                    weather_object["currently"]["icon"],
+                                                    wind,
+                                                    runner["gender"],
+                                                    runner["feel"],
+                                                    intensity["type"],
+                                                    weather_object["currently"]["temperature"],
+                                                    temp_adjust_config)
+    clothing_controller = ClothingController(temp_adjuster.adjusted_temperature,
+                                             CLOTHING_CONFIG_FILENAME, runner["gender"],
+                                             intensity["type"],
+                                             weather_object["currently"]["icon"],
+                                             time_of_day)
+    clothes = clothing_controller.calculate_items()
+
+    intensity_layout = QGridLayout()
+    intensity_layout.setAlignment(QtCore.Qt.AlignTop)
+
+    intensity_frame = QGroupBox(intensity["name"])
+    row = 0
+    for body_part in clothes:
+        logger.info(f"body part: {body_part}")
+        # once we have the calculated clothing for a runner for an intensity
+        # we add it to the UI
+        row += 1
+        item = QLabel(clothes[body_part])
+        intensity_layout.addWidget(item, row, 0)
+
+    intensity_frame.setLayout(intensity_layout)
+
+    return intensity_frame
 
 def get_wind(wind_speed, wind_speed_config):
     """
     Take the wind speed and calculate the wind type
     TODO: This should be someplace else!
     """
+    return_value = "None"
     if wind_speed_config["light_min"] <= wind_speed <= wind_speed_config["light_max"]:
-        return "light_wind"
+        return_value = "light_wind"
     elif wind_speed_config["wind_min"] <= wind_speed <= wind_speed_config["wind_max"]:
-        return "windy"
+        return_value = "windy"
     elif wind_speed_config["heavy_min"] <= wind_speed <= wind_speed_config["heavy_max"]:
-        return "heavy_wind"
+        return_value = "heavy_wind"
+
+    return return_value

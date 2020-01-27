@@ -40,6 +40,7 @@ def get_weather(lat, lon):
     json_results = ""
 
     try:
+        LOGGER.info("Getting Weather Data.")
         request = requests.get(weather_req_url)
         json_results = json.loads(request.text)
     except HTTPError as http_err:

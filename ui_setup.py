@@ -8,6 +8,8 @@ from PyQt5.QtWidgets import QWidget, QGridLayout
 from obj.weather_frame import Weather
 from obj.running_clothes_frame import RunningClothes
 from update_thread import UpdateThread
+from controllers.weather_controller import WeatherController
+from lib.utils import open_config_file
 
 DIRNAME = os.path.dirname(__file__)
 LOCATION_CONFIG_FILENAME = os.path.join(DIRNAME, "config/locationConfig.json")
@@ -30,12 +32,16 @@ class AppUI(QWidget):
 
         window_layout = QGridLayout()
         window_layout.setAlignment(QtCore.Qt.AlignTop)
-        self.weather_frame = Weather(LOCATION_CONFIG_FILENAME)
+
+        self.weather_controller = WeatherController(LOCATION_CONFIG_FILENAME)
+        self.weather_controller.parse_weather()
+
+        self.weather_frame = Weather(self.weather_controller)
         window_layout.addWidget(self.weather_frame, 0, 0)
 
         self.running_clothes_frame = RunningClothes(PEOPLE_CONFIG_FILENAME,
                                                     TEMP_ADJUSTMENT_CONFIG_FILENAME,
-                                                    self.weather_frame.weather_config)
+                                                    self.weather_controller.weather_obj)
         window_layout.addWidget(self.running_clothes_frame, 1, 0)
 
         ui_palette = self.palette()
@@ -52,20 +58,20 @@ class AppUI(QWidget):
         # kick off the thread
         self.update_thread = UpdateThread()
         self.update_thread.update_clock.connect(self.callback_update_clock)
-        self.update_thread.update_weather_and_clothes.connect(self.callback_update_weather_and_clothes)
+        self.update_thread.update_weather_and_clothes.connect(
+            self.callback_update_weather_and_clothes)
         self.update_thread.update_person.connect(self.callback_update_person)
         self.update_thread.start()
 
     def callback_update_clock(self):
         """callback for updating the clock from the timing thread"""
         self.weather_frame.update_clock()
-        return
 
     def callback_update_person(self):
         """
         Callback for updateing the person frame from the timing thread.
         Makes the current visible person invisible and the next person visible.
-        Loops around when it hits the end of the person list.        
+        Loops around when it hits the end of the person list.
         """
         people = self.running_clothes_frame.runner_widget_list
         number_of_people = len(people)
@@ -81,13 +87,15 @@ class AppUI(QWidget):
             index_to_set_visible = 0
 
         people[index_to_set_visible].setVisible(True)
-        return
 
     def callback_update_weather_and_clothes(self):
         """callback to update the weather and clothing from the timeing thread"""
-        self.weather_frame.get_weather_data()
-        self.weather_frame.update_display()
-        return
+        self.weather_controller.parse_weather()
+        self.weather_frame.update_display(self.weather_controller)
+
+        temp_adjust_config = open_config_file(TEMP_ADJUSTMENT_CONFIG_FILENAME)
+        self.running_clothes_frame.build_runner_layout(self.weather_controller.weather_obj,
+                                                       temp_adjust_config)
 
     def keyPressEvent(self, event):
         """
