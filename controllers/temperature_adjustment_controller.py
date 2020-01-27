@@ -94,13 +94,13 @@ class TemperatureAdjustmentController:
                                temp_adjustment_gender)
 
 
-        self.logger.info("Real Temp: " + str(self.current_temp))
-        self.logger.info("TimeofDay and Conditions Adjust(" +
+        self.logger.debug("Real Temp: " + str(self.current_temp))
+        self.logger.debug("TimeofDay and Conditions Adjust(" +
                 self.time_of_day + ", " + self.precip +
                 "): " + str(temp_adjustment_time_of_day_and_conditions))
-        self.logger.info("Wind Adjust (" + self.wind + "): " + str(temp_adjustment_wind))
-        self.logger.info("Intensity Adjust (" + self.intensity + "): " + str(temp_adjustment_intensity))
-        self.logger.info("Feel Adjust (" + self.feel + "): " + str(temp_adjustment_feel))
-        self.logger.info("Gender Adjust (" + self.gender + "): " + str(temp_adjustment_gender))
+        self.logger.debug("Wind Adjust (" + self.wind + "): " + str(temp_adjustment_wind))
+        self.logger.debug("Intensity Adjust (" + self.intensity + "): " + str(temp_adjustment_intensity))
+        self.logger.debug("Feel Adjust (" + self.feel + "): " + str(temp_adjustment_feel))
+        self.logger.debug("Gender Adjust (" + self.gender + "): " + str(temp_adjustment_gender))
 
         return final_adjusted_temp

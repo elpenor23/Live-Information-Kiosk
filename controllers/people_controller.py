@@ -5,7 +5,8 @@ It will eventually do more
 """
 from lib.utils import open_config_file
 
-class PeopleController:
+class PeopleController(object):
+    """ basic controller for people information """
     def __init__(self, people_config_filename):
         #open config files
         config_data = open_config_file(people_config_filename)
