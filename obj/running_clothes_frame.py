@@ -30,13 +30,16 @@ class RunningClothes(QFrame):
         self.logger = logging.getLogger('kiosk_log')
         self.setStyleSheet(LABLE_STYLE)
         self.runner_widget_list = []
-        self.frame_layout = None
-
+        main_layout = QGridLayout()
+        self.main_frame = QFrame()
         temp_adjust_config = open_config_file(temp_adjust_config_filename)
 
         self.people_controller = PeopleController(people_config_filename)
 
         self.build_runner_layout(weather_object, temp_adjust_config)
+
+        main_layout.addWidget(self.main_frame, 0, 0)
+        self.setLayout(main_layout)
 
     def build_runner_layout(self, weather_object, temp_adjust_config):
         """ Build the layout with all the runner frames in it """
@@ -48,8 +51,8 @@ class RunningClothes(QFrame):
         wind = get_wind(weather_object["currently"]["windSpeed"],
                         temp_adjust_config["wind_speed"])
 
-        self.frame_layout = QGridLayout()
-        self.frame_layout.setAlignment(QtCore.Qt.AlignTop)
+        frame_layout = QGridLayout()
+        frame_layout.setAlignment(QtCore.Qt.AlignTop)
         runner_row = 1
         for runner in self.people_controller.people:
             
@@ -71,9 +74,9 @@ class RunningClothes(QFrame):
             if runner_row > 2:
                 runner_frame.setVisible(False)
 
-            self.frame_layout.addWidget(runner_frame, runner_row, 0)
+            frame_layout.addWidget(runner_frame, runner_row, 0)
         
-        self.setLayout(self.frame_layout)
+        self.main_frame.setLayout(frame_layout)
 
 def build_runner_frame(runner, wind, weather_object, temp_adjust_config, time_of_day, people_controller, logger):
     """ build each runner frame """
