@@ -81,6 +81,7 @@ class Sun():
         """ checks if it is dawn """
         if when is None:
             when = datetime.now(tz=self.to_timezone)
+
         sunrise = self.sunrise(when)
         sunrise_full_date = datetime.strptime(when.strftime("%m/%d/%Y ") + sunrise.strftime("%H:%M:%S"), "%m/%d/%Y %H:%M:%S")
         sunrise_full_date.replace(tzinfo=self.to_timezone)

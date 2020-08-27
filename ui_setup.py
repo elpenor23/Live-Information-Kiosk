@@ -4,7 +4,7 @@
 import os
 import logging
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt5.QtWidgets import QWidget, QGridLayout, QFrame, QGroupBox, QLabel
 from obj.weather_frame import Weather
 from obj.running_clothes_frame import RunningClothes
 from update_thread import UpdateThread
@@ -42,6 +42,7 @@ class AppUI(QWidget):
         self.running_clothes_frame = RunningClothes(PEOPLE_CONFIG_FILENAME,
                                                     TEMP_ADJUSTMENT_CONFIG_FILENAME,
                                                     self.weather_controller.weather_obj)
+
         window_layout.addWidget(self.running_clothes_frame, 1, 0)
 
         ui_palette = self.palette()
@@ -93,9 +94,30 @@ class AppUI(QWidget):
         self.weather_controller.parse_weather()
         self.weather_frame.update_display(self.weather_controller)
         
-        self.running_clothes_frame = RunningClothes(PEOPLE_CONFIG_FILENAME,
-                                                    TEMP_ADJUSTMENT_CONFIG_FILENAME,
-                                                    self.weather_controller.weather_obj)
+        running_frame = self.findChild(RunningClothes)
+        self.update_clothing(running_frame)
+
+    def update_clothing(self, running_frame):
+        """Loops through the UI and hides the displayed clothing"""
+        running_sub_frame = running_frame.findChild(QFrame)
+        runner_frames = running_sub_frame.findChildren(QFrame)
+        for runner_frame in runner_frames:
+            if runner_frame.__class__.__name__ == "QFrame":
+                runner_data = self.get_data(runner_frame)
+                intensity_frames = runner_frame.findChildren(QGroupBox)
+                for intensity in intensity_frames:
+                    intensity_data = self.get_data(intensity)
+                    running_frame.hide_all_clothing(intensity)
+                    running_frame.show_correct_clothing(intensity, intensity_data, runner_data, self.weather_controller.weather_obj)
+
+    def get_data(self, frame):
+        """Gets data from hidden lables in frames"""
+        data = {}
+        for label in frame.findChildren(QLabel):
+            if ":" in label.text():
+                text = label.text().split(":")
+                data[text[0]] =  text[1]
+        return data
 
     def keyPressEvent(self, event):
         """

@@ -1,20 +1,25 @@
 #!/usr/bin/python3
 """ Adjusts the temp based on all the things """
 import logging
+from lib.utils import open_config_file
 
 class TemperatureAdjustmentController:
     """ Adjusts the temp based on things"""
     def __init__(self, 
                  time_of_day,
                  precip,
-                 wind,
+                 wind_speed,
                  gender,
                  feel,
                  intensity,
                  current_temp,
-                 temp_adjust_config):
+                 temp_adjust_config_filename):
+        
+        self.temp_adjust_config = open_config_file(temp_adjust_config_filename)
+
         self.logger = logging.getLogger('kiosk_log')
-        self.wind = wind
+        self.wind  = self.get_wind(wind_speed,
+                        self.temp_adjust_config["wind_speed"])
         self.time_of_day = time_of_day
         self.precip = precip
         self.gender = gender
@@ -22,7 +27,6 @@ class TemperatureAdjustmentController:
         self.feel = feel
         self.current_temp = current_temp
 
-        self.temp_adjust_config = temp_adjust_config
         self.adjusted_temperature = self.get_adjusted_temperature()
         return
 
@@ -104,3 +108,17 @@ class TemperatureAdjustmentController:
         self.logger.debug("Gender Adjust (" + self.gender + "): " + str(temp_adjustment_gender))
 
         return final_adjusted_temp
+
+    def get_wind(self, wind_speed, wind_speed_config):
+        """
+        Take the wind speed and calculate the wind type
+        """
+        return_value = "None"
+        if wind_speed_config["light_min"] <= wind_speed <= wind_speed_config["light_max"]:
+            return_value = "light_wind"
+        elif wind_speed_config["wind_min"] <= wind_speed <= wind_speed_config["wind_max"]:
+            return_value = "windy"
+        elif wind_speed_config["heavy_min"] <= wind_speed <= wind_speed_config["heavy_max"]:
+            return_value = "heavy_wind"
+
+        return return_value

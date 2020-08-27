@@ -59,7 +59,7 @@
         },
         {
             "name": "short_sleeve_shirt",
-            "min_temp": 54,
+            "min_temp": 51,
             "max_temp": 65,
             "title": "Short-Sleeve Shirt"
         }],
