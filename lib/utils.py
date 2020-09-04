@@ -1,5 +1,6 @@
 """ Utils for getting data from api and opening config files """
 from datetime import datetime
+from time import time
 import logging
 import json
 import os
@@ -73,6 +74,7 @@ def create_empty_results():
     results['currently']['summary'] = "Error"
     results['currently']['icon'] = "fog"
     results["currently"]["windSpeed"] = 100
+    results["currently"]["time"] = time()
     results["daily"] = {}
     results["daily"]["data"] = []
     results["daily"]["data"].append({})
