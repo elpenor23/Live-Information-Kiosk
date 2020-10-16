@@ -11,7 +11,7 @@ LABLESTYLE_INDOOR_OPEN = "QLabel { color : white; font-size: 30px; border: 3px s
 LABLESTYLE_INDOOR_INUSE = "QLabel { color : white; font-size: 30px; border: 3px solid white; background: red;}"
 LABLESTYLE_INDOOR_UNKNOWN = "QLabel { color : black; font-size: 30px; border: 3px solid white; background: yellow;}"
 
-LABLETEXT_INDOOR_OPEN = "Indoor Free."
+LABLETEXT_INDOOR_OPEN = "Indoor Free"
 LABLETEXT_INDOOR_INUSE = "Indoor In Use!"
 LABLETEXT_INDOOR_UNKNOWN = "Indoor Unknown?"
 
@@ -41,12 +41,15 @@ class Indoor(QFrame):
 
         indoor_status = get_indoor_status()
 
-        if indoor_status == "inuse":
+        if indoor_status.find("inuse") > -1:
             styleSheetToUse = LABLESTYLE_INDOOR_INUSE
             testToUse = LABLETEXT_INDOOR_INUSE
-        elif indoor_status == "open":
+        elif indoor_status.find("open") > -1:
             testToUse = LABLETEXT_INDOOR_OPEN
             styleSheetToUse = LABLESTYLE_INDOOR_OPEN
         
+        if indoor_status.find("old") > -1:
+            testToUse += "**"
+
         self.setStyleSheet(styleSheetToUse)
         self.in_use_label.setText(testToUse)

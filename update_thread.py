@@ -21,7 +21,8 @@ class UpdateThread(QtCore.QThread):
         """ main function for the thread. tells the UI when to update """
         self.logger = logging.getLogger('kioskLog')
         
-        # every 1s update clock
+        # every 1 seconds update clock
+        # every 10 seconds update indoor status
         # every 30 seconds switch person to view
         # every 5 minutes update weather
         update_person_seconds = 30

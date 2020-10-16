@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 """ base application start """
-import sys
+import sys, os
 import logging
 import logging.handlers
 from PyQt5.QtWidgets import QApplication
 from ui_setup import AppUI
+DIRNAME = os.path.dirname(__file__)
+LOG_FILENAME = os.path.join(DIRNAME, "log/kiosk_log.log")
 
-LOG_FILENAME = 'log/kiosk_log.log'
 def get_logger():
     """ Initializes the logger for the entire program """
     # Set up a specific logger with our desired output level
