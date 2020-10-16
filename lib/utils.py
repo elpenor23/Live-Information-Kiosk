@@ -1,5 +1,5 @@
 """ Utils for getting data from api and opening config files """
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import time
 import logging
 import json
@@ -108,5 +108,9 @@ def get_indoor_status():
             status = "inuse"
         else:
             status = "open"
+
+        last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
+        if datetime.now() >= last_set + timedelta(minutes = 5):
+            status += "-old"
 
     return status
