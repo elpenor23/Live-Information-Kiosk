@@ -5,6 +5,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout
 from PyQt5.QtGui import QPixmap
 from obj.clock_frame import Clock
+from obj.indoor_frame import Indoor
 
 LABLESTYLE = "QLabel { color : white; font-size: 30px;}"
 
@@ -41,8 +42,11 @@ class Weather(QFrame):
         weather_area.setLayout(frame_layout)
         overall_layout.addWidget(weather_area, 0, 0, QtCore.Qt.AlignLeft)
 
+        self.indoor_frame = Indoor()
+        overall_layout.addWidget(self.indoor_frame, 0, 1, QtCore.Qt.AlignRight)
+
         self.clock_frame = Clock()
-        overall_layout.addWidget(self.clock_frame, 0, 0, QtCore.Qt.AlignRight)
+        overall_layout.addWidget(self.clock_frame, 0, 2, QtCore.Qt.AlignRight)
 
         self.setLayout(overall_layout)
 
@@ -71,3 +75,7 @@ class Weather(QFrame):
     def update_clock(self):
         """ Tells the clock to update itself """
         self.clock_frame.tick()
+
+    def update_indoor_status(self):
+        """ tells the indoor to update it's status """
+        self.indoor_frame.update()

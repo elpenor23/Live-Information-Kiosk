@@ -59,6 +59,7 @@ class AppUI(QWidget):
         # kick off the thread
         self.update_thread = UpdateThread()
         self.update_thread.update_clock.connect(self.callback_update_clock)
+        self.update_thread.update_indoor.connect(self.callback_update_indoor)
         self.update_thread.update_weather_and_clothes.connect(
             self.callback_update_weather_and_clothes)
         self.update_thread.update_person.connect(self.callback_update_person)
@@ -67,6 +68,10 @@ class AppUI(QWidget):
     def callback_update_clock(self):
         """callback for updating the clock from the timing thread"""
         self.weather_frame.update_clock()
+
+    def callback_update_indoor(self):
+        """callback for updating the indoor from the timing thread"""
+        self.weather_frame.update_indoor_status()
 
     def callback_update_person(self):
         """

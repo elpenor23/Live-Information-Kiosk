@@ -3,5 +3,6 @@
     "weather_api_token": "<darksky.net api key>",
     "weather_lang": "en",
     "weather_unit": "us",
-    "weather_exclude_list":"minutely,hourly"
+    "weather_exclude_list":"minutely,hourly",
+    "indoor_req_url": "http://your.internal.api.here/api/"
 }
