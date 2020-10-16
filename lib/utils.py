@@ -43,7 +43,8 @@ def get_weather(lat, lon):
     try:
         LOGGER.info("Getting Weather Data.")
         request = requests.get(weather_req_url)
-        json_results = json.loads(request.text)
+        if request.status_code == 200:
+            json_results = json.loads(request.text)
     except HTTPError as http_err:
         error_text = f"HTTP Error Could not get weather:{http_err}"
         LOGGER.critical(error_text)
@@ -61,6 +62,7 @@ def get_weather(lat, lon):
     if json_results == "" or json_results is None:
         json_results = create_empty_results()
 
+    LOGGER.critical(json_results)
     return json_results
 
 def create_empty_results():
@@ -94,3 +96,17 @@ def open_config_file(config_filename):
         LOGGER.Error(error_text)
     else:
         return config_data
+
+def get_indoor_status():
+    config_data = open_config_file(API_CONFIG_FILE_NAME)
+    response = requests.get(config_data["indoor_req_url"] + "1")
+    status = "unknown"
+
+    if response.status_code == 200:
+        data = response.json()
+        if data["is_set"] == 1:
+            status = "inuse"
+        else:
+            status = "open"
+
+    return status
