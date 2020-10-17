@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """ Frame used to display time and date """
 
-import requests
+import os
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout
+from PyQt5.QtGui import QPixmap
 from lib.utils import get_indoor_status
 
 
@@ -24,16 +25,17 @@ class Indoor(QFrame):
         frame_layout.setAlignment(QtCore.Qt.AlignTop)
 
         self.in_use_label = QLabel(LABLETEXT_INDOOR_UNKNOWN)
-        # self.day_of_week_label = QLabel()
-        # self.date_label = QLabel()
-
+        
+        self.wifi_icon_label = QLabel()
+        self.ble_icon_label = QLabel()
+        
         frame_layout.addWidget(self.in_use_label, 0, 0)
-        # frame_layout.addWidget(self.day_of_week_label, 1, 0)
-        # frame_layout.addWidget(self.date_label, 2, 0)
+        frame_layout.addWidget(self.wifi_icon_label, 0, 1)
+        frame_layout.addWidget(self.ble_icon_label, 0, 2)
 
         self.setLayout(frame_layout)
-        # self.tick()
-
+        self.setup_icons()
+        self.manage_icons("XX")
     def update(self):
         """ Updates the status of the indoor """
         styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN
@@ -41,15 +43,48 @@ class Indoor(QFrame):
 
         indoor_status = get_indoor_status()
 
-        if indoor_status.find("inuse") > -1:
+        if indoor_status.find("B") > -1 or indoor_status.find("W") > -1:
             styleSheetToUse = LABLESTYLE_INDOOR_INUSE
             testToUse = LABLETEXT_INDOOR_INUSE
-        elif indoor_status.find("open") > -1:
+        else:
             testToUse = LABLETEXT_INDOOR_OPEN
             styleSheetToUse = LABLESTYLE_INDOOR_OPEN
         
         if indoor_status.find("old") > -1:
             testToUse += "**"
 
+        self.manage_icons(indoor_status)
         self.setStyleSheet(styleSheetToUse)
         self.in_use_label.setText(testToUse)
+
+    def setup_icons(self):
+        DIRNAME = os.path.dirname(__file__)
+        icon_size = 40
+        
+        wifi_icon = os.path.join(DIRNAME, "../assets/wifi.png")
+        ble_icon = os.path.join(DIRNAME, "../assets/bluetooth.png")
+
+        image = QPixmap(wifi_icon)
+        small_image = image.scaled(icon_size,
+                                icon_size,
+                                QtCore.Qt.KeepAspectRatio,
+                                QtCore.Qt.FastTransformation)
+        self.wifi_icon_label.setPixmap(small_image)
+
+        image = QPixmap(ble_icon)
+        small_image = image.scaled(icon_size,
+                                icon_size,
+                                QtCore.Qt.KeepAspectRatio,
+                                QtCore.Qt.FastTransformation)
+        self.ble_icon_label.setPixmap(small_image)
+
+    def manage_icons(self, indoor_status):
+        if indoor_status.find("W") > -1:
+            self.wifi_icon_label.show()
+        else:
+            self.wifi_icon_label.hide()
+
+        if indoor_status.find("B") > -1:
+            self.ble_icon_label.show()
+        else:
+            self.ble_icon_label.hide()
