@@ -12,7 +12,7 @@
             "min_temp": 38,
             "max_temp": 1000,
             "title": "Hat with visor",
-            "conditions": "rain,light-rain"
+            "conditions": "Rain,Drizzle"
         }
     ],
     "face": [
@@ -47,7 +47,7 @@
         {
             "name": "singlet",
             "min_temp": 65,
-            "max_temp": 80,
+            "max_temp": 85,
             "title": "Singlet",
             "special": "singlet"
         },
@@ -60,7 +60,7 @@
         {
             "name": "short_sleeve_shirt",
             "min_temp": 51,
-            "max_temp": 65,
+            "max_temp": 85,
             "title": "Short-Sleeve Shirt"
         }],
     "undergarments":[

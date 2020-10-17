@@ -45,13 +45,17 @@ class ClothingController:
                             break
                     elif "special" in item:
                         if item["special"] == "sunny":
-                            if (conditions.find("clear") > -1 or conditions.find("partially-cloudy") > -1) and time_of_day == "day":
+                            if conditions.find("Clear") > -1 and time_of_day == "day":
                                 # print(item["title"] + " added with special special sunny!")
                                 clothes[bodyPart] = item["title"]
                                 break
                         elif item["special"] == "not_rain":
-                            if conditions.find("rain") == -1:
+                            if conditions.find("Rain") == -1:
                                 # print(item["title"] + " added with special special not_rain!")
+                                clothes[bodyPart] = item["title"]
+                                break
+                        elif item["special"] == "singlet":
+                            if intensity == "race":
                                 clothes[bodyPart] = item["title"]
                                 break
                     else:

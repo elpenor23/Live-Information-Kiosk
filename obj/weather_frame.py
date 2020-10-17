@@ -57,8 +57,8 @@ class Weather(QFrame):
         """ Updates the weather and all the weather data """
         if weather_controller.weather_icon is not None:
             image = QPixmap(weather_controller.weather_icon)
-            small_image = image.scaled(200,
-                                       200,
+            small_image = image.scaled(1000,
+                                       1000,
                                        QtCore.Qt.KeepAspectRatio,
                                        QtCore.Qt.FastTransformation)
             self.icon_label.setPixmap(small_image)

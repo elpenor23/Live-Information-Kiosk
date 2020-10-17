@@ -34,27 +34,31 @@ class TemperatureAdjustmentController:
         """ gets the adjusted temp"""
         temp_adjustment_time_of_day_and_conditions = 0
         #time of day and conditions
-        if self.time_of_day == "day" and self.precip.startswith("clear"):
+        if self.time_of_day == "day" and self.precip == "Clear":
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["clear_day"])
-        elif self.time_of_day == "day" and self.precip.startswith("partly-cloudy"):
+
+        elif self.time_of_day == "day" and (self.precip == "Clouds" or self.precip == "Mist"):
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["partially_cloudy_day"])
-        elif ((self.time_of_day == "dawn" or self.time_of_day == "dusk") and
-              self.precip.startswith("clear")):
+
+        elif ((self.time_of_day == "dawn" or self.time_of_day == "dusk") and self.precip == "Clear"):
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["clear_dusk_dawn"])
-        elif ((self.time_of_day == "dawn" or self.time_of_day == "dusk") and
-              self.precip.startswith("partly_cloudly")):
+
+        elif ((self.time_of_day == "dawn" or self.time_of_day == "dusk") and (self.precip == "Clouds" or self.precip == "Mist")):
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["partially_cloudy_dusk_dawn"])
-        elif self.precip == "rain":
+
+        elif self.precip == "Rain":
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["rain"])
-        elif self.precip == "light_rain":
+
+        elif self.precip == "Drizzle":
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["light_rain"])
-        elif self.precip == "snow":
+
+        elif self.precip == "Snow":
             temp_adjustment_time_of_day_and_conditions += (
                 self.temp_adjust_config["timeofday_precipitation"]["snow"])
 

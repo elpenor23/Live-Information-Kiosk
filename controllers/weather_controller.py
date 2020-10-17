@@ -7,25 +7,7 @@ import os
 import logging
 from lib.utils import get_weather, open_config_file
 
-# maps open weather icons to
-# icon reading is not impacted by the 'lang' parameter
 DIRNAME = os.path.dirname(__file__)
-
-ICON_LOOKUP = {
-    'clear-day': os.path.join(DIRNAME, "../assets/Sun.png"),  # clear sky day
-    'wind': os.path.join(DIRNAME, "../assets/Wind.png"),   #wind
-    'cloudy': os.path.join(DIRNAME, "../assets/Cloud.png"),  # cloudy day
-    'partly-cloudy-day': os.path.join(DIRNAME, "../assets/PartlySunny.png"),  # partly cloudy day
-    'rain': os.path.join(DIRNAME, "../assets/Rain.png"),  # rain day
-    'snow': os.path.join(DIRNAME, "../assets/Snow.png"),  # snow day
-    'snow-thin': os.path.join(DIRNAME, "../assets/Snow.png"),  # sleet day
-    'fog': os.path.join(DIRNAME, "../assets/Haze.png"),  # fog day
-    'clear-night': os.path.join(DIRNAME, "../assets/Moon.png"),  # clear sky night
-    'partly-cloudy-night': os.path.join(DIRNAME, "../assets/PartlyMoon.png"),  # partly cloudy night
-    'thunderstorm': os.path.join(DIRNAME, "../assets/Storm.png"),  # thunderstorm
-    'tornado': os.path.join(DIRNAME, "../assests/Tornado.png"),    # tornado
-    'hail': os.path.join(DIRNAME, "../assests/Hail.png")  # hail
-}
 
 class WeatherController(object):
     """ Parses the weather data for the frame """
@@ -34,7 +16,6 @@ class WeatherController(object):
         #data for clothing calculations
         self.logger = logging.getLogger('kiosk_log')
         self.wind = ""
-        self.time_of_day = ""
         self.precip = ""
         self.current_temp_int = 0
 
@@ -63,22 +44,20 @@ class WeatherController(object):
 
         #temp and formatted temp
         degree_sign = u'\N{DEGREE SIGN}'
-        self.current_temp_int = int(self.weather_obj['currently']['temperature'])
+        self.current_temp_int = int(self.weather_obj['current']['temp'])
         self.current_temp_formatted = "%s%s" % (str(self.current_temp_int), degree_sign)
 
         #summary and forecast
-        self.summary_text = self.weather_obj['currently']['summary']
-        self.forecast_text = (self.weather_obj["daily"]["data"][0]["summary"] +
-                              "\n" + self.weather_obj["daily"]["summary"])
+        self.summary_text = (self.weather_obj['current']['weather'][0]["main"] + 
+                            " - " + self.weather_obj['current']['weather'][0]["description"])
+
+        self.forecast_text = (self.weather_obj["daily"][0]["weather"][0]["main"] +
+                              "\n" + self.weather_obj["daily"][0]["weather"][0]["description"])
 
         #weather icon
-        icon_id = self.weather_obj['currently']['icon']
-
-        if icon_id in ICON_LOOKUP:
-            self.weather_icon = ICON_LOOKUP[icon_id]
-
-        self.time_of_day = icon_id
-
+        icon_id = self.weather_obj['current']["weather"][0]['icon']
+        self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id + "@4x.png")
+        
     @staticmethod
     def convert_kelvin_to_fahrenheit(kelvin_temp):
         """

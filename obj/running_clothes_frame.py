@@ -155,26 +155,26 @@ class RunningClothes(QFrame):
 
     def show_correct_clothing(self, intensity_frame, intensity, runner, weather_object):
         """displays the correct clothing for the current weather """
-        weather_time = datetime.datetime.fromtimestamp(weather_object["currently"]["time"])
+        weather_time = datetime.datetime.fromtimestamp(weather_object["current"]["dt"])
         weather_time = weather_time.replace(tzinfo=timezone.utc)
 
-        sunrise_sunset = Sun(lat=weather_object["latitude"],
-                             long=weather_object["longitude"])
+        sunrise_sunset = Sun(lat=weather_object["lat"],
+                             long=weather_object["lon"])
         time_of_day = sunrise_sunset.time_of_day(weather_time)
 
         temp_adjuster = TemperatureAdjustmentController(time_of_day,
-                                                        weather_object["currently"]["icon"],
-                                                        weather_object["currently"]["windSpeed"],
+                                                        weather_object["current"]["weather"][0]["main"],
+                                                        weather_object["current"]["wind_speed"],
                                                         runner["gender"],
                                                         runner["feel"],
                                                         intensity["type"],
-                                                        weather_object["currently"]["temperature"],
+                                                        weather_object["current"]["temp"],
                                                         self.temp_adjust_config_filename)
 
         clothes = self.clothing_controller.calculate_items(temp_adjuster.adjusted_temperature,
                                                 runner["gender"],
                                                 intensity["type"],
-                                                weather_object["currently"]["icon"],
+                                                weather_object["current"]["weather"][0]["main"],
                                                 time_of_day)
         for body_part in clothes:
             # once we have the calculated clothing for a runner for an intensity

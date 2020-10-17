@@ -38,6 +38,7 @@ def get_weather(lat, lon):
                                          weather_lang,
                                          weather_unit,
                                          weather_exclude_list)
+
     json_results = ""
 
     try:
@@ -87,7 +88,6 @@ def create_empty_results():
 
 def open_config_file(config_filename):
     """ Opens the passed in JSON config file read only and returns it as a python dictionary"""
-
     try:
         with open(config_filename, 'r') as config_file:
             config_data = json.load(config_file)
@@ -99,18 +99,23 @@ def open_config_file(config_filename):
 
 def get_indoor_status():
     config_data = open_config_file(API_CONFIG_FILE_NAME)
-    response = requests.get(config_data["indoor_req_url"] + "1")
     status = "unknown"
 
-    if response.status_code == 200:
-        data = response.json()
-        if data["is_set"] == 1:
-            status = "inuse"
-        else:
-            status = "open"
+    try:
+        response = requests.get(config_data["indoor_req_url"] + "1")
 
-        last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
-        if datetime.now() >= last_set + timedelta(minutes = 5):
-            status += "-old"
+        if response.status_code == 200:
+            data = response.json()
+            if data["is_set"] == 1:
+                status = "inuse"
+            else:
+                status = "open"
 
-    return status
+            last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
+            if datetime.now() >= last_set + timedelta(minutes = 5):
+                status += "-old"
+    except Exception as err:
+        error_text = f"Error Could not get indoor status:{err}"
+        LOGGER.critical(error_text)
+    finally:
+        return status
