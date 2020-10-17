@@ -102,15 +102,11 @@ def get_indoor_status():
     status = "unknown"
 
     try:
-        response = requests.get(config_data["indoor_req_url"] + "1")
+        response = requests.get(config_data["indoor_req_url"])
 
         if response.status_code == 200:
             data = response.json()
-            if data["is_set"] == 1:
-                status = "inuse"
-            else:
-                status = "open"
-
+            status = data["data"]
             last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
             if datetime.now() >= last_set + timedelta(minutes = 5):
                 status += "-old"
