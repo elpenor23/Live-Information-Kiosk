@@ -69,20 +69,33 @@ def get_weather(lat, lon):
 def create_empty_results():
     """ creates empty json string so as not to break things """
     results = {}
-    results["latitude"] = 0
-    results["longitude"] = 0
+    results["lat"] = 0
+    results["lon"] = 0
     results["location"] = "Error City, MI"
-    results["currently"] = {}
-    results['currently']['temperature'] = 69
-    results['currently']['summary'] = "Error"
-    results['currently']['icon'] = "fog"
-    results["currently"]["windSpeed"] = 100
-    results["currently"]["time"] = time()
-    results["daily"] = {}
-    results["daily"]["data"] = []
-    results["daily"]["data"].append({})
-    results["daily"]["data"][0]["summary"] = "No forecast"
-    results["daily"]["summary"] = "Houston we have a problem"
+    results["current"] = {}
+    results['current']['temp'] = 69
+    results['current']['dew_point'] = 69
+    results['current']["weather"] = [{}]
+    results['current']["weather"][0]['main'] = "Tornado"
+    results['current']["weather"][0]['description'] = "Houston we have a problem!"
+    results['current']["weather"][0]['icon'] = "50d"
+    results["current"]["wind_speed"] = 100
+    results["current"]["dt"] = time()
+    results["daily"] = [{}, {}]
+
+    results["daily"][0]["temp"] = {}
+    results["daily"][0]["temp"]["min"] = -100
+    results["daily"][0]["temp"]["max"] = 100
+    results["daily"][0]["weather"] = [{}]
+    results["daily"][0]["weather"][0]["main"] = "Tornado"
+    results["daily"][0]["weather"][0]["description"] = "Houston we have a problem!"
+
+    results["daily"][1]["temp"] = {}
+    results["daily"][1]["temp"]["min"] = -100
+    results["daily"][1]["temp"]["max"] = 100
+    results["daily"][1]["weather"] = [{}]
+    results["daily"][1]["weather"][0]["main"] = "Tornado"
+    results["daily"][1]["weather"][0]["description"] = "Houston We have a problem!"
 
     return results
 
