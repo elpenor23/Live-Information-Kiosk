@@ -35,7 +35,8 @@ class Indoor(QFrame):
 
         self.setLayout(frame_layout)
         self.setup_icons()
-        self.manage_icons("XX")
+        self.update()
+
     def update(self):
         """ Updates the status of the indoor """
         styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN

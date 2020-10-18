@@ -33,7 +33,7 @@ class AppUI(QWidget):
         window_layout = QGridLayout()
         window_layout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.weather_controller = WeatherController(LOCATION_CONFIG_FILENAME)
+        self.weather_controller = WeatherController(LOCATION_CONFIG_FILENAME, TEMP_ADJUSTMENT_CONFIG_FILENAME)
         self.weather_controller.parse_weather()
 
         self.weather_frame = Weather(self.weather_controller)

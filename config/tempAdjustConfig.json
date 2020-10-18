@@ -33,5 +33,14 @@
         "wind_max": 9.9,
         "heavy_min": 10,
         "heavy_max": 1000
+    },
+    "comfort_data":{
+        "cold_min_temp": 12,
+        "comfortable_max_dew_point": 55,
+        "perfect_temp_min": 45,
+        "perfect_temp_max": 65,
+        "comfortable_max_temp": 85,
+        "sticky_max_dew_point": 65,
+        "oppressive_max_dew_point": 200
     }
 }
