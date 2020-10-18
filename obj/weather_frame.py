@@ -39,7 +39,7 @@ class Weather(QFrame):
         frame_layout.addWidget(self.icon_label, 0, 0, 5, 1)
 
         frame_layout.addWidget(self.currently_label, 0, 1)
-        frame_layout.addWidget(self.comfort_icon_label, 0, 2)
+        frame_layout.addWidget(self.comfort_icon_label, 0, 2, QtCore.Qt.AlignLeft)
         frame_layout.addWidget(self.location_label, 1, 1)
         frame_layout.addWidget(self.temperature_label, 2, 1)
         frame_layout.addWidget(self.forecast_label, 3, 1)
