@@ -15,12 +15,32 @@
  * you can remove this if you do not have a 
  * Heltec device with a display
 */
-void print_to_display(String first_line, String second_line = "", String third_line = "", String fourth_line = ""){
+void print_to_display(String first_line, String second_line = "", String third_line = "", String fourth_line = "", String fifth_line = "", String sixth_line = ""){
+
+  Serial.println(first_line);
+  if (second_line != ""){
+    Serial.println(second_line);
+  }
+  if (third_line != ""){
+    Serial.println(third_line);
+  }
+  if (fourth_line != ""){
+    Serial.println(fourth_line);
+  }
+  if (fifth_line != ""){
+    Serial.println(fifth_line);
+  }
+  if (sixth_line != ""){
+    Serial.println(sixth_line);
+  }
+  
   Heltec.display->clear();
   Heltec.display->drawString(0, 0, first_line);
   Heltec.display->drawString(0, 10, second_line);
   Heltec.display->drawString(0, 20, third_line);
   Heltec.display->drawString(0, 30, fourth_line);
+  Heltec.display->drawString(0, 40, fifth_line);
+  Heltec.display->drawString(0, 50, sixth_line);
   Heltec.display->display();
 };
 
@@ -57,7 +77,7 @@ void onReceive()
 
   //just to avoid overflow
   //this number is just for debugging
-  if (packetNumber > 500){
+  if (packetNumber > 1000){
     packetNumber = 0;
   }
   
@@ -71,8 +91,8 @@ void onReceive()
     packetData += String((char)LoRa.read());
   }
 
-  display_lora_results(packetNumber, packetData, LoRa.packetRssi());
-  save_data(packetData, LoRa.packetRssi());
+  String save_results = save_data(packetData, LoRa.packetRssi());
+  display_results(packetNumber, packetData, LoRa.packetRssi(), save_results);
 };
 
 //---------------------- END LoRa -------------------------//
@@ -87,33 +107,50 @@ const String api_endpoint = "http://10.0.0.69/api/";
 */
 void setup_wifi(){
   WiFi.begin(ssid, password);
-  String connectStatus = "Connecting";
+  String connectStatus = "Connecting to WiFi.";
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
       connectStatus += ".";
       print_to_display("Trying: " + String(ssid), connectStatus);
   }
 
-  print_to_display("WiFi connected", "IP address: " + String(WiFi.localIP()));
+  IPAddress ip = WiFi.localIP();
+  
+  print_to_display("WiFi connected", "IP address: " + FormatIPAddress(ip));
 
 };
 
 /*
+ * Formats IP Address for humans
+*/
+String FormatIPAddress(const IPAddress& ipAddress)
+{
+  return String(ipAddress[0]) + String(".") +\
+  String(ipAddress[1]) + String(".") +\
+  String(ipAddress[2]) + String(".") +\
+  String(ipAddress[3])  ;
+}
+
+/*
  * Send Data to API
 */
-void save_data(String packetData, int packetRSSI){
+String save_data(String packetData, int packetRSSI){
+  if (WiFi.status() != WL_CONNECTED){
+    setup_wifi();
+  }
+  
   HTTPClient http;
 
   http.begin(api_endpoint + packetData); 
   
   http.addHeader("Content-Type", "text/plain");
 
-  Serial.println(api_endpoint + packetData);
   int responce = http.POST("");
-  Serial.println("Responce: " + String(responce));
 
   // Free resources
   http.end();
+
+  return api_endpoint + packetData + "|" + String(responce);
 }
 
 //---------------------- END WiFi -------------------------//
@@ -138,7 +175,7 @@ void loop() {
  * This is where we display the results to the screen
  * mostly for debugging purposes.
 */
-void display_lora_results(int packetNumber, String packetData, int packetRSSI){
+void display_results(int packetNumber, String packetData, int packetRSSI, String save_data){
   String WiFiDevices = "No WiFi Found.";
   String BlueToothDevices = "No BLE Found.";
   
@@ -149,6 +186,11 @@ void display_lora_results(int packetNumber, String packetData, int packetRSSI){
   if (packetData.indexOf("B") > -1) {
     BlueToothDevices = "Bluetooth Devices Found!";
   }
-  print_to_display("Received packet (" + String(packetNumber) + "): ", WiFiDevices, BlueToothDevices, "RSSI: " + String(packetRSSI));
+
+  int indexOfPipe = save_data.indexOf("|");
+  String api_call = save_data.substring(0, indexOfPipe);
+  String response_data = "Response:" + save_data.substring(indexOfPipe+1);
+  
+  print_to_display("Received packet (" + String(packetNumber) + "): ", WiFiDevices, BlueToothDevices, "RSSI: " + String(packetRSSI), api_call, response_data);
 }
 //---------------------- END Helper Functions -------------------------//
