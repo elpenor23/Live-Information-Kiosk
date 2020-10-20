@@ -98,9 +98,9 @@ void onReceive()
 //---------------------- END LoRa -------------------------//
 
 //---------------------- START WiFi -------------------------//
-const char* ssid     = "Bradlowski";
-const char* password = "Br@d-Br@dl0wsk1";
-const String api_endpoint = "http://10.0.0.69/api/";
+const char* ssid     = "<SSID>";
+const char* password = "<PASSWORD>";
+const String api_endpoint = "http://api.end.point/api/";
 
 /*
  * Sets up and connects to the wifi
