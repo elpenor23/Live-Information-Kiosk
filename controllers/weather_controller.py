@@ -77,17 +77,17 @@ class WeatherController(object):
     def get_comfort_emoji(self, comfort_data, current_temp, current_dew_point):
         icon = ""
         if current_temp < comfort_data["cold_min_temp"]:
-            icon = "freezing"
+            icon = "cold"
         elif (comfort_data["perfect_temp_min"] <= current_temp <= comfort_data["perfect_temp_max"]) and current_dew_point <= comfort_data["comfortable_max_dew_point"]:
-            icon = "perfect"
+            icon = "smiling-face-with-heart"
         elif current_temp > comfort_data["comfortable_max_temp"]:
-            icon = "gross"
+            icon = "hot"
         elif current_dew_point < comfort_data["comfortable_max_dew_point"]:
-            icon = "decent"
+            icon = "happy"
         elif current_dew_point < comfort_data["sticky_max_dew_point"]:
-            icon = "sticky"
+            icon = "dew-point"
         else:
-            icon = "gross"
+            icon = "hot"
         
         return  os.path.join(DIRNAME, "../assets/" + icon + ".png")
 
