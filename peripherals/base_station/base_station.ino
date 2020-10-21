@@ -98,9 +98,9 @@ void onReceive()
 //---------------------- END LoRa -------------------------//
 
 //---------------------- START WiFi -------------------------//
-const char* ssid     = "<SSID>";
-const char* password = "<PASSWORD>";
-const String api_endpoint = "http://api.end.point/api/";
+const char* ssid     = "Bradlowski";
+const char* password = "Br@d-Br@dl0wsk1";
+const String api_endpoint = "http://10.0.0.69/api/";
 
 /*
  * Sets up and connects to the wifi
@@ -135,22 +135,24 @@ String FormatIPAddress(const IPAddress& ipAddress)
  * Send Data to API
 */
 String save_data(String packetData, int packetRSSI){
+  //make sure we have a wifi connection  
   if (WiFi.status() != WL_CONNECTED){
     setup_wifi();
   }
   
   HTTPClient http;
 
-  http.begin(api_endpoint + packetData); 
+  http.begin(api_endpoint); 
   
-  http.addHeader("Content-Type", "text/plain");
+  http.addHeader("Content-Type", "application/json");
+  String post_data = "{\"data\":\"" + packetData + "\"}";
 
-  int responce = http.POST("");
+  int responce = http.POST(post_data);
 
   // Free resources
   http.end();
 
-  return api_endpoint + packetData + "|" + String(responce);
+  return api_endpoint + post_data + "|" + String(responce);
 }
 
 //---------------------- END WiFi -------------------------//

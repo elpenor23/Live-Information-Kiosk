@@ -1,10 +1,12 @@
 from flask import Flask
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
 api = Api = Api(app)
+
+parser = reqparse.RequestParser()
 
 DATE_FORMAT = "%m/%d/%Y, %H:%M:%S"
 MINUTES_TO_ADD = 0
@@ -25,8 +27,12 @@ def setup_db():
   db.session.add(new_latch)
   db.session.commit()
 
-class LatchSet(Resource):
-  def post(self, data):
+class LatchData(Resource):
+  def post(self):
+    parser.add_argument("data", type=str)
+    args = parser.parse_args()
+    data = args["data"]
+
     latches = Latch.query.all()
     record = latches[0]
     current_time = datetime.now()
@@ -46,15 +52,13 @@ class LatchSet(Resource):
 
     return {"message": "Success!"}
 
-class LatchGet(Resource):
   def get(self):
     latches = Latch.query.all()
     latch = latches[0]
     return {"data": latch.data, "last_set": latch.last_set.strftime(DATE_FORMAT)}
 
 
-api.add_resource(LatchSet, "/<string:data>")
-api.add_resource(LatchGet, "/GET")
+api.add_resource(LatchData, "/")
 setup_db()
 
 if __name__ == "__main__":
