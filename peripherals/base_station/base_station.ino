@@ -17,21 +17,21 @@
 */
 void print_to_display(String first_line, String second_line = "", String third_line = "", String fourth_line = "", String fifth_line = "", String sixth_line = ""){
 
-  Serial.println(first_line);
+  debug_print(first_line);
   if (second_line != ""){
-    Serial.println(second_line);
+    debug_print(second_line);
   }
   if (third_line != ""){
-    Serial.println(third_line);
+    debug_print(third_line);
   }
   if (fourth_line != ""){
-    Serial.println(fourth_line);
+    debug_print(fourth_line);
   }
   if (fifth_line != ""){
-    Serial.println(fifth_line);
+    debug_print(fifth_line);
   }
   if (sixth_line != ""){
-    Serial.println(sixth_line);
+    debug_print(sixth_line);
   }
   
   Heltec.display->clear();
@@ -73,6 +73,7 @@ int packetNumber = 0;
 */
 void onReceive()
 {
+  debug_print("Received Packet!");
   packetNumber++;
 
   //just to avoid overflow
@@ -88,19 +89,26 @@ void onReceive()
   // read packet
   while (LoRa.available())
   {
-    packetData += String((char)LoRa.read());
+    //make sure we are getting ascii chars
+    //or bad things happen
+    char c = (char)LoRa.read();
+    if (isAscii(c)){
+      packetData += String(c);
+    }
   }
 
-  String save_results = save_data(packetData, LoRa.packetRssi());
+  debug_print("Saving Packet: " + packetData);
+  String save_results = save_data(packetData);
+  debug_print("Done Saving!");
   display_results(packetNumber, packetData, LoRa.packetRssi(), save_results);
 };
 
 //---------------------- END LoRa -------------------------//
 
 //---------------------- START WiFi -------------------------//
-const char* ssid     = "Bradlowski";
-const char* password = "Br@d-Br@dl0wsk1";
-const String api_endpoint = "http://10.0.0.69/api/";
+const char* ssid     = "<SSID>";
+const char* password = "<PASSWORD>";
+const String api_endpoint = "http://your.api.end.point/api/";
 
 /*
  * Sets up and connects to the wifi
@@ -134,7 +142,7 @@ String FormatIPAddress(const IPAddress& ipAddress)
 /*
  * Send Data to API
 */
-String save_data(String packetData, int packetRSSI){
+String save_data(String packetData){
   //make sure we have a wifi connection  
   if (WiFi.status() != WL_CONNECTED){
     setup_wifi();
@@ -147,12 +155,14 @@ String save_data(String packetData, int packetRSSI){
   http.addHeader("Content-Type", "application/json");
   String post_data = "{\"data\":\"" + packetData + "\"}";
 
+  debug_print("Posting!");
   int responce = http.POST(post_data);
-
+  debug_print("Finished Post: " + String(responce));
+  
   // Free resources
   http.end();
 
-  return api_endpoint + post_data + "|" + String(responce);
+  return post_data + "|" + String(responce);
 }
 
 //---------------------- END WiFi -------------------------//
@@ -194,5 +204,16 @@ void display_results(int packetNumber, String packetData, int packetRSSI, String
   String response_data = "Response:" + save_data.substring(indexOfPipe+1);
   
   print_to_display("Received packet (" + String(packetNumber) + "): ", WiFiDevices, BlueToothDevices, "RSSI: " + String(packetRSSI), api_call, response_data);
+}
+
+/*
+ * wrapper for serial.print to make stopping debugging easier
+*/
+void debug_print(String stuff){
+  bool debug = false;
+
+  if (debug){
+    Serial.println(stuff);
+  }
 }
 //---------------------- END Helper Functions -------------------------//
