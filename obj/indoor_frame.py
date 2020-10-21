@@ -143,3 +143,8 @@ class Indoor(QFrame):
             self.warning_lights_icon_label.hide()
             self.lights_on_icon_label.hide()
             self.lights_off_icon_label.show()
+
+        #Temp: Will remove when we can sense the lights
+        self.warning_lights_icon_label.hide()
+        self.lights_on_icon_label.hide()
+        self.lights_off_icon_label.hide()

@@ -72,22 +72,25 @@ class WeatherController(object):
         self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id + "@4x.png")
 
         #humidity/dewpoint icon
-        self.comfort_icon = self.get_comfort_emoji(self.temp_adjust_config["comfort_data"], self.current_temp_int, self.current_dew_point_int)
+        self.comfort_icon = self.get_comfort_emoji(self.temp_adjust_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, self.weather_obj['current']['weather'][0]["main"])
         
-    def get_comfort_emoji(self, comfort_data, current_temp, current_dew_point):
+    def get_comfort_emoji(self, comfort_data, current_temp, current_dew_point, weather_main):
         icon = ""
-        if current_temp < comfort_data["cold_min_temp"]:
-            icon = "cold"
-        elif (comfort_data["perfect_temp_min"] <= current_temp <= comfort_data["perfect_temp_max"]) and current_dew_point <= comfort_data["comfortable_max_dew_point"]:
-            icon = "smiling-face-with-heart"
-        elif current_temp > comfort_data["comfortable_max_temp"]:
-            icon = "hot"
-        elif current_dew_point < comfort_data["comfortable_max_dew_point"]:
-            icon = "happy"
-        elif current_dew_point < comfort_data["sticky_max_dew_point"]:
-            icon = "dew-point"
+        if weather_main == "Clear" or weather_main == "Clouds":
+            if current_temp < comfort_data["cold_min_temp"]:
+                icon = "cold"
+            elif (comfort_data["perfect_temp_min"] <= current_temp <= comfort_data["perfect_temp_max"]) and current_dew_point <= comfort_data["comfortable_max_dew_point"]:
+                icon = "smiling-face-with-heart"
+            elif current_temp > comfort_data["comfortable_max_temp"]:
+                icon = "hot"
+            elif current_dew_point < comfort_data["comfortable_max_dew_point"]:
+                icon = "happy"
+            elif current_dew_point < comfort_data["sticky_max_dew_point"]:
+                icon = "dew-point"
+            else:
+                icon = "hot"
         else:
-            icon = "hot"
+            icon = "sad"
         
         return  os.path.join(DIRNAME, "../assets/" + icon + ".png")
 
