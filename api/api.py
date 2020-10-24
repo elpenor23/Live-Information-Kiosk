@@ -1,66 +1,22 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timedelta
+from flask_restful import Api
+from indoor_status.IndoorStatus import IndoorStatus
+from database.database import db
 
 app = Flask(__name__)
-api = Api = Api(app)
 
-parser = reqparse.RequestParser()
-
-DATE_FORMAT = "%m/%d/%Y, %H:%M:%S"
-MINUTES_TO_ADD = 0
-
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////var/www/api/db/latch.db"
+#SETUP Database
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////var/www/api/db/api.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.init_app(app)
+with app.app_context():
+    db.create_all()
 
-db = SQLAlchemy(app)
+#SETUP API
+api = Api = Api(app)
+api.add_resource(IndoorStatus, "/indoor_status")
 
-class Latch(db.Model):
-  id = db.Column(db.Integer, primary_key=True)
-  data = db.Column(db.String)
-  last_set = db.Column(db.DateTime)
-
-def setup_db():
-  db.create_all()
-  new_latch = Latch(data = "XX", last_set = datetime.now())
-  db.session.add(new_latch)
-  db.session.commit()
-
-class LatchData(Resource):
-  def post(self):
-    parser.add_argument("data", type=str)
-    args = parser.parse_args()
-    data = args["data"]
-
-    latches = Latch.query.all()
-    record = latches[0]
-    current_time = datetime.now()
-    # This is for latching not sure if we need it so commenting it out
-    # #if we are unsetting the latch we need to make sure that it has been
-    # # at least 2 minutes since the last set
-    # if set == 0:
-    #   if record.is_set == 1:
-    #     #we are trying to unset the latch
-    #     deadline_date = record.last_set + timedelta(minutes = MINUTES_TO_ADD)
-    #     if current_time < deadline_date:
-    #       return
-
-    record.data = data
-    record.last_set = current_time
-    db.session.commit()
-
-    return {"message": "Success!"}
-
-  def get(self):
-    latches = Latch.query.all()
-    latch = latches[0]
-    return {"data": latch.data, "last_set": latch.last_set.strftime(DATE_FORMAT)}
-
-
-api.add_resource(LatchData, "/")
-setup_db()
-
+#Run the things
 if __name__ == "__main__":
-  #app.run(host="10.0.0.6", port="5000", debug=True)
-  app.run()
+  app.run(host="10.0.0.6", port="5000", debug=True)
+  #app.run()
