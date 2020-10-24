@@ -54,6 +54,10 @@ class Indoor(QFrame):
         testToUse = LABLETEXT_INDOOR_UNKNOWN
 
         indoor_status = get_indoor_status()
+        if indoor_status == "None":
+            self.in_use_label.hide()
+            self.manage_icons(indoor_status)
+            return
 
         if indoor_status.find("B") > -1 or indoor_status.find("W") > -1:
             styleSheetToUse = LABLESTYLE_INDOOR_INUSE
@@ -115,6 +119,14 @@ class Indoor(QFrame):
         self.warning_lights_icon_label.setPixmap(small_image)
 
     def manage_icons(self, indoor_status):
+        if indoor_status == "None":
+            self.warning_lights_icon_label.hide()
+            self.lights_on_icon_label.hide()
+            self.lights_off_icon_label.hide()
+            self.wifi_icon_label.hide()
+            self.ble_icon_label.hide()
+            return
+
         wifi_detected = (indoor_status.find("W") > -1)
         ble_detected = (indoor_status.find("B") > -1)
         lights_on = (indoor_status.find("L") > -1)

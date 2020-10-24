@@ -113,6 +113,10 @@ def open_config_file(config_filename):
 def get_indoor_status():
     config_data = open_config_file(API_CONFIG_FILE_NAME)
     status = "unknown"
+    
+    # if we do not have an indoor we need to return None and hide all the things
+    if config_data["indoor_req_url"] == "None":
+        return "None"
 
     try:
         response = requests.get(config_data["indoor_req_url"])
