@@ -4,5 +4,5 @@
     "weather_lang": "en",
     "weather_unit": "imperial",
     "weather_exclude_list":"minutely,hourly",
-    "indoor_req_url": "http://your.internal.api.here/api/"
+    "indoor_req_url": "http://your.internal.api.here/api/ Use 'None' to disable indoor status"
 }
