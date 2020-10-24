@@ -58,8 +58,11 @@ class Indoor(QFrame):
             self.in_use_label.hide()
             self.manage_icons(indoor_status)
             return
-
-        if indoor_status.find("B") > -1 or indoor_status.find("W") > -1:
+ 
+        if indoor_status == "FAIL":
+            styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN
+            testToUse = LABLETEXT_INDOOR_UNKNOWN
+        elif indoor_status.find("B") > -1 or indoor_status.find("W") > -1:
             styleSheetToUse = LABLESTYLE_INDOOR_INUSE
             testToUse = LABLETEXT_INDOOR_INUSE
         else:
