@@ -9,6 +9,10 @@ from requests.exceptions import HTTPError
 
 DIRNAME = os.path.dirname(__file__)
 API_CONFIG_FILE_NAME = os.path.join(DIRNAME, "../config/apiConfig.json")
+LOCATION_CONFIG_FILENAME = os.path.join(DIRNAME, "../config/locationConfig.json")
+PEOPLE_CONFIG_FILENAME = os.path.join(DIRNAME, "../config/peopleConfig.json")
+TEMP_ADJUSTMENT_CONFIG_FILENAME = os.path.join(DIRNAME, "../config/tempAdjustConfig.json")
+
 LOGGER = logging.getLogger('kiosk_log')
 
 def get_weather(lat, lon):
@@ -109,26 +113,3 @@ def open_config_file(config_filename):
         LOGGER.Error(error_text)
     else:
         return config_data
-
-def get_indoor_status():
-    config_data = open_config_file(API_CONFIG_FILE_NAME)
-    status = "FAIL"
-    
-    # if we do not have an indoor we need to return None and hide all the things
-    if config_data["indoor_req_url"] == "None":
-        return "None"
-
-    try:
-        response = requests.get(config_data["indoor_req_url"])
-
-        if response.status_code == 200:
-            data = response.json()
-            status = data["data"]
-            last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
-            if datetime.now() >= last_set + timedelta(minutes = 5):
-                status += "-old"
-    except Exception as err:
-        error_text = f"Error Could not get indoor status:{err}"
-        LOGGER.critical(error_text)
-    finally:
-        return status

@@ -9,12 +9,7 @@ from obj.weather_frame import Weather
 from obj.running_clothes_frame import RunningClothes
 from update_thread import UpdateThread
 from controllers.weather_controller import WeatherController
-from lib.utils import open_config_file
-
-DIRNAME = os.path.dirname(__file__)
-LOCATION_CONFIG_FILENAME = os.path.join(DIRNAME, "config/locationConfig.json")
-PEOPLE_CONFIG_FILENAME = os.path.join(DIRNAME, "config/peopleConfig.json")
-TEMP_ADJUSTMENT_CONFIG_FILENAME = os.path.join(DIRNAME, "config/tempAdjustConfig.json")
+from lib.utils import LOCATION_CONFIG_FILENAME, TEMP_ADJUSTMENT_CONFIG_FILENAME, PEOPLE_CONFIG_FILENAME
 
 class AppUI(QWidget):
     """ Sets up the up the UI """

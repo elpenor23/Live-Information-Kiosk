@@ -5,7 +5,8 @@ import os
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout
 from PyQt5.QtGui import QPixmap
-from lib.utils import get_indoor_status
+from controllers.indoor_controller import IndoorController
+from obj.enums import Indoor_Status, Light_Status
 
 
 LABLESTYLE_INDOOR_OPEN = "QLabel { color : white; font-size: 30px; border: 3px solid white; background: green;}"
@@ -20,6 +21,9 @@ class Indoor(QFrame):
     """ class that defines the date and time frame"""
     def __init__(self):
         QFrame.__init__(self)
+
+        self.indoorController = IndoorController()
+        
         self.setStyleSheet(LABLESTYLE_INDOOR_UNKNOWN)
         frame_layout = QGridLayout()
         frame_layout.setAlignment(QtCore.Qt.AlignTop)
@@ -50,31 +54,33 @@ class Indoor(QFrame):
 
     def update(self):
         """ Updates the status of the indoor """
-        styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN
-        testToUse = LABLETEXT_INDOOR_UNKNOWN
+        styleSheetToUse = ""
+        textToUse = ""
 
-        indoor_status = get_indoor_status()
-        if indoor_status == "None":
+        indoor_status = self.indoorController.Indoor_Status
+
+        if indoor_status == Indoor_Status:
             self.in_use_label.hide()
             self.manage_icons(indoor_status)
             return
- 
-        if indoor_status == "FAIL":
+        elif indoor_status == Indoor_Status.UNKNOWN:
             styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN
-            testToUse = LABLETEXT_INDOOR_UNKNOWN
-        elif indoor_status.find("B") > -1 or indoor_status.find("W") > -1:
+            textToUse = LABLETEXT_INDOOR_UNKNOWN
+        elif (indoor_status == Indoor_Status.BLUETOOTH or
+                indoor_status == Indoor_Status.WIFI or 
+                indoor_status == Indoor_Status.WIFIANDBLUETOOTH):
             styleSheetToUse = LABLESTYLE_INDOOR_INUSE
-            testToUse = LABLETEXT_INDOOR_INUSE
-        else:
-            testToUse = LABLETEXT_INDOOR_OPEN
+            textToUse = LABLETEXT_INDOOR_INUSE
+        elif indoor_status == Indoor_Status.FREE:
+            textToUse = LABLETEXT_INDOOR_OPEN
             styleSheetToUse = LABLESTYLE_INDOOR_OPEN
         
-        if indoor_status.find("old") > -1:
-            testToUse += "**"
+        if self.indoorController.dataHasExpired:
+            textToUse += "**"
 
-        self.manage_icons(indoor_status)
+        self.manage_icons(indoor_status, self.indoorController.Light_Status)
         self.setStyleSheet(styleSheetToUse)
-        self.in_use_label.setText(testToUse)
+        self.in_use_label.setText(textToUse)
 
     def setup_icons(self):
         DIRNAME = os.path.dirname(__file__)
@@ -121,8 +127,8 @@ class Indoor(QFrame):
                                 QtCore.Qt.FastTransformation)
         self.warning_lights_icon_label.setPixmap(small_image)
 
-    def manage_icons(self, indoor_status):
-        if indoor_status == "None":
+    def manage_icons(self, indoor_status, light_status):
+        if indoor_status == Indoor_Status.NONE:
             self.warning_lights_icon_label.hide()
             self.lights_on_icon_label.hide()
             self.lights_off_icon_label.hide()
@@ -130,9 +136,9 @@ class Indoor(QFrame):
             self.ble_icon_label.hide()
             return
 
-        wifi_detected = (indoor_status.find("W") > -1)
-        ble_detected = (indoor_status.find("B") > -1)
-        lights_on = (indoor_status.find("L") > -1)
+        wifi_detected = indoor_status == Indoor_Status.WIFI or indoor_status == Indoor_Status.WIFIANDBLUETOOTH
+        ble_detected = indoor_status == Indoor_Status.BLUETOOTH or indoor_status == Indoor_Status.WIFIANDBLUETOOTH
+        lights_on = light_status == Light_Status.ON
 
         # display wifi and bluetooth icons when detected
         if wifi_detected:
