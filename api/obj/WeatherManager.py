@@ -103,9 +103,9 @@ class WeatherManager():
             error_text = f'Unknown error occurred: {err}'
 
         if json_results == "" or json_results is None:
-            json_results = WeatherManager.create_empty_results()
+            json_results = WeatherManager.process_weather_results(WeatherManager.create_empty_results())
 
-        return WeatherManager.process_weather_results(json_results)
+        return json_results
 
     def create_empty_results():
         """ creates empty json string so as not to break things """

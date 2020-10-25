@@ -46,7 +46,6 @@ class WeatherController(object):
 
         if self.api_config["use_local_api"]:
             #get weather data from local api
-            
             formattedWeather = WeatherManager.get_weather_from_local_api(self.api_config["local_api_base"],
                                                             self.api_config["local_weather_endpoint"],
                                                             self.api_config["weather_req_url"], 
