@@ -56,7 +56,7 @@ class Indoor(QFrame):
         """ Updates the status of the indoor """
         styleSheetToUse = ""
         textToUse = ""
-
+        self.indoorController.update_statuses()
         indoor_status = self.indoorController.Indoor_Status
 
         if indoor_status == Indoor_Status:

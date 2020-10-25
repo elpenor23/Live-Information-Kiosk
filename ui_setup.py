@@ -9,7 +9,7 @@ from obj.weather_frame import Weather
 from obj.running_clothes_frame import RunningClothes
 from update_thread import UpdateThread
 from controllers.weather_controller import WeatherController
-from lib.utils import LOCATION_CONFIG_FILENAME, TEMP_ADJUSTMENT_CONFIG_FILENAME, PEOPLE_CONFIG_FILENAME
+from lib.utils import TEMP_ADJUSTMENT_CONFIG_FILENAME, PEOPLE_CONFIG_FILENAME
 
 class AppUI(QWidget):
     """ Sets up the up the UI """
@@ -28,7 +28,7 @@ class AppUI(QWidget):
         window_layout = QGridLayout()
         window_layout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.weather_controller = WeatherController(LOCATION_CONFIG_FILENAME, TEMP_ADJUSTMENT_CONFIG_FILENAME)
+        self.weather_controller = WeatherController()
         self.weather_controller.parse_weather()
 
         self.weather_frame = Weather(self.weather_controller)

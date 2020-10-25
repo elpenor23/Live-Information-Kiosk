@@ -5,13 +5,16 @@ and makes it available to the weather frame
 """
 import os
 import logging
-from lib.utils import get_weather, open_config_file
+import requests
+from lib.utils import open_config_file
+from lib.utils import TEMP_ADJUSTMENT_CONFIG_FILENAME, LOCATION_CONFIG_FILENAME, API_CONFIG_FILE_NAME
+from api.obj.WeatherManager import WeatherManager
 
 DIRNAME = os.path.dirname(__file__)
 
 class WeatherController(object):
     """ Parses the weather data for the frame """
-    def __init__(self, weather_config, temp_adust_confg):
+    def __init__(self):
         """ initializes all of the weather data """
         #data for clothing calculations
         self.logger = logging.getLogger('kiosk_log')
@@ -29,50 +32,61 @@ class WeatherController(object):
         self.location = ""
 
         #open config files
-        self.weather_config = open_config_file(weather_config)
-        self.temp_adjust_config = open_config_file(temp_adust_confg)
+        self.weather_config = open_config_file(LOCATION_CONFIG_FILENAME)
+        self.temp_adjust_config = open_config_file(TEMP_ADJUSTMENT_CONFIG_FILENAME)
+        self.api_config = open_config_file(API_CONFIG_FILE_NAME)
         self.weather_obj = None
         return
 
     def parse_weather(self):
         """ Parses the weather data """
         self.logger.debug("Parsing weather")
-        latitude = self.weather_config["latitude"]
-        longitude = self.weather_config["longitude"]
-        location = self.weather_config["location"]
+        self.location = self.weather_config["location"]
+        formattedWeather = {}
 
-        self.location = location
+        if self.api_config["use_local_api"]:
+            #get weather data from local api
+            
+            formattedWeather = WeatherManager.get_weather_from_local_api(self.api_config["local_api_base"],
+                                                            self.api_config["local_weather_endpoint"],
+                                                            self.api_config["weather_req_url"], 
+                                                            self.api_config["weather_api_token"], 
+                                                            self.weather_config["latitude"], 
+                                                            self.weather_config["longitude"], 
+                                                            self.api_config["weather_lang"], 
+                                                            self.api_config["weather_unit"], 
+                                                            self.api_config["weather_exclude_list"])
+        else:
+            #get data directly from the weather api
+            raw_weather = WeatherManager.get_weather_from_api(self.api_config["weather_req_url"], 
+                                                                    self.api_config["weather_api_token"], 
+                                                                    self.weather_config["latitude"], 
+                                                                    self.weather_config["longitude"], 
+                                                                    self.api_config["weather_lang"], 
+                                                                    self.api_config["weather_unit"], 
+                                                                    self.api_config["weather_exclude_list"])
 
-        self.weather_obj = get_weather(latitude, longitude)
+            formattedWeather = WeatherManager.process_weather_results(raw_weather)
+
+        self.weather_obj = formattedWeather
 
         #temp and formatted temp
-        degree_sign = u'\N{DEGREE SIGN}'
-        self.current_temp_int = int(self.weather_obj['current']['temp'])
-        self.current_dew_point_int = int(self.weather_obj['current']['dew_point'])
+        self.current_temp_int = int(formattedWeather['current_temp_int'])
+        self.current_dew_point_int = int(formattedWeather['current_dew_point_int'])
 
-        #format temps for display
-        current_temp = "%s%s " % (str(self.current_temp_int), degree_sign)
-        min_temp = "%s%s" % (str(int(self.weather_obj["daily"][0]["temp"]["min"])), degree_sign)
-        max_temp = "%s%s" % (str(int(self.weather_obj["daily"][0]["temp"]["max"])), degree_sign)
-
-        self.current_temp_formatted = current_temp
+        self.current_temp_formatted = formattedWeather['current_temp_formatted']
 
         #summary and forecast
-        self.summary_text = ("Today: " + self.weather_obj['current']['weather'][0]["description"] + "\n" + 
-                            "Low: " + min_temp + " / High: " + max_temp)
+        self.summary_text = formattedWeather['summary_text']
 
-        min_temp = "%s%s" % (str(int(self.weather_obj["daily"][1]["temp"]["min"])), degree_sign)
-        max_temp = "%s%s" % (str(int(self.weather_obj["daily"][1]["temp"]["max"])), degree_sign)
-
-        self.forecast_text = ("Tomorrow: " + self.weather_obj["daily"][1]["weather"][0]["description"] + 
-                              "\nLow: " + min_temp + " / High: " + max_temp)
+        self.forecast_text = formattedWeather['forecast_text']
 
         #weather icon
-        icon_id = self.weather_obj['current']["weather"][0]['icon']
+        icon_id = formattedWeather['icon_id']
         self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id + "@4x.png")
 
         #humidity/dewpoint icon
-        self.comfort_icon = self.get_comfort_emoji(self.temp_adjust_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, self.weather_obj['current']['weather'][0]["main"])
+        self.comfort_icon = self.get_comfort_emoji(self.temp_adjust_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, formattedWeather['current_main'])
         
     def get_comfort_emoji(self, comfort_data, current_temp, current_dew_point, weather_main):
         icon = ""

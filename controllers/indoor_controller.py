@@ -14,15 +14,15 @@ class IndoorController:
         self.dataHasExpired = False
         self.Indoor_Status = Indoor_Status.UNKNOWN
         self.Light_Status = Light_Status.UNKNOWN
-        self.initialize_statuses()
+        self.update_statuses()
 
-    def initialize_statuses(self):       
+    def update_statuses(self):       
         # if we do not have an indoor we need to return None and hide all the things
-        if self.config_data["indoor_req_url"] == "None":
+        if self.config_data["local_indoor_status_endpoint"] == "None":
             self.Indoor_Status = Indoor_Status.NONE
 
         try:
-            response = requests.get(self.config_data["indoor_req_url"])
+            response = requests.get(self.config_data["local_api_base"] + self.config_data["local_indoor_status_endpoint"])
 
             if response.status_code == 200:
                 data = response.json()
@@ -38,7 +38,7 @@ class IndoorController:
     def process_indoor_info(self, data):
         status = Indoor_Status.FREE
  
-        if data.find("B") > -1 or data.find("W") > -1:
+        if data.find("B") > -1 and data.find("W") > -1:
             status = Indoor_Status.WIFIANDBLUETOOTH
         else:
             if data.find("B") > -1:

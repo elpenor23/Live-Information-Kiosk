@@ -6,7 +6,7 @@ from database.StatusModel import StatusModel
 DATE_FORMAT = "%m/%d/%Y, %H:%M:%S"
 MINUTES_TO_ADD = 0
 
-class IndoorStatus(Resource):
+class IndoorStatusResource(Resource):
   def __init__(self):
       self.setup_db()
 
