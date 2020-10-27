@@ -4,6 +4,7 @@ Counter top kiosk meant to show you useful imformation that you need on the regu
 ## Requirements
  - Python3
  - PyQt5 (pip3 install PyQt5)
+ - Qt5 defaults (sudo apt-get install qt5-default) *fixes ubuntu xcb bug
  - dateutils (pip3 install python-dateutil)
  - requests (pip3 install requests)
 
