@@ -13,16 +13,20 @@ MINUTES_TO_ADD = 0
 class WeatherResource(Resource):
     def __init__(self):
       self.setup_db()
+      self.useLocalWeatherOnly = True
 
     def get(self):
+        self.useLocalWeatherOnly = True
         #setup arguments
-        self.api_url = request.args.get('weather_api_url')
-        self.api_token = request.args.get('api_token')
-        self.lat = request.args.get('lat')
-        self.lon = request.args.get('lon')
-        self.exclude = request.args.get('exclude')
-        self.lang = request.args.get('lang')
-        self.unit = request.args.get('unit')
+        if 'weather_api_url' in request.args:
+            self.useLocalWeatherOnly = False
+            self.api_url = request.args.get('weather_api_url')
+            self.api_token = request.args.get('api_token')
+            self.lat = request.args.get('lat')
+            self.lon = request.args.get('lon')
+            self.exclude = request.args.get('exclude')
+            self.lang = request.args.get('lang')
+            self.unit = request.args.get('unit')
 
         #get the weather
         data = self.get_weather()
@@ -38,7 +42,7 @@ class WeatherResource(Resource):
         current_time = datetime.now()
 
         #should we use the local data or refresh it?
-        if db_weather.last_set <= (current_time - timedelta(minutes = 1)):
+        if not self.useLocalWeatherOnly and db_weather.last_set <= (current_time - timedelta(minutes = 1)):
             #get the weather from the api and save it locally
             weather = WeatherManager.get_weather_from_api(self.api_url, self.api_token, self.lat, self.lon, self.lang, self.unit, self.exclude)
             db_weather.data = json.dumps(weather)
