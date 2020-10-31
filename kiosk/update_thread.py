@@ -24,7 +24,7 @@ class UpdateThread(QtCore.QThread):
         # every 5 minutes update weather
         update_person_seconds = 30
         update_clock_seconds = 1
-        update_weather_seconds = 60 #300
+        update_weather_seconds = 300
         update_indoor_seconds = 10
 
         i = 1

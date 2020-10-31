@@ -47,6 +47,7 @@ class WeatherController(object):
 
         self.weather_obj = formattedWeather
 
+        print(formattedWeather)
         #temp and formatted temp
         self.current_temp_int = int(formattedWeather['current_temp_int'])
         self.current_dew_point_int = int(formattedWeather['current_dew_point_int'])
