@@ -1,5 +1,5 @@
 {
-    "local_api_base": "http://your.local.api.ip/api/",
+    "local_api_base": "http://10.0.0.69/api/",
     "local_indoor_status_endpoint": "indoor_status",
     "local_weather_endpoint": "weather",
     "local_clothing_endpoint": "clothing"
