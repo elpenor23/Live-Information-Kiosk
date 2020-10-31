@@ -1,34 +1,18 @@
 {
     "people":[
         {
+            "id": 1,
             "name": "Runner 1",
             "gender": "man",
             "feel": "inbetween",
             "color": "green"
         },
         {
+            "id": 2,
             "name": "Runner 2",
             "gender": "woman",
             "feel": "warm",
             "color": "red"
         }
-    ],
-    "intensities": [
-        {
-            "type": "easy", 
-            "name": "Easy"
-        },
-        {
-            "type": "long_run",
-            "name": "Long"
-         },
-         {
-            "type": "race",
-            "name": "Race"
-         },
-         {
-            "type": "hard_workout",
-            "name": "Workout"
-         }
     ]
 }

@@ -1,11 +1,6 @@
 {
-    "weather_req_url": "https://api.openweathermap.org/data/2.5/onecall?appid=%s&lat=%s&lon=%s&lang=%s&units=%s&exclude=%s",
-    "weather_api_token": "<openweathermap.org api key>",
-    "weather_lang": "en",
-    "weather_unit": "imperial",
-    "weather_exclude_list":"minutely,hourly",
-    "use_local_api": false,
-    "local_api_base": "http://local.api.address/",
+    "local_api_base": "http://local.api.ip/",
     "local_indoor_status_endpoint": "indoor_status",
-    "local_weather_endpoint": "weather"
+    "local_weather_endpoint": "weather",
+    "local_clothing_endpoint": "clothing"
 }
