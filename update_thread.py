@@ -3,7 +3,6 @@
     This is a thread so that the UI stays active and happy
 """
 import time
-import logging
 from PyQt5 import QtCore
 
 class UpdateThread(QtCore.QThread):
@@ -19,34 +18,28 @@ class UpdateThread(QtCore.QThread):
 
     def run(self):
         """ main function for the thread. tells the UI when to update """
-        self.logger = logging.getLogger('kioskLog')
-        
         # every 1 seconds update clock
         # every 10 seconds update indoor status
         # every 30 seconds switch person to view
         # every 5 minutes update weather
         update_person_seconds = 30
         update_clock_seconds = 1
-        update_weather_seconds = 300
+        update_weather_seconds = 60 #300
         update_indoor_seconds = 10
 
         i = 1
         while self.keep_going:
             if i % update_person_seconds == 0:
                 self.update_person.emit()
-                self.logger.debug("emitting to update person.")
             
             if i % update_weather_seconds == 0:
                 self.update_weather_and_clothes.emit()
-                self.logger.debug("Emmitting to update weather and clothes.")
 
             if i % update_clock_seconds == 0:
                 self.update_clock.emit()
-                self.logger.debug("Emitting to update clock.")
 
             if i % update_indoor_seconds == 0:
                 self.update_indoor.emit()
-                self.logger.debug("Emitting to update indoor.")
                 
             i += 1
             time.sleep(1)

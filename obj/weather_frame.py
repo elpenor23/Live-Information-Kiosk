@@ -9,6 +9,7 @@ from obj.indoor_frame import Indoor
 
 LABLESTYLE = "QLabel { color : white; font-size: 30px;}"
 SMALL_LABELSTYLE = "QLabel {font-size: 20px;}"
+WEATHER_ICON_SIZE = 200
 
 class Weather(QFrame):
     """ This is the frame that holds the weather and clock information """
@@ -60,7 +61,7 @@ class Weather(QFrame):
 
     def update_display(self, weather_controller):
         """ Updates the weather and all the weather data """
-        weather_icon_size = 200
+        weather_icon_size = WEATHER_ICON_SIZE
         if weather_controller.weather_icon is not None:
             image = QPixmap(weather_controller.weather_icon)
             small_image = image.scaled(weather_icon_size,

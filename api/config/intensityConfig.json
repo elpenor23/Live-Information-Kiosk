@@ -1,0 +1,20 @@
+{
+    "intensities": [
+        {
+            "type": "easy", 
+            "name": "Easy"
+        },
+        {
+            "type": "long_run",
+            "name": "Long"
+         },
+         {
+            "type": "race",
+            "name": "Race"
+         },
+         {
+            "type": "hard_workout",
+            "name": "Workout"
+         }
+    ]
+}

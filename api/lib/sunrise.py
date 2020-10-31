@@ -1,6 +1,6 @@
 """
 This module deals with calculating sunrises and sunsets
-and determining if it is day/night/duck/dawn
+and determining if it is day/night/dusk/dawn
 """
 import logging
 from math import cos, sin, acos, asin, tan
@@ -8,9 +8,6 @@ from math import degrees as deg, radians as rad
 from datetime import date, datetime, time, timedelta
 from dateutil import tz
 from time import mktime
-
-# this module is not provided here. See text.
-#from timezone import LocalTimezone
 
 class Sun():
     """

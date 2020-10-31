@@ -1,8 +1,4 @@
 {
-    "gender":{
-        "man": 0,
-        "woman": 0
-    },
     "timeofday_precipitation":{
         "clear_day": 10,
         "partially_cloudy_day": 5,

@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 """ Sets up the UI and controls UI changes """
 
-import os
-import logging
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QGridLayout, QFrame, QGroupBox, QLabel
 from obj.weather_frame import Weather
 from obj.running_clothes_frame import RunningClothes
 from update_thread import UpdateThread
 from controllers.weather_controller import WeatherController
-from lib.utils import TEMP_ADJUSTMENT_CONFIG_FILENAME, PEOPLE_CONFIG_FILENAME
+from controllers.running_clothes_controller import RunningClothesController
+from lib.utils import PEOPLE_CONFIG_FILENAME
 
 class AppUI(QWidget):
     """ Sets up the up the UI """
@@ -23,7 +22,6 @@ class AppUI(QWidget):
     # Add all the sections to the main window
     def init_ui(self):
         """ Initializes all the secions in the layout """
-        self.logger = logging.getLogger('kiosk_log')
 
         window_layout = QGridLayout()
         window_layout.setAlignment(QtCore.Qt.AlignTop)
@@ -34,9 +32,7 @@ class AppUI(QWidget):
         self.weather_frame = Weather(self.weather_controller)
         window_layout.addWidget(self.weather_frame, 0, 0)
 
-        self.running_clothes_frame = RunningClothes(PEOPLE_CONFIG_FILENAME,
-                                                    TEMP_ADJUSTMENT_CONFIG_FILENAME,
-                                                    self.weather_controller.weather_obj)
+        self.running_clothes_frame = RunningClothes()
 
         window_layout.addWidget(self.running_clothes_frame, 1, 0)
 
@@ -55,8 +51,7 @@ class AppUI(QWidget):
         self.update_thread = UpdateThread()
         self.update_thread.update_clock.connect(self.callback_update_clock)
         self.update_thread.update_indoor.connect(self.callback_update_indoor)
-        self.update_thread.update_weather_and_clothes.connect(
-            self.callback_update_weather_and_clothes)
+        self.update_thread.update_weather_and_clothes.connect(self.callback_update_weather_and_clothes)
         self.update_thread.update_person.connect(self.callback_update_person)
         self.update_thread.start()
 
@@ -101,16 +96,26 @@ class AppUI(QWidget):
         """Loops through the UI and hides the displayed clothing"""
         running_sub_frame = running_frame.findChild(QFrame)
         runner_frames = running_sub_frame.findChildren(QFrame)
+        new_running_clothes_data = RunningClothesController.get_runner_data()
+
         for runner_frame in runner_frames:
+            new_intensity_clothes_data = {}
             if runner_frame.__class__.__name__ == "QFrame":
-                runner_data = self.get_data(runner_frame)
+                frame_runner_data = self.get_hidden_data(runner_frame)
+                new_runner_data = RunningClothesController.get_updated_runner_data(new_running_clothes_data, frame_runner_data)
+
                 intensity_frames = runner_frame.findChildren(QGroupBox)
                 for intensity in intensity_frames:
-                    intensity_data = self.get_data(intensity)
-                    running_frame.hide_all_clothing(intensity)
-                    running_frame.show_correct_clothing(intensity, intensity_data, runner_data, self.weather_controller.weather_obj)
+                    intensity_frame_data = self.get_hidden_data(intensity)
 
-    def get_data(self, frame):
+                    for new_intensity_data in new_runner_data["data"]:
+                        if new_intensity_data["intensity_type"] == intensity_frame_data["type"]:
+                            new_intensity_clothes_data = new_intensity_data["clothes"]
+
+                    running_frame.hide_all_clothing(intensity)
+                    running_frame.show_correct_clothing(intensity, new_intensity_clothes_data)
+
+    def get_hidden_data(self, frame):
         """Gets data from hidden lables in frames"""
         data = {}
         for label in frame.findChildren(QLabel):
