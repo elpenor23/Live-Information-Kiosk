@@ -15,15 +15,6 @@
             "conditions": "Rain,Drizzle"
         }
     ],
-    "face": [
-        {
-            "name": "sunglasses",
-            "min_temp": -1000,
-            "max_temp": 1000,
-            "title": "Sunglasses",
-            "special": "sunny"
-        }
-    ],
     "outer_torso": [
         {
             "name": "heavy_jacket",
@@ -63,15 +54,6 @@
             "max_temp": 85,
             "title": "Short-Sleeve Shirt"
         }],
-    "undergarments":[
-        {
-            "name": "bra",
-            "min_temp": -1000,
-            "max_temp": 1000,
-            "title": "Sports Bra",
-            "gender": "woman"
-        }
-    ],
     "legs": [
         {
             "name": "capris",
@@ -93,14 +75,6 @@
             "title": "Shorts"
         }
     ],
-    "feet":[
-        {
-            "name": "shoes",
-            "min_temp": -1000,
-            "max_temp": 1000,
-            "title": "Running Shoes"
-        }
-    ],
     "hands":[
         {
             "name": "mittens",
@@ -113,15 +87,6 @@
             "min_temp": 20,
             "max_temp": 60,
             "title": "Gloves"
-        }
-    ],
-    "other":[
-        {
-            "name": "sunblock",
-            "min_temp": -1000,
-            "max_temp": 1000,
-            "title": "Sunblock",
-            "special": "sunny"
         }
     ]
 }
