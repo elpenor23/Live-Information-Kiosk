@@ -6,4 +6,4 @@ class MoonPhaseController():
 
         moon_data = get_api_data(api_config["local_moon_phase_endpoint"], {})
 
-        return moon_data["phase"]
+        return moon_data
