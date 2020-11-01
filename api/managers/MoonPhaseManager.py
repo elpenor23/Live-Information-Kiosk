@@ -11,12 +11,15 @@ dec = decimal.Decimal
 class MoonPhaseManager():
     def moon_phase(): 
         pos = position()
-        phasename = phase(pos)
+        index = phase_index(pos)
+        name = phase_name(index)
+        icon = phase_icon(index)
 
-        #roundedpos = round(float(pos), 3)
-        #print("%s (%s)" % (phasename, roundedpos))
-
-        return {"phase": phasename}
+        return {
+                "phase_index": index,
+                "phase_name": name,
+                "phase_icon": icon
+                }
 
 def position(now=None): 
     if now is None: 
@@ -28,9 +31,12 @@ def position(now=None):
 
     return lunations % dec(1)
 
-def phase(pos): 
+def phase_index(pos):
     index = (pos * dec(8)) + dec("0.5")
     index = math.floor(index)
+    return int(index) & 7
+
+def phase_icon(index): 
     return {
         0: "new-moon", 
         1: "waxing-crecent-moon", 
@@ -40,4 +46,16 @@ def phase(pos):
         5: "waning-gibbous-moon", 
         6: "last-quarter-moon", 
         7: "waning-crescent-moon"
-    }[int(index) & 7]
+    }[index]
+
+def phase_name(index):
+    return {
+        0: "New Moon", 
+        1: "Waxing Crecent Moon", 
+        2: "First Quarter Moon", 
+        3: "Waxing Gibbous Moon", 
+        4: "Full Moon", 
+        5: "Waning Gibbous Moon", 
+        6: "Last Quarter Moon", 
+        7: "Waning Crescent Moon"
+    }[index]
