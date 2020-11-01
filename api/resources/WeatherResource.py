@@ -4,9 +4,6 @@ from flask import request
 from enums.Enums import WeatherFetch
 from managers.WeatherManager import WeatherManager
 
-DATE_FORMAT = "%m/%d/%Y, %H:%M:%S"
-MINUTES_TO_ADD = 0
-
 class WeatherResource(Resource):
     def __init__(self):
       WeatherManager.setup_db()

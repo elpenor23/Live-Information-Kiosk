@@ -8,7 +8,6 @@ from PyQt5.QtGui import QPixmap
 from controllers.indoor_controller import IndoorController
 from obj.enums import Indoor_Status, Light_Status
 
-
 LABLESTYLE_INDOOR_OPEN = "QLabel { color : white; font-size: 30px; border: 3px solid white; background: green;}"
 LABLESTYLE_INDOOR_INUSE = "QLabel { color : white; font-size: 30px; border: 3px solid white; background: red;}"
 LABLESTYLE_INDOOR_UNKNOWN = "QLabel { color : black; font-size: 30px; border: 3px solid white; background: yellow;}"

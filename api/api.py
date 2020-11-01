@@ -3,6 +3,7 @@ from flask_restful import Api
 from resources.IndoorStatusResource import IndoorStatusResource
 from resources.WeatherResource import WeatherResource
 from resources.ClothingResource import ClothingResource
+from resources.MoonPhaseResource import MoonPhaseResource
 from database.database import db
 
 app = Flask(__name__)
@@ -21,6 +22,8 @@ api = Api = Api(app)
 api.add_resource(IndoorStatusResource, "/indoor_status")
 api.add_resource(WeatherResource, "/weather")
 api.add_resource(ClothingResource, "/clothing")
+api.add_resource(MoonPhaseResource, "/moon_phase")
+
 #Run the things
 if __name__ == "__main__":
   app.run(host="10.0.0.15", port="5000", debug=True)

@@ -1,14 +1,11 @@
 from lib.utils import API_CONFIG_FILE_NAME, open_config_file
 from datetime import datetime, timedelta
-import logging
-import requests
 from obj.enums import Indoor_Status, Light_Status
-from lib.utils import API_CONFIG_FILE_NAME
+from lib.utils import API_CONFIG_FILE_NAME, get_api_data
 
-LOGGER = logging.getLogger('kiosk_log')
 DATA_EXPIRES_TIME = 5
 
-class IndoorController:
+class IndoorController():
     def __init__(self):
         self.config_data = open_config_file(API_CONFIG_FILE_NAME)
         self.dataHasExpired = False
@@ -21,19 +18,13 @@ class IndoorController:
         if self.config_data["local_indoor_status_endpoint"] == "None":
             self.Indoor_Status = Indoor_Status.NONE
 
-        try:
-            response = requests.get(self.config_data["local_api_base"] + self.config_data["local_indoor_status_endpoint"])
+        data = get_api_data(self.config_data["local_indoor_status_endpoint"], {})
 
-            if response.status_code == 200:
-                data = response.json()
-                status_data = data["data"]
-                last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
-                self.process_indoor_info(status_data)
-                self.dataHasExpired = datetime.now() >= last_set + timedelta(minutes = DATA_EXPIRES_TIME)
-                
-        except Exception as err:
-            error_text = f"Error Could not get indoor status:{err}"
-            LOGGER.critical(error_text)
+        status_data = data["data"]
+        last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
+        self.process_indoor_info(status_data)
+        self.dataHasExpired = datetime.now() >= last_set + timedelta(minutes = DATA_EXPIRES_TIME)
+
 
     def process_indoor_info(self, data):
         status = Indoor_Status.FREE

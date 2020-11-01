@@ -61,14 +61,13 @@ class Weather(QFrame):
 
     def update_display(self, weather_controller):
         """ Updates the weather and all the weather data """
-        weather_icon_size = WEATHER_ICON_SIZE
         if weather_controller.weather_icon is not None:
             image = QPixmap(weather_controller.weather_icon)
-            small_image = image.scaled(weather_icon_size,
-                                       weather_icon_size,
-                                       QtCore.Qt.KeepAspectRatio,
-                                       QtCore.Qt.FastTransformation)
-            self.icon_label.setPixmap(small_image)
+            # small_image = image.scaled(WEATHER_ICON_SIZE,
+            #                            WEATHER_ICON_SIZE,
+            #                            QtCore.Qt.KeepAspectRatio,
+            #                            QtCore.Qt.FastTransformation)
+            self.icon_label.setPixmap(image)
         else:
             # remove image
             self.icon_label.setPixmap(None)
