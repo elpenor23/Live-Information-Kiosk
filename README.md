@@ -19,6 +19,7 @@ Current modules show:
     * Weather and time information
     * what to wear while running based on weather and person
     * Status of "indoor"
+    * Phase of moon
 
 Use:
 
