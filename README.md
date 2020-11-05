@@ -3,9 +3,14 @@ Counter top kiosk meant to show you useful imformation that you need on the regu
 
 ## Requirements
  - Python3
+ - dateutils (pip3 install python-dateutil)
+ ## API
+ - flask (pip3 install flask)
+ - flask_restful (pip3 install flask-restful)
+ - flask-sqlalchemy (pip3 install flask-sqlalchemy)
+ # Kiosk
  - PyQt5 (pip3 install PyQt5)
  - Qt5 defaults (sudo apt-get install qt5-default) *fixes ubuntu xcb bug
- - dateutils (pip3 install python-dateutil)
  - requests (pip3 install requests)
 
 # Modules
@@ -13,6 +18,7 @@ Current modules show:
 
     * Weather and time information
     * what to wear while running based on weather and person
+    * Status of "indoor"
 
 Use:
 
