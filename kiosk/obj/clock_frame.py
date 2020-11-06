@@ -44,14 +44,17 @@ class Clock(QFrame):
 
     def update_moon_phase(self):
         moon_data = MoonPhaseController.get_moon_phase()
-        phase_text = moon_data["phase_name"]
-        self.moon_phase.setText(phase_text)
+        if "phase_name" in moon_data:
+            phase_text = moon_data["phase_name"]
+            self.moon_phase.setText(phase_text)
 
-        DIRNAME = os.path.dirname(__file__)       
-        moon_icon = os.path.join(DIRNAME, "../assets/" + moon_data["phase_icon"] + ".png")
-        image = QPixmap(moon_icon)
-        small_image = image.scaled(MOON_ICON_SIZE,
-                                    MOON_ICON_SIZE,
-                                    QtCore.Qt.KeepAspectRatio,
-                                    QtCore.Qt.FastTransformation)
-        self.moon_icon.setPixmap(small_image)
+            DIRNAME = os.path.dirname(__file__)       
+            moon_icon = os.path.join(DIRNAME, "../assets/" + moon_data["phase_icon"] + ".png")
+            image = QPixmap(moon_icon)
+            small_image = image.scaled(MOON_ICON_SIZE,
+                                        MOON_ICON_SIZE,
+                                        QtCore.Qt.KeepAspectRatio,
+                                        QtCore.Qt.FastTransformation)
+            self.moon_icon.setPixmap(small_image)
+        else:
+            self.moon_phase.setText("Moon API Error!")

@@ -38,21 +38,22 @@ class RunningClothes(QFrame):
         runner_data = RunningClothesController.get_runner_data()
         all_items = RunningClothesController.get_all_items()
 
-        for runner in runner_data:
+        if "error" not in runner_data:
+            for runner in runner_data:
 
-            runner_frame = self.build_runner_frame(runner, all_items)
+                runner_frame = self.build_runner_frame(runner, all_items)
 
-            self.runner_widget_list.append(runner_frame)
-            runner_row += 1
+                self.runner_widget_list.append(runner_frame)
+                runner_row += 1
 
-            # we only want to show the first runner initially
-            # so every runner after the first gets set to invisible
-            if runner_row > 2:
-                runner_frame.setVisible(False)
+                # we only want to show the first runner initially
+                # so every runner after the first gets set to invisible
+                if runner_row > 2:
+                    runner_frame.setVisible(False)
 
-            frame_layout.addWidget(runner_frame, runner_row, 0)
-        
-        self.main_frame.setLayout(frame_layout)
+                frame_layout.addWidget(runner_frame, runner_row, 0)
+            
+            self.main_frame.setLayout(frame_layout)
 
     def hide_all_clothing(self, intensity_frame):
         for child in intensity_frame.findChildren(QLabel):

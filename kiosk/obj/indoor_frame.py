@@ -58,7 +58,7 @@ class Indoor(QFrame):
         self.indoorController.update_statuses()
         indoor_status = self.indoorController.Indoor_Status
 
-        if indoor_status == Indoor_Status:
+        if indoor_status == Indoor_Status.NONE:
             self.in_use_label.hide()
             self.manage_icons(indoor_status)
             return

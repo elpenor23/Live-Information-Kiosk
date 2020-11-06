@@ -1,12 +1,12 @@
 import json
 import os
+from managers.ErrorManager import ErrorManager
 
 CONFIG_DIR = "/config/"
 WEATHER_API_CONFIG_FILE = "weatherAPIConfig.json"
 CLOTHING_CONFIG_FILE = "clothingConfig.json"
 INTENSITY_CONFIG_FILE = "intensityConfig.json"
 TEMP_ADJUSTMENT_CONFIG_FILE = "tempAdjustConfig.json"
-
 
 class ConfigManager():
     def get_api_config_data():
@@ -34,6 +34,7 @@ def open_json_file(filename):
             config_data = json.load(config_file)
     except IOError as ex:
         error_text = "Could not read config file: " + filename
-        return {"error": error_text}
+        ErrorManager.log_error(error_text)
+        return {"error": "Error opening config file."}
     else:
         return config_data

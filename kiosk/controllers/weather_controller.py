@@ -47,21 +47,38 @@ class WeatherController(object):
 
         self.weather_obj = formattedWeather
 
-        #temp and formatted temp
-        self.current_temp_int = int(formattedWeather['current_temp_int'])
-        self.current_dew_point_int = int(formattedWeather['current_dew_point_int'])
-        self.current_temp_formatted = formattedWeather['current_temp_formatted']
+        if "current_temp_int" in formattedWeather:
+            #temp and formatted temp
+            self.current_temp_int = int(formattedWeather['current_temp_int'])
+            self.current_dew_point_int = int(formattedWeather['current_dew_point_int'])
+            self.current_temp_formatted = formattedWeather['current_temp_formatted']
 
-        #summary and forecast
-        self.summary_text = formattedWeather['summary_text']
-        self.forecast_text = formattedWeather['forecast_text']
+            #summary and forecast
+            self.summary_text = formattedWeather['summary_text']
+            self.forecast_text = formattedWeather['forecast_text']
 
-        #weather icon
-        icon_id = formattedWeather['icon_id']
-        self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id + "@4x.png")
+            #weather icon
+            icon_id = formattedWeather['icon_id']
+            self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id + "@4x.png")
 
-        #humidity/dewpoint icon
-        self.comfort_icon = get_comfort_emoji(self.icon_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, formattedWeather['current_main'])
+            #humidity/dewpoint icon
+            self.comfort_icon = get_comfort_emoji(self.icon_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, formattedWeather['current_main'])
+        else:
+            #temp and formatted temp
+            self.current_temp_int = 69
+            self.current_dew_point_int = 69
+            self.current_temp_formatted = "69*"
+
+            #summary and forecast
+            self.summary_text = "Houston: "
+            self.forecast_text = "We have a problem..."
+
+            #weather icon
+            icon_id = "high-priority.png"
+            self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id)
+
+            #humidity/dewpoint icon
+            self.comfort_icon = get_comfort_emoji(self.icon_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, "Clear")
         
 def get_comfort_emoji(comfort_data, current_temp, current_dew_point, weather_main):
     icon = ""

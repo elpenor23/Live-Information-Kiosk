@@ -1,6 +1,7 @@
 
 from database.database import db
 from database.StatusModel import StatusModel
+from managers.ErrorManager import ErrorManager
 from datetime import datetime
 
 
@@ -19,7 +20,8 @@ class IndoorStatusManager():
             status = statuses[0]
             return_message = {"data": status.data, "last_set": status.last_set.strftime(DATE_FORMAT)}, 200
         except Exception as err:
-            return_message = {"message:" f"Error getting status: {err}"}, 500
+            ErrorManager.log_error(err)
+            return_message = {"error": "Error getting Indoor Status from DB"}, 500
 
         return return_message
 
@@ -44,7 +46,8 @@ class IndoorStatusManager():
 
             return_message = {"message": "Success!"}, 200
         except Exception as err:
-            return_message = {"message": f"Error saving status: {err}"}, 500
+            ErrorManager.log_error(err)
+            return_message = {"error": f"Error saving status: {err}"}, 500
 
         
         return return_message

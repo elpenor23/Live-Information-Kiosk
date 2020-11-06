@@ -29,9 +29,8 @@ class WeatherResource(Resource):
         #get the weather
         data = WeatherManager.get_weather(fetchType, lat, lon)
 
-        if data["error"] != "":
-            data["type"] = "error"
-            return {"data": data}, 500
+        if "error" in data:
+            return data, 500
         
         #return the data
         return data

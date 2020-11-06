@@ -63,14 +63,11 @@ class Weather(QFrame):
         """ Updates the weather and all the weather data """
         if weather_controller.weather_icon is not None:
             image = QPixmap(weather_controller.weather_icon)
-            # small_image = image.scaled(WEATHER_ICON_SIZE,
-            #                            WEATHER_ICON_SIZE,
-            #                            QtCore.Qt.KeepAspectRatio,
-            #                            QtCore.Qt.FastTransformation)
+            small_image = image.scaled(WEATHER_ICON_SIZE,
+                                       WEATHER_ICON_SIZE,
+                                       QtCore.Qt.KeepAspectRatio,
+                                       QtCore.Qt.FastTransformation)
             self.icon_label.setPixmap(image)
-        else:
-            # remove image
-            self.icon_label.setPixmap(None)
 
         self.currently_label.setText("Current Temp: " + weather_controller.current_temp_formatted)
         self.forecast_label.setText(weather_controller.forecast_text)
@@ -86,9 +83,6 @@ class Weather(QFrame):
                                        QtCore.Qt.KeepAspectRatio,
                                        QtCore.Qt.FastTransformation)
             self.comfort_icon_label.setPixmap(small_image)
-        else:
-            # remove image
-            self.comfort_icon_label.setPixmap(None)
 
     def update_clock(self):
         """ Tells the clock to update itself """

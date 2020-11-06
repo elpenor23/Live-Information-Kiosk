@@ -6,6 +6,7 @@ import json
 from database.database import db
 from database.WeatherModel import WeatherModel
 from managers.ConfigManager import ConfigManager
+from managers.ErrorManager import ErrorManager
 from enums.Enums import WeatherFetch
 
 
@@ -22,33 +23,46 @@ class WeatherManager():
         allWeatherResults = WeatherModel.query.all()
         db_weather = allWeatherResults[0]
         current_time = datetime.now()
+        weather = {}
+        db_error = ""
 
         #should we use the local data or refresh it?
         if fetchType == WeatherFetch.FORCEREFRESH or (fetchType == WeatherFetch.NORMAL and db_weather.last_set <= (current_time - timedelta(minutes = 1))):
             #get the weather from the api and save it locally
             fromCache = False
             weather = get_weather_from_api(lat, lon)
-            db_weather.data = json.dumps(weather)
-            db_weather.last_set = current_time
-            db.session.commit()
+            try:
+                db_weather.data = json.dumps(weather)
+                db_weather.last_set = current_time
+                db.session.commit()
+            except Exception as err:
+                db_error = "Error Saving Weather to DB: " + err
         else:
             #return weather we already have
             fromCache = True
-            weather = json.loads(db_weather.data)
+            try:
+                weather = json.loads(db_weather.data)
+            except Exception as err:
+                db_error = "Error Saving Weather to DB: " + err
 
-        processed_results = process_weather_results(weather)
+        processed_results = {}
+
+        if "error" not in weather:
+            processed_results = process_weather_results(weather)
         
-        if fromCache:
-            processed_results["type"] = "cached"
+            if fromCache:
+                processed_results["type"] = "cached"
+            else:
+                processed_results["type"] = "refreshed"
+            return processed_results
         else:
-            processed_results["type"] = "refreshed"
-
-        return processed_results
+            return {"error": "Error calculating clothing"}, 500
 
 #
 # Local functions used by the manager
 #
 def process_weather_results(raw_json_results):
+
     json_result = {}
     degree_sign = u'\N{DEGREE SIGN}'
 
@@ -82,8 +96,6 @@ def process_weather_results(raw_json_results):
 
     json_result["current_wind_speed"] = raw_json_results["current"]["wind_speed"]
 
-    json_result["error"] = raw_json_results["error"]
-
     return json_result
 
 
@@ -107,7 +119,8 @@ def get_weather_from_api(lat, lon):
             if request.status_code == 200:
                 json_results = json.loads(request.text)
             else:
-                error_text = "Weather API Status: " + str(request.json())
+                ErrorManager.log_error("WeatherManager.get_weather_from_api: request.status_code - " + str(request.status_code) + " | Responce - " + request.json() )
+                json_results = {"error": "Error Getting Weather from open weather."}
         except HTTPError as http_err:
             error_text = f"HTTP Error Could not get weather:{http_err}"
         except ConnectionError as http_con_err:
@@ -118,14 +131,13 @@ def get_weather_from_api(lat, lon):
             error_text = f'JSON key error occurred: {key_err}'
         except Exception as err:
             error_text = f'Unknown error occurred: {err}'
+        finally:
+            ErrorManager.log_error(error_text)
     else:
         error_text = apiConfig["error"]
 
-    if json_results == "" or json_results is None:
-        json_results = create_empty_results()
-
-    json_results["error"] = error_text
-
+    if error_text != "":
+        json_results = {"error": "Error connecting to open weather."}
     return json_results
 
 def create_empty_results():

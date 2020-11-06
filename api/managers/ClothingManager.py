@@ -11,13 +11,15 @@ class ClothingManager():
         data = {}
         ary = []
         clothingConfig = ConfigManager.get_clothing_config_data()
-        
-        for bodypart in clothingConfig:
-            ary.append( bodypart)
+        if "error" not in clothingConfig:
+            for bodypart in clothingConfig:
+                ary.append( bodypart)
 
-        data["data"] = ary
+            data["data"] = ary
 
-        return data
+            return data
+
+        return {"error": "Error getting bodyparts"}, 500
 
     def get_all_clothing_for_bodypart(bodypart):
         #returns all clothing available for a single bodypart
@@ -27,18 +29,20 @@ class ClothingManager():
         # read config and return clothing titles
         # UI can use this to build stuff if it needs it
         clothingConfig = ConfigManager.get_clothing_config_data()
-        data = {}
-        info = {}
-        for bodypart in clothingConfig:
-            
-            for clothing in clothingConfig[bodypart]:
-                info[clothing["name"]] = {}
-                info[clothing["name"]]["bodypart"] = bodypart
-                info[clothing["name"]]["title"] = clothing["title"]
+        if "error" not in clothingConfig:
+            data = {}
+            info = {}
+            for bodypart in clothingConfig:
+                
+                for clothing in clothingConfig[bodypart]:
+                    info[clothing["name"]] = {}
+                    info[clothing["name"]]["bodypart"] = bodypart
+                    info[clothing["name"]]["title"] = clothing["title"]
 
-        data["data"] = info
+            data["data"] = info
 
-        return data
+            return data
+        return {"error": "Error getting all clothing"}, 500
 
     def calculate_clothing(ids_csv, feels_csv, gender_csv, name_csv, color_csv, lat, lon):
         # takes in a person list and returns a 
@@ -58,14 +62,17 @@ class ClothingManager():
 
         #get weather and time of day
         weather = WeatherManager.get_weather(WeatherFetch.NORMAL, lat, lon)
-        time_of_day = get_time_of_day(weather["weather_time"], lat, lon)
+        if "error" not in weather:
+            time_of_day = get_time_of_day(weather["weather_time"], lat, lon)
 
-        #get intensities
-        intensity_data = ConfigManager.get_intensity_config_data()
+            #get intensities
+            intensity_data = ConfigManager.get_intensity_config_data()
 
-        results = calculate(people, intensity_data, weather, time_of_day)
+            results = calculate(people, intensity_data, weather, time_of_day)
 
-        return results
+            return results
+        else:
+            return weather, 500 #weather just holds the error at this point not the actual weather
 
 def calculate(people, intensities, weather, time_of_day):
     results = []
