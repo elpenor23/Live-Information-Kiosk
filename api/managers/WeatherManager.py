@@ -119,7 +119,7 @@ def get_weather_from_api(lat, lon):
             if request.status_code == 200:
                 json_results = json.loads(request.text)
             else:
-                ErrorManager.log_error("WeatherManager.get_weather_from_api: request.status_code - " + str(request.status_code) + " | Responce - " + request.json() )
+                ErrorManager.log_error("WeatherManager.get_weather_from_api: request.status_code - " + str(request.status_code) + " | Responce - " + str(request.json()) )
                 json_results = {"error": "Error Getting Weather from open weather."}
         except HTTPError as http_err:
             error_text = f"HTTP Error Could not get weather:{http_err}"
