@@ -34,7 +34,7 @@ def open_json_file(filename):
             config_data = json.load(config_file)
     except IOError as ex:
         error_text = "Could not read config file: " + filename
-        ErrorManager.log_error(error_text)
+        ErrorManager.log_error("ConfigManager.open_json_file: " + error_text)
         return {"error": "Error opening config file."}
     else:
         return config_data

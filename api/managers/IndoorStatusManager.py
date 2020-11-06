@@ -20,7 +20,7 @@ class IndoorStatusManager():
             status = statuses[0]
             return_message = {"data": status.data, "last_set": status.last_set.strftime(DATE_FORMAT)}, 200
         except Exception as err:
-            ErrorManager.log_error(err)
+            ErrorManager.log_error("IndoorStatusManager.get_status: " + err)
             return_message = {"error": "Error getting Indoor Status from DB"}, 500
 
         return return_message
@@ -46,7 +46,7 @@ class IndoorStatusManager():
 
             return_message = {"message": "Success!"}, 200
         except Exception as err:
-            ErrorManager.log_error(err)
+            ErrorManager.log_error("IndoorStatusManager.set_status: " + err)
             return_message = {"error": f"Error saving status: {err}"}, 500
 
         
