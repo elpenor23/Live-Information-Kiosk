@@ -131,12 +131,11 @@ def get_weather_from_api(lat, lon):
             error_text = f'JSON key error occurred: {key_err}'
         except Exception as err:
             error_text = f'Unknown error occurred: {err}'
-        finally:
-            ErrorManager.log_error("WeatherManager.get_weather_from_api: " + error_text)
     else:
         error_text = apiConfig["error"]
 
     if error_text != "":
+        ErrorManager.log_error("WeatherManager.get_weather_from_api: " + error_text)
         json_results = {"error": "Error connecting to open weather."}
     return json_results
 
