@@ -56,7 +56,7 @@ class WeatherManager():
                 processed_results["type"] = "refreshed"
             return processed_results
         else:
-            return {"error": "Error calculating clothing"}, 500
+            return {"error": "Error getting weather"}, 500
 
 #
 # Local functions used by the manager

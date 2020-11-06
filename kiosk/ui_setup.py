@@ -112,13 +112,13 @@ class AppUI(QWidget):
                 intensity_frames = runner_frame.findChildren(QGroupBox)
                 for intensity in intensity_frames:
                     intensity_frame_data = self.get_hidden_data(intensity)
+                    if "data" in new_runner_data:
+                        for new_intensity_data in new_runner_data["data"]:
+                            if new_intensity_data["intensity_type"] == intensity_frame_data["type"]:
+                                new_intensity_clothes_data = new_intensity_data["clothes"]
 
-                    for new_intensity_data in new_runner_data["data"]:
-                        if new_intensity_data["intensity_type"] == intensity_frame_data["type"]:
-                            new_intensity_clothes_data = new_intensity_data["clothes"]
-
-                    running_frame.hide_all_clothing(intensity)
-                    running_frame.show_correct_clothing(intensity, new_intensity_clothes_data)
+                        running_frame.hide_all_clothing(intensity)
+                        running_frame.show_correct_clothing(intensity, new_intensity_clothes_data)
 
     def get_hidden_data(self, frame):
         """Gets data from hidden lables in frames"""
