@@ -62,7 +62,7 @@ class ClothingManager():
 
         #get weather and time of day
         weather = WeatherManager.get_weather(WeatherFetch.NORMAL, lat, lon)
-        if "error" not in weather:
+        if "error" not in weather and "weather_time" in weather:
             time_of_day = get_time_of_day(weather["weather_time"], lat, lon)
 
             #get intensities
