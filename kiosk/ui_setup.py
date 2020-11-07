@@ -8,7 +8,6 @@ from obj.running_clothes_frame import RunningClothes
 from update_thread import UpdateThread
 from controllers.weather_controller import WeatherController
 from controllers.running_clothes_controller import RunningClothesController
-from lib.utils import PEOPLE_CONFIG_FILENAME
 
 class AppUI(QWidget):
     """ Sets up the up the UI """
@@ -27,7 +26,7 @@ class AppUI(QWidget):
         window_layout.setAlignment(QtCore.Qt.AlignTop)
 
         self.weather_controller = WeatherController()
-        self.weather_controller.parse_weather()
+        self.weather_controller.parse_weather({})
 
         self.weather_frame = Weather(self.weather_controller)
         window_layout.addWidget(self.weather_frame, 0, 0)
@@ -64,9 +63,9 @@ class AppUI(QWidget):
         """callback for updating the clock from the timing thread"""
         self.weather_frame.update_moon()
 
-    def callback_update_indoor(self):
+    def callback_update_indoor(self, data):
         """callback for updating the indoor from the timing thread"""
-        self.weather_frame.update_indoor_status()
+        self.weather_frame.update_indoor_status(data)
 
     def callback_update_person(self):
         """
@@ -89,9 +88,9 @@ class AppUI(QWidget):
 
         people[index_to_set_visible].setVisible(True)
 
-    def callback_update_weather_and_clothes(self):
+    def callback_update_weather_and_clothes(self, data):
         """callback to update the weather and clothing from the timeing thread"""
-        self.weather_controller.parse_weather()
+        self.weather_controller.parse_weather(data)
         self.weather_frame.update_display(self.weather_controller)
         
         running_frame = self.findChild(RunningClothes)

@@ -30,20 +30,12 @@ class WeatherController(object):
         self.location = ""
 
         #open config files
-        self.location_config = open_config_file(LOCATION_CONFIG_FILENAME)
-        self.api_config = open_config_file(API_CONFIG_FILE_NAME)
         self.icon_config = open_config_file(ICON_CONFIG_FILENAME)
         self.weather_obj = None
         return
 
-    def parse_weather(self):
+    def parse_weather(self, formattedWeather):
         """ Parses the weather data """
-        self.location = self.location_config["location"]
-
-        #get weather from API
-        formattedWeather = get_weather_from_local_api(self.api_config["local_weather_endpoint"],
-                                                        self.location_config["latitude"], 
-                                                        self.location_config["longitude"])
 
         self.weather_obj = formattedWeather
 
@@ -100,12 +92,3 @@ def get_comfort_emoji(comfort_data, current_temp, current_dew_point, weather_mai
     
     return  os.path.join(DIRNAME, "../assets/" + icon + ".png")
 
-def get_weather_from_local_api(local_api_weather_endpoint, lat, lon):
-    params = {
-        'lat': lat,
-        'lon': lon,
-    }
-
-    json_results = get_api_data(local_api_weather_endpoint, params)
-
-    return json_results

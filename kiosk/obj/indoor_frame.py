@@ -49,13 +49,13 @@ class Indoor(QFrame):
 
         self.setLayout(frame_layout)
         self.setup_icons()
-        self.update()
 
-    def update(self):
+    def update(self, data):
         """ Updates the status of the indoor """
         styleSheetToUse = ""
         textToUse = ""
-        self.indoorController.update_statuses()
+
+        self.indoorController.update_statuses(data)
         indoor_status = self.indoorController.Indoor_Status
 
         if indoor_status == Indoor_Status.NONE:

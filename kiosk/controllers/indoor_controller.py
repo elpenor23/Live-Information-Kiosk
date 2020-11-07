@@ -12,12 +12,11 @@ class IndoorController():
         self.Indoor_Status = Indoor_Status.UNKNOWN
         self.Light_Status = Light_Status.UNKNOWN
 
-    def update_statuses(self):       
+    def update_statuses(self, data):       
         # if we do not have an indoor we need to return None and hide all the things
         if self.config_data["local_indoor_status_endpoint"] == "None":
             self.Indoor_Status = Indoor_Status.NONE
         else:
-            data = get_api_data(self.config_data["local_indoor_status_endpoint"], {})
             if "data" in data:
                 status_data = data["data"]
                 last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")

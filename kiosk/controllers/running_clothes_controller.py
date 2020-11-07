@@ -59,7 +59,8 @@ class RunningClothesController():
     def get_updated_runner_data(new_runner_data, frame_runner_data):
         updated_runner_data = {}
         for runner_data in new_runner_data:
-            if runner_data["id"] == frame_runner_data["id"]:
-                updated_runner_data = runner_data
+            if "id" in runner_data and "id" in frame_runner_data:
+                if runner_data["id"] == frame_runner_data["id"]:
+                    updated_runner_data = runner_data
 
         return updated_runner_data

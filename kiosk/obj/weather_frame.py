@@ -92,6 +92,6 @@ class Weather(QFrame):
         """ Tells the clock to update itself """
         self.clock_frame.update_moon_phase()
 
-    def update_indoor_status(self):
+    def update_indoor_status(self, data):
         """ tells the indoor to update it's status """
-        self.indoor_frame.update()
+        self.indoor_frame.update(data)
