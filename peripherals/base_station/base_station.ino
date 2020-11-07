@@ -1,3 +1,5 @@
+#include <ArduinoHttpClient.h>
+
 /*
  * Base Station
  * Receives data over lora and processes it for display
@@ -106,9 +108,9 @@ void onReceive()
 //---------------------- END LoRa -------------------------//
 
 //---------------------- START WiFi -------------------------//
-const char* ssid     = "<SSID>";
-const char* password = "<PASSWORD>";
-const String api_endpoint = "http://your.api.end.point/api/";
+const char* ssid     = "Bradlowski";
+const char* password = "Br@d-Br@dl0wsk1";
+const String api_endpoint = "http://10.0.0.123/api/indoor_status";
 
 /*
  * Sets up and connects to the wifi
@@ -210,7 +212,7 @@ void display_results(int packetNumber, String packetData, int packetRSSI, String
  * wrapper for serial.print to make stopping debugging easier
 */
 void debug_print(String stuff){
-  bool debug = false;
+  bool debug = true;
 
   if (debug){
     Serial.println(stuff);
