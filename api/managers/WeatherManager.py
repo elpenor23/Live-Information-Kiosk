@@ -13,9 +13,12 @@ from enums.Enums import WeatherFetch
 class WeatherManager():
 
     def setup_db():
-        new_status = WeatherModel(data = json.dumps(create_empty_results()), last_set = (datetime.now() - timedelta(minutes = 60)))
-        db.session.add(new_status)
-        db.session.commit()
+        allWeatherResults = WeatherModel.query.all()
+        weather_count = len(allWeatherResults)
+        if weather_count == 0:
+            new_status = WeatherModel(data = json.dumps(create_empty_results()), last_set = (datetime.now() - timedelta(minutes = 60)))
+            db.session.add(new_status)
+            db.session.commit()
 
     def get_weather(fetchType, lat, lon):
         """Gets the weather from the api in the apiConfig File"""

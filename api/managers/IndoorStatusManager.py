@@ -10,9 +10,13 @@ MINUTES_TO_ADD = 0
 
 class IndoorStatusManager():
     def setup_db():
-        new_status = StatusModel(data = "XX", last_set = datetime.now())
-        db.session.add(new_status)
-        db.session.commit()
+        statuses = StatusModel.query.all()
+        status_count = len(statuses)
+
+        if status_count == 0:
+            new_status = StatusModel(data = "XX", last_set = datetime.now())
+            db.session.add(new_status)
+            db.session.commit()
 
     def get_status():
         try:
