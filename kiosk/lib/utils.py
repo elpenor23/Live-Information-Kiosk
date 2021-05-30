@@ -48,13 +48,11 @@ def get_api_data(endpoint, params):
     except Exception as err:
         error_text = f'Unknown error occurred: {err}'
 
-
     if "error" in results:
         responce_error_text = results["error"]
 
     if responce_error_text != "" or error_text != "":
-        error_log = get_logger()
-        error_log.critical("Endpoint: " + endpoint + " | params: " + str(params) + " | API Error: " + error_text + " | Response Error: " + responce_error_text)
+        log_error("Endpoint: " + endpoint + " | params: " + str(params) + " | API Error: " + error_text + " | Response Error: " + responce_error_text)
 
     return results
 
@@ -69,3 +67,7 @@ def get_logger():
     handler.setFormatter(log_formatter)
 
     return logger
+
+def log_error(message):
+        logger = get_logger()
+        logger.critical(message)

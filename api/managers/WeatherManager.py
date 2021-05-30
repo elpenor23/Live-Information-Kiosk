@@ -96,6 +96,8 @@ def process_weather_results(raw_json_results):
     json_result["current_main"] = raw_json_results['current']['weather'][0]["main"]
 
     json_result["weather_time"] = raw_json_results["current"]["dt"]
+    json_result["sunrise_time"] = raw_json_results["current"]["sunrise"]
+    json_result["sunset_time"] = raw_json_results["current"]["sunset"]
 
     json_result["current_wind_speed"] = raw_json_results["current"]["wind_speed"]
 

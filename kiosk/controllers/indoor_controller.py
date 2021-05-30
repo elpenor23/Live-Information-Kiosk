@@ -9,6 +9,7 @@ class IndoorController():
     def __init__(self):
         self.config_data = open_config_file(API_CONFIG_FILE_NAME)
         self.dataHasExpired = False
+        self.lastUpdatedOn = datetime.min
         self.Indoor_Status = Indoor_Status.UNKNOWN
         self.Light_Status = Light_Status.UNKNOWN
 
@@ -21,6 +22,7 @@ class IndoorController():
                 status_data = data["data"]
                 last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
                 self.process_indoor_info(status_data)
+                self.lastUpdatedOn = last_set
                 self.dataHasExpired = datetime.now() >= last_set + timedelta(minutes = DATA_EXPIRES_TIME)
             else:
                 self.Indoor_Status = Indoor_Status.UNKNOWN

@@ -2,6 +2,7 @@
 """ Frame used to display time and date """
 
 import os
+from datetime import datetime
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout
 from PyQt5.QtGui import QPixmap
@@ -14,7 +15,7 @@ LABLESTYLE_INDOOR_UNKNOWN = "QLabel { color : black; font-size: 30px; border: 3p
 ICON_STYLESHEET = "QLabel { color : black; font-size: 30px; border: 0px none black; background: black;}"
 LABLETEXT_INDOOR_OPEN = "Indoor Free"
 LABLETEXT_INDOOR_INUSE = "Indoor In Use!"
-LABLETEXT_INDOOR_UNKNOWN = "Indoor Unknown?"
+LABLETEXT_INDOOR_UNKNOWN = "Last Updated On: "
 
 class Indoor(QFrame):
     """ class that defines the date and time frame"""
@@ -27,7 +28,7 @@ class Indoor(QFrame):
         frame_layout = QGridLayout()
         frame_layout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.in_use_label = QLabel(LABLETEXT_INDOOR_UNKNOWN)
+        self.in_use_label = QLabel(LABLETEXT_INDOOR_UNKNOWN + datetime.min.strftime('%I:%M:%S %p'))
         
         self.wifi_icon_label = QLabel()
         self.wifi_icon_label.setStyleSheet(ICON_STYLESHEET)
@@ -75,7 +76,8 @@ class Indoor(QFrame):
             styleSheetToUse = LABLESTYLE_INDOOR_OPEN
         
         if self.indoorController.dataHasExpired:
-            textToUse += "**"
+            textToUse = LABLETEXT_INDOOR_UNKNOWN + self.indoorController.lastUpdatedOn.strftime('%I:%M:%S %p')
+            styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN
 
         self.manage_icons(indoor_status, self.indoorController.Light_Status)
         self.setStyleSheet(styleSheetToUse)
