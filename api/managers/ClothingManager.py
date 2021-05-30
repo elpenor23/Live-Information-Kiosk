@@ -2,8 +2,7 @@ from managers.TemperatureAdjustmentManager import TemperatureAdjustmentManager
 from managers.WeatherManager import WeatherManager
 from managers.ConfigManager import ConfigManager
 from enums.Enums import WeatherFetch
-from lib.sunrise import Sun
-from datetime import datetime, timezone
+from datetime import datetime, timedelta
 
 class ClothingManager():
     def get_bodyparts():
@@ -63,7 +62,7 @@ class ClothingManager():
         #get weather and time of day
         weather = WeatherManager.get_weather(WeatherFetch.NORMAL, lat, lon)
         if "error" not in weather and "weather_time" in weather:
-            time_of_day = get_time_of_day(weather["weather_time"], lat, lon)
+            time_of_day = get_time_of_day(weather["weather_time"], weather["sunrise_time"], weather["sunset_time"])
 
             #get intensities
             intensity_data = ConfigManager.get_intensity_config_data()
@@ -99,14 +98,39 @@ def calculate(people, intensities, weather, time_of_day):
 
     return results
 
-def get_time_of_day(t, lat, lon):
+def get_time_of_day(t, sr_t, ss_t):
     weather_time = datetime.fromtimestamp(t)
-    weather_time = weather_time.replace(tzinfo=timezone.utc)
+    sunrise_time = datetime.fromtimestamp(sr_t)
+    sunset_time = datetime.fromtimestamp(ss_t)
 
-    sunrise_sunset = Sun(lat=float(lat),
-                        long=float(lon))
-    return sunrise_sunset.time_of_day(weather_time)
+    if is_dawn(weather_time, sunrise_time):
+        return "dawn"
+    elif is_dusk(weather_time, sunset_time):
+        return "dusk"
+    elif is_day(weather_time, sunrise_time, sunset_time):
+        return "day"
+    elif is_night(weather_time, sunset_time):
+        return "night"
+    else:
+        return "unknown"
 
+def is_day(ct,sr,ss):
+    return sr <= ct <= ss
+
+def is_dawn(ct, sr):
+    thirty_min_before_sunrise = (sr + timedelta(minutes=-30))
+    thirty_min_after_sunrise = (sr + timedelta(minutes=30))
+
+    return thirty_min_before_sunrise <= ct <= thirty_min_after_sunrise
+
+def is_dusk(ct,ss):
+    thirty_min_before_sunset = (ss + timedelta(minutes=-30))
+    thirty_min_after_sunset = (ss + timedelta(minutes=30))
+
+    return thirty_min_before_sunset <= ct <= thirty_min_after_sunset
+
+def is_night(ct,ss):
+    return ct >= ss
 
 def create_people(ids_ary, feel_ary, gender_ary, name_ary, color_ary):
     people = {}
