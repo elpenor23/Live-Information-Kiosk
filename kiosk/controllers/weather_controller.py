@@ -6,7 +6,7 @@ and makes it available to the weather frame
 import os, json
 import requests
 from lib.utils import open_config_file
-from lib.utils import ICON_CONFIG_FILENAME, LOCATION_CONFIG_FILENAME, API_CONFIG_FILE_NAME, get_api_data
+from lib.utils import ICON_CONFIG_FILENAME
 from requests.exceptions import HTTPError 
 
 DIRNAME = os.path.dirname(__file__)
@@ -44,6 +44,7 @@ class WeatherController(object):
             self.current_temp_int = int(formattedWeather['current_temp_int'])
             self.current_dew_point_int = int(formattedWeather['current_dew_point_int'])
             self.current_temp_formatted = formattedWeather['current_temp_formatted']
+            self.current_weather_time = formattedWeather['weather_time']
 
             #summary and forecast
             self.summary_text = formattedWeather['summary_text']
@@ -60,6 +61,7 @@ class WeatherController(object):
             self.current_temp_int = 69
             self.current_dew_point_int = 69
             self.current_temp_formatted = "69*"
+            self.current_weather_time = "12/31/1999 23:59:59"
 
             #summary and forecast
             self.summary_text = "Houston: "
