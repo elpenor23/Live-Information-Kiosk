@@ -146,6 +146,7 @@ def process_weather_results(raw_json_results):
 
     #format temps for display
     json_result["current_temp_formatted"] = "%s%s " % (str(json_result["current_temp_int"]), degree_sign)
+    json_result["current_feels_like_formatted"] = "%s%s " % (str(round(raw_json_results['current']['feels_like'])), degree_sign)
     json_result["min_temp"] = "%s%s" % (str(int(raw_json_results["daily"][0]["temp"]["min"])), degree_sign)
     json_result["max_temp"] = "%s%s" % (str(int(raw_json_results["daily"][0]["temp"]["max"])), degree_sign)
 
