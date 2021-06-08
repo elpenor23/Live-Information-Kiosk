@@ -33,4 +33,4 @@ class WeatherResource(Resource):
             return data, 500
         
         #return the data
-        return data
+        return data, 200

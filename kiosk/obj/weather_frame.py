@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout
 from PyQt5.QtGui import QPixmap
 from obj.clock_frame import Clock
 from obj.indoor_frame import Indoor
+from datetime import datetime, timedelta
 
 LABLESTYLE = "QLabel { color : white; font-size: 30px;}"
 SMALL_LABELSTYLE = "QLabel {font-size: 20px;}"
@@ -32,6 +33,10 @@ class Weather(QFrame):
         self.icon_label = QLabel()
         
         self.currently_label = QLabel()
+        self.error_label = QLabel()
+        self.error_label.setStyleSheet(SMALL_LABELSTYLE)
+        self.error_label.setVisible(False)
+        
         self.comfort_icon_label = QLabel()
         self.forecast_label = QLabel()
         self.forecast_label.setStyleSheet(SMALL_LABELSTYLE)
@@ -41,9 +46,10 @@ class Weather(QFrame):
 
         frame_layout.addWidget(self.currently_label, 0, 1)
         frame_layout.addWidget(self.comfort_icon_label, 0, 2, QtCore.Qt.AlignLeft)
-        frame_layout.addWidget(self.location_label, 1, 1)
-        frame_layout.addWidget(self.temperature_label, 2, 1)
-        frame_layout.addWidget(self.forecast_label, 3, 1)
+        frame_layout.addWidget(self.error_label, 1, 1, QtCore.Qt.AlignTop)
+        frame_layout.addWidget(self.location_label, 2, 1)
+        frame_layout.addWidget(self.temperature_label, 3, 1)
+        frame_layout.addWidget(self.forecast_label, 4, 1)
 
         weather_area.setLayout(frame_layout)
         overall_layout.addWidget(weather_area, 0, 0, QtCore.Qt.AlignLeft)
@@ -69,7 +75,15 @@ class Weather(QFrame):
                                        QtCore.Qt.FastTransformation)
             self.icon_label.setPixmap(image)
 
-        self.currently_label.setText("Current Temp: " + weather_controller.current_temp_formatted + "\n" + weather_controller.weather_time_formatted)
+        self.currently_label.setText("Current Temp: " + weather_controller.current_temp_formatted)
+        weather_time = datetime.fromtimestamp(weather_controller.current_weather_time)
+        ten_minutes_ago = (datetime.now() - timedelta(minutes=10))
+        if weather_time < ten_minutes_ago:
+            self.error_label.setVisible(True)
+            self.error_label.setText(weather_controller.weather_time_formatted)
+        else:
+            self.error_label.setVisible(False)
+
         self.forecast_label.setText(weather_controller.forecast_text)
         self.temperature_label.setText(weather_controller.summary_text)
 

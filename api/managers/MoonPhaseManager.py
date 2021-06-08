@@ -1,40 +1,46 @@
 #!/usr/bin/env python
-"""
-moonphase.py - Calculate Lunar Phase
-Author: Sean B. Palmer, inamidst.com
-Cf. http://en.wikipedia.org/wiki/Lunar_phase#Lunar_phase_calculation
-"""
+from managers.WeatherManager import WeatherManager
+from enums.Enums import WeatherFetch 
 
-import math, decimal, datetime
-dec = decimal.Decimal
-
+from datetime import datetime
 class MoonPhaseManager():
-    def moon_phase(): 
-        pos = position()
-        index = phase_index(pos)
+    def moon_phase():
+        weather_data = WeatherManager.get_weather(WeatherFetch.CACHEONLY, 1, 1)
+        moon_phase = weather_data["moon_phase"]
+
+        index = phase_index(moon_phase)
         name = phase_name(index)
         icon = phase_icon(index)
+        day_length = get_day_length(weather_data["sunrise_time"], weather_data["sunset_time"])
 
         return {
                 "phase_index": index,
                 "phase_name": name,
-                "phase_icon": icon
+                "phase_icon": icon,
+                "day_length": "Day Length: " + day_length
                 }
 
-def position(now=None): 
-    if now is None: 
-        now = datetime.datetime.now()
-
-    diff = now - datetime.datetime(2001, 1, 1)
-    days = dec(diff.days) + (dec(diff.seconds) / dec(86400))
-    lunations = dec("0.20439731") + (days * dec("0.03386319269"))
-
-    return lunations % dec(1)
-
 def phase_index(pos):
-    index = (pos * dec(8)) + dec("0.5")
-    index = math.floor(index)
-    return int(index) & 7
+    if pos == 0 or pos == 1:
+        index = 0
+    elif pos > 0 and pos < .25:
+        index = 1
+    elif pos == .25:
+        index = 2
+    elif pos > .25 and pos < .5:
+        index = 3
+    elif pos == .5:
+        index = 4
+    elif pos > .5 and pos < .75:
+        index = 5
+    elif pos == .75:
+        index = 6
+    elif pos > .75 and pos < 1:
+        index = 7
+    else:
+        index = 0
+
+    return index
 
 def phase_icon(index): 
     return {
@@ -59,3 +65,13 @@ def phase_name(index):
         6: "Last Quarter Moon", 
         7: "Waning Crescent Moon"
     }[index]
+
+def get_day_length(sunrise, sunset):
+    rise = datetime.fromtimestamp(sunrise)
+    set = datetime.fromtimestamp(sunset)
+
+    day_duration_seconds = (set - rise).seconds
+    day_duration_hours = day_duration_seconds //3600
+    day_duration_minutes = (day_duration_seconds //60 ) % 60
+
+    return str(day_duration_hours).zfill(2) + ":" + str(day_duration_minutes).zfill(2)

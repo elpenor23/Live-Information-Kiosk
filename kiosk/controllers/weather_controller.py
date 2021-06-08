@@ -21,6 +21,7 @@ class WeatherController(object):
         self.current_temp_int = 0
 
         #data for GUI updates
+        self.current_weather_time = 0
         self.current_temp_formatted = ""
         self.weather_time_formatted = ""
         self.current_dew_point_int = 0
@@ -45,7 +46,7 @@ class WeatherController(object):
             self.current_temp_int = int(formattedWeather['current_temp_int'])
             self.current_dew_point_int = int(formattedWeather['current_dew_point_int'])
             self.current_temp_formatted = formattedWeather['current_temp_formatted']
-            self.current_weather_time = formattedWeather['weather_time']
+            self.current_weather_time = int(formattedWeather['weather_time'])
             self.weather_time_formatted = formattedWeather['weather_time_formatted']
 
             #summary and forecast
@@ -63,7 +64,7 @@ class WeatherController(object):
             self.current_temp_int = 69
             self.current_dew_point_int = 69
             self.current_temp_formatted = "69*"
-            self.current_weather_time = "12/31/1999 23:59:59"
+            self.current_weather_time = 0
 
             #summary and forecast
             self.summary_text = "Houston: "

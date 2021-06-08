@@ -11,11 +11,12 @@ from obj.enums import Indoor_Status, Light_Status
 
 LABLESTYLE_INDOOR_OPEN = "QLabel { color : white; font-size: 30px; border: 3px solid white; background: green;}"
 LABLESTYLE_INDOOR_INUSE = "QLabel { color : white; font-size: 30px; border: 3px solid white; background: red;}"
-LABLESTYLE_INDOOR_UNKNOWN = "QLabel { color : black; font-size: 30px; border: 3px solid white; background: yellow;}"
+LABLESTYLE_INDOOR_UNKNOWN = "QLabel { color : black; font-size: 20px; border: 3px solid white; background: yellow;}"
 ICON_STYLESHEET = "QLabel { color : black; font-size: 30px; border: 0px none black; background: black;}"
 LABLETEXT_INDOOR_OPEN = "Indoor Free"
 LABLETEXT_INDOOR_INUSE = "Indoor In Use!"
-LABLETEXT_INDOOR_UNKNOWN = "Last Updated On: "
+LABLETEXT_INDOOR_UNKNOWN = "Last Updated On: \n"
+DATE_FORMAT = "%m/%d/%Y %I:%M:%S %p"
 
 class Indoor(QFrame):
     """ class that defines the date and time frame"""
@@ -28,7 +29,7 @@ class Indoor(QFrame):
         frame_layout = QGridLayout()
         frame_layout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.in_use_label = QLabel(LABLETEXT_INDOOR_UNKNOWN + datetime.min.strftime('%I:%M:%S %p'))
+        self.in_use_label = QLabel(LABLETEXT_INDOOR_UNKNOWN + datetime.min.strftime(DATE_FORMAT))
         
         self.wifi_icon_label = QLabel()
         self.wifi_icon_label.setStyleSheet(ICON_STYLESHEET)
@@ -76,7 +77,7 @@ class Indoor(QFrame):
             styleSheetToUse = LABLESTYLE_INDOOR_OPEN
         
         if self.indoorController.dataHasExpired:
-            textToUse = LABLETEXT_INDOOR_UNKNOWN + self.indoorController.lastUpdatedOn.strftime('%I:%M:%S %p')
+            textToUse = LABLETEXT_INDOOR_UNKNOWN + self.indoorController.lastUpdatedOn.strftime(DATE_FORMAT)
             styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN
 
         self.manage_icons(indoor_status, self.indoorController.Light_Status)

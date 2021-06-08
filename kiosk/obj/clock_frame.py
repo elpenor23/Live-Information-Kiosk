@@ -22,6 +22,8 @@ class Clock(QFrame):
         self.time_label = QLabel()
         self.day_of_week_label = QLabel()
         self.date_label = QLabel()
+        self.day_length_label = QLabel()
+        self.day_length_label.setStyleSheet(MOONPHASE_LABLESTYLE)
         self.moon_phase = QLabel()
         self.moon_phase.setStyleSheet(MOONPHASE_LABLESTYLE)
         self.moon_icon = QLabel()
@@ -29,8 +31,9 @@ class Clock(QFrame):
         frame_layout.addWidget(self.time_label, 0, 0)
         frame_layout.addWidget(self.day_of_week_label, 1, 0)
         frame_layout.addWidget(self.date_label, 2, 0)
-        frame_layout.addWidget(self.moon_phase, 3, 0)
-        frame_layout.addWidget(self.moon_icon, 4, 0)
+        frame_layout.addWidget(self.day_length_label, 3, 0)
+        frame_layout.addWidget(self.moon_phase, 4, 0)
+        frame_layout.addWidget(self.moon_icon, 5, 0)
 
         self.setLayout(frame_layout)
         self.update_moon_phase()
@@ -44,9 +47,11 @@ class Clock(QFrame):
 
     def update_moon_phase(self):
         moon_data = MoonPhaseController.get_moon_phase()
+        if "day_length" in moon_data:
+            self.day_length_label.setText(moon_data["day_length"])
+            
         if "phase_name" in moon_data:
-            phase_text = moon_data["phase_name"]
-            self.moon_phase.setText(phase_text)
+            self.moon_phase.setText(moon_data["phase_name"])
 
             DIRNAME = os.path.dirname(__file__)       
             moon_icon = os.path.join(DIRNAME, "../assets/" + moon_data["phase_icon"] + ".png")

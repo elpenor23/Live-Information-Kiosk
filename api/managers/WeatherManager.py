@@ -46,7 +46,7 @@ class WeatherManager():
 
         #should we use the local data or refresh it?
         if (
-                fetchType == WeatherFetch.FORCEREFRESH or 
+            fetchType == WeatherFetch.FORCEREFRESH or 
                 (fetchType == WeatherFetch.NORMAL and db_weather.last_set <= (current_time - timedelta(minutes = REFRESH_WEATHER_DELAY)))
             ) and fetchType != WeatherFetch.CACHEONLY:
             #get the weather from the api and save it locally
@@ -60,17 +60,20 @@ class WeatherManager():
 
         processed_results = {}
 
-        if weather is not None and "error" not in weather:
-            processed_results = process_weather_results(weather)
-        
-            if fromCache:
-                processed_results["type"] = "cached"
-            else:
-                processed_results["type"] = "refreshed"
+        if weather is not None:
+            if "error" not in weather:
+                processed_results = process_weather_results(weather)
+            
+                if fromCache:
+                    processed_results["type"] = "cached"
+                else:
+                    processed_results["type"] = "refreshed"
 
-            return processed_results
+                return processed_results
+            else:
+                return {"error": "Error getting weather", "error_data": weather["error"]}
         else:
-            return {"error": "Error getting weather"}, 500
+            return {"error": "Error getting weather"}
 
     def get_checkup_data():
         try:
