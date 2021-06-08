@@ -30,7 +30,7 @@ class UpdateThread(QtCore.QThread):
         # every hour check if day has changed, if yes check moon phase
         update_person_seconds = 30
         update_clock_seconds = 1
-        update_weather_seconds = 180
+        update_weather_seconds = 60
         update_indoor_seconds = 10
         check_date_seconds = 3600
 
@@ -56,11 +56,11 @@ class UpdateThread(QtCore.QThread):
 
              #hit API to get data
             if (i % update_weather_seconds == 0) or i == 1:
-                print("Calling api thread for: weather @ " + str(datetime.datetime.now()))
+                # print("Calling api thread for: weather @ " + str(datetime.datetime.now()))
                 self.api_thread.run_this("weather")          
 
             if i % update_indoor_seconds == 0:
-                print("Calling api thread for: indoor_status @ " + str(datetime.datetime.now()))
+                # print("Calling api thread for: indoor_status @ " + str(datetime.datetime.now()))
                 self.api_thread.run_this("indoor_status")
 
             #make sure we do not overflow int
