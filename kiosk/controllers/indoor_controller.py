@@ -4,7 +4,7 @@ from obj.enums import Indoor_Status, Light_Status
 from lib.utils import API_CONFIG_FILE_NAME, get_api_data
 
 DATA_EXPIRES_TIME = 5 #minutes
-
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S"
 class IndoorController():
     def __init__(self):
         self.config_data = open_config_file(API_CONFIG_FILE_NAME)
@@ -20,7 +20,7 @@ class IndoorController():
         else:
             if "data" in data:
                 status_data = data["data"]
-                last_set = datetime.strptime(data["last_set"], "%m/%d/%Y, %H:%M:%S")
+                last_set = datetime.strptime(data["last_set"], DATE_FORMAT)
                 self.process_indoor_info(status_data)
                 self.lastUpdatedOn = last_set
                 self.dataHasExpired = datetime.now() >= last_set + timedelta(minutes = DATA_EXPIRES_TIME)
