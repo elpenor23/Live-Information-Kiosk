@@ -22,6 +22,7 @@ class WeatherController(object):
 
         #data for GUI updates
         self.current_temp_formatted = ""
+        self.weather_time_formatted = ""
         self.current_dew_point_int = 0
         self.summary_text = ""
         self.forecast_text = ""
@@ -45,6 +46,7 @@ class WeatherController(object):
             self.current_dew_point_int = int(formattedWeather['current_dew_point_int'])
             self.current_temp_formatted = formattedWeather['current_temp_formatted']
             self.current_weather_time = formattedWeather['weather_time']
+            self.weather_time_formatted = formattedWeather['weather_time_formatted']
 
             #summary and forecast
             self.summary_text = formattedWeather['summary_text']

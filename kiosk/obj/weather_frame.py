@@ -69,7 +69,7 @@ class Weather(QFrame):
                                        QtCore.Qt.FastTransformation)
             self.icon_label.setPixmap(image)
 
-        self.currently_label.setText("Current Temp: " + weather_controller.current_temp_formatted)
+        self.currently_label.setText("Current Temp: " + weather_controller.current_temp_formatted + "\n" + weather_controller.weather_time_formatted)
         self.forecast_label.setText(weather_controller.forecast_text)
         self.temperature_label.setText(weather_controller.summary_text)
 
