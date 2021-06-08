@@ -64,11 +64,12 @@ class IndoorStatusManager():
             local_last_set = status.last_set
 
             status.data = data
+            status.average_seconds_between_calls = int(
+                    ((current_time - local_last_set).total_seconds() + (status.average_seconds_between_calls * status.number_of_calls)) / (status.number_of_calls + 1)
+                )
             status.last_set = current_time
             status.number_of_calls += 1
-            status.average_seconds_between_calls = int(
-                    ((current_time - local_last_set).total_seconds() + status.average_seconds_between_calls) / status.number_of_calls
-                )
+            
             db.session.commit()
 
             return_message = {"message": "Success!"}, 200

@@ -115,18 +115,19 @@ def save_status_data(db_weather, current_time):
 
 def set_weather_status_data(db_weather, current_time, reset_cache = False):
     #every time there is a call we set these guys
-    db_weather.number_of_calls += 1
+    
     db_weather.average_seconds_between_calls = int(
-            ((current_time - db_weather.last_call).total_seconds() + db_weather.average_seconds_between_calls) / db_weather.number_of_calls
+            ((current_time - db_weather.last_call).total_seconds() + (db_weather.average_seconds_between_calls * db_weather.number_of_calls)) / (db_weather.number_of_calls + 1)
         )
+    db_weather.number_of_calls += 1
     db_weather.last_call = current_time
 
     if reset_cache:
         #we only reset the cached versions when we get new data        
-        db_weather.number_of_resets += 1
         db_weather.average_seconds_between_resets = int(
-                ((current_time - db_weather.last_set).total_seconds() + db_weather.average_seconds_between_resets) / db_weather.number_of_resets
+                ((current_time - db_weather.last_set).total_seconds() + (db_weather.average_seconds_between_resets * db_weather.number_of_resets)) / (db_weather.number_of_resets + 1)
             )
+        db_weather.number_of_resets += 1
         db_weather.last_set = current_time
 
     return db_weather
