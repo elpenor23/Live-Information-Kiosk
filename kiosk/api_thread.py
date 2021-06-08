@@ -1,5 +1,5 @@
 from PyQt5 import QtCore
-from datetime import time
+from datetime import datetime
 from lib.utils import get_api_data, open_config_file, API_CONFIG_FILE_NAME, LOCATION_CONFIG_FILENAME
 
 class APIThread(QtCore.QThread):
@@ -8,31 +8,37 @@ class APIThread(QtCore.QThread):
     def __init__(self):
         QtCore.QThread.__init__(self)
         self.keep_going = True
-        self.api_ready = False
-        self.api_to_run = ""
+        self.run_weather = False
+        self.run_indoor_status = False
         self.config_data = open_config_file(API_CONFIG_FILE_NAME)
         self.location_config = open_config_file(LOCATION_CONFIG_FILENAME)
 
     def run(self):
         while self.keep_going:
-            if self.api_ready:
-                self.run_api(self.api_to_run)
+            if self.run_indoor_status or self.run_weather:
+                self.run_api()
 
-    def run_api(self, api_to_run):
-        data = {"api": api_to_run}
-        #reset things immediately so we do not end up here twice
-        self.api_ready = False
-        self.api_to_run = ""
-
-        if api_to_run == "indoor_status":
+    def run_api(self):
+        data = {}
+        if self.run_indoor_status:
+            # print("Hitting INDOOR API")
+            self.run_indoor_status = False
+            data["api"] = "indoor_status"
             data["return"] = get_api_data(self.config_data["local_indoor_status_endpoint"], {})
-        elif api_to_run == "weather":
+        elif self.run_weather:
+            # print("Hitting WEATHER API")
+            self.run_weather = False
+            data["api"] = "weather"
             data["return"] = get_weather_from_local_api(self.config_data["local_weather_endpoint"], self.location_config["latitude"], self.location_config["longitude"])
 
         self.get_data.emit(data)
 
     def run_this(self, api):
-        self.api_to_run = api
+        if api == "indoor_status":
+            self.run_indoor_status = True
+        elif api == "weather":
+            self.run_weather = True
+
         self.api_ready = True
 
     def stop(self):

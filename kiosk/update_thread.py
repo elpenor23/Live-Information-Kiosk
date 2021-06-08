@@ -30,38 +30,47 @@ class UpdateThread(QtCore.QThread):
         # every hour check if day has changed, if yes check moon phase
         update_person_seconds = 30
         update_clock_seconds = 1
-        update_weather_seconds = 300
+        update_weather_seconds = 180
         update_indoor_seconds = 10
         check_date_seconds = 3600
 
         current_date = datetime.date.today()
 
         i = 1
+
+        #TODO: ON API ERROR PAUSE AND WAIT INSTEAD OF CONSTANTLY HITTING THE API
         while self.keep_going:
+            # print("i = " + str(i) + " @ " + str(datetime.datetime.now()))
+            
+            #just emit things
+            if i % update_clock_seconds == 0:
+                self.update_clock.emit()
+            
             if i % update_person_seconds == 0:
                 self.update_person.emit()
             
-            if i % update_weather_seconds == 0 or i == 1:
-                self.api_thread.run_this("weather")
-
-            if i % update_clock_seconds == 0:
-                self.update_clock.emit()
-
-            if i % update_indoor_seconds == 0:
-                self.api_thread.run_this("indoor_status")
-
             if i % check_date_seconds == 0:
                 #only update the moon each day
                 if current_date != datetime.date.today():
                     self.update_moon.emit()
-                
+
+             #hit API to get data
+            if (i % update_weather_seconds == 0) or i == 1:
+                print("Calling api thread for: weather @ " + str(datetime.datetime.now()))
+                self.api_thread.run_this("weather")          
+
+            if i % update_indoor_seconds == 0:
+                print("Calling api thread for: indoor_status @ " + str(datetime.datetime.now()))
+                self.api_thread.run_this("indoor_status")
+
             #make sure we do not overflow int
             if i < 10800:
                 i += 1
             else:
                 i = 1
+                
             time.sleep(1)
-        # return
+        return
 
     def stop(self):
         """stops the thread and closes nicely"""
@@ -71,6 +80,7 @@ class UpdateThread(QtCore.QThread):
         return
 
     def thread_callback_return(self, data):
+        # print("results returned for: " + data["api"] + " @ " + str(datetime.datetime.now()))
         if data["api"] == "indoor_status":
             self.update_indoor.emit(data["return"])
         elif data["api"] == "weather":
