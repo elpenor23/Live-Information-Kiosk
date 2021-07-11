@@ -45,7 +45,7 @@ def phase_index(pos):
 def phase_icon(index): 
     return {
         0: "new-moon", 
-        1: "waxing-crecent-moon", 
+        1: "waxing-crescent-moon", 
         2: "first-quarter-moon", 
         3: "waxing-gibbous-moon", 
         4: "full-moon", 
@@ -57,7 +57,7 @@ def phase_icon(index):
 def phase_name(index):
     return {
         0: "New Moon", 
-        1: "Waxing Crecent Moon", 
+        1: "Waxing Crescent Moon", 
         2: "First Quarter Moon", 
         3: "Waxing Gibbous Moon", 
         4: "Full Moon", 
