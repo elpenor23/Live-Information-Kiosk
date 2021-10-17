@@ -69,5 +69,6 @@ def get_logger():
     return logger
 
 def log_error(message):
-        logger = get_logger()
-        logger.critical(message)
+        # logger = get_logger()
+        # logger.critical(message)
+        print(message)
