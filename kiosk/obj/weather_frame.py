@@ -30,7 +30,11 @@ class Weather(QFrame):
 
         self.temperature_label = QLabel()
         self.temperature_label.setStyleSheet(SMALL_LABELSTYLE)
+
         self.icon_label = QLabel()
+        self.icon_label.setFixedWidth(WEATHER_ICON_SIZE)
+        self.icon_label.setFixedHeight(WEATHER_ICON_SIZE)
+        self.icon_label.setScaledContents(True)
         
         self.currently_label = QLabel()
         self.error_label = QLabel()
@@ -69,10 +73,6 @@ class Weather(QFrame):
         """ Updates the weather and all the weather data """
         if weather_controller.weather_icon is not None:
             image = QPixmap(weather_controller.weather_icon)
-            small_image = image.scaled(WEATHER_ICON_SIZE,
-                                       WEATHER_ICON_SIZE,
-                                       QtCore.Qt.KeepAspectRatio,
-                                       QtCore.Qt.FastTransformation)
             self.icon_label.setPixmap(image)
 
         self.currently_label.setText("Current Temp: " + weather_controller.current_temp_formatted + "( " + weather_controller.current_feels_like_formatted + ")")
