@@ -3,13 +3,13 @@
 parses the weather data from the api
 and makes it available to the weather frame
 """
-import os, json
-import requests
+import os
+from datetime import datetime, timedelta
 from lib.utils import open_config_file
 from lib.utils import ICON_CONFIG_FILENAME
-from requests.exceptions import HTTPError 
 
 DIRNAME = os.path.dirname(__file__)
+DATE_FORMAT = "%m/%d/%Y %H:%M:%S"
 
 class WeatherController(object):
     """ Parses the weather data for the frame """
@@ -21,10 +21,10 @@ class WeatherController(object):
         self.current_temp_int = 0
 
         #data for GUI updates
-        self.current_weather_time = 0
+        self.current_weather_time = datetime.now()
         self.current_temp_formatted = ""
         self.current_feels_like_formatted = ""
-        self.weather_time_formatted = ""
+        self.weather_time_formatted = datetime.now()
         self.current_dew_point_int = 0
         self.summary_text = ""
         self.forecast_text = ""
@@ -42,31 +42,31 @@ class WeatherController(object):
 
         self.weather_obj = formattedWeather
 
-        if "current_temp_int" in formattedWeather:
+        if "currentTemp" in formattedWeather:
             #temp and formatted temp
-            self.current_temp_int = int(formattedWeather['current_temp_int'])
-            self.current_dew_point_int = int(formattedWeather['current_dew_point_int'])
-            self.current_temp_formatted = formattedWeather['current_temp_formatted']
-            self.current_feels_like_formatted = formattedWeather['current_feels_like_formatted']
-            self.current_weather_time = int(formattedWeather['weather_time'])
-            self.weather_time_formatted = formattedWeather['weather_time_formatted']
+            self.current_temp_int = int(formattedWeather['currentTemp'])
+            self.current_dew_point_int = int(formattedWeather['currentDewPoint'])
+            self.current_temp_formatted = formattedWeather['currentTempFormatted']
+            self.current_feels_like_formatted = formattedWeather['currentFeelsLikeFormatted']
+            self.current_weather_time = datetime.strptime(formattedWeather['weatherTimeFormatted'], DATE_FORMAT)
+            self.weather_time_formatted = formattedWeather['weatherTimeFormatted']
 
             #summary and forecast
-            self.summary_text = formattedWeather['summary_text']
-            self.forecast_text = formattedWeather['forecast_text']
+            self.summary_text = formattedWeather['todaySummary']
+            self.forecast_text = formattedWeather['tommorrowForecast']
 
             #weather icon
-            icon_id = formattedWeather['icon_id']
+            icon_id = formattedWeather['currentIconId']
             self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id + "@4x.png")
 
             #humidity/dewpoint icon
-            self.comfort_icon = get_comfort_emoji(self.icon_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, formattedWeather['current_main'])
+            self.comfort_icon = get_comfort_emoji(self.icon_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, formattedWeather['currentMain'])
         else:
             #temp and formatted temp
             self.current_temp_int = 69
             self.current_dew_point_int = 69
-            self.current_temp_formatted = "69*"
-            self.current_weather_time = 0
+            self.current_temp_formatted = "69°"
+            self.current_weather_time = datetime.now()
 
             #summary and forecast
             self.summary_text = "Houston: "

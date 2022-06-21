@@ -1,7 +1,7 @@
 {
-    "local_api_base": "http://10.0.0.15:5000/",
-    "local_indoor_status_endpoint": "indoor_status",
-    "local_weather_endpoint": "weather",
-    "local_clothing_endpoint": "clothing",
-    "local_moon_phase_endpoint": "moon_phase"
+    "local_api_base": "https://<your_api_here>/api/",
+    "local_indoor_status_endpoint": "IndoorStatus",
+    "local_weather_endpoint": "Weather",
+    "local_clothing_endpoint": "Clothing",
+    "local_moon_phase_endpoint": "MoonPhase"
 }

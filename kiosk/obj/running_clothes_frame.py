@@ -59,11 +59,12 @@ class RunningClothes(QFrame):
         for child in intensity_frame.findChildren(QLabel):
             child.hide()
 
-    def build_runner_frame(self, runner, all_items):
+    def build_runner_frame(self, runner_data, all_items):
         """ build each runner frame """
+        runner = runner_data["person"]
         # loop through each runner and make their Frame
         runner_frame = QFrame()
-
+        
         runner_layout = QGridLayout()
         runner_layout.setAlignment(QtCore.Qt.AlignTop)
         
@@ -75,21 +76,18 @@ class RunningClothes(QFrame):
         runner_layout.addWidget(runner_name, 0, 0)
 
         #add hidden values we need for future use
-        runner_gender = QLabel("gender:" + runner["gender"])
-        runner_gender.hide()
-        runner_feel = QLabel("feel:" + runner["feel"])
+        runner_feel = QLabel("feel:" + str(runner["feel"]))
         runner_feel.hide()
-        runner_id = QLabel("id:" + runner["id"])
+        runner_id = QLabel("id:" + str(runner["id"]))
         runner_id.hide()
 
-        runner_layout.addWidget(runner_gender, 0, 0)
         runner_layout.addWidget(runner_feel, 0, 0)
         runner_layout.addWidget(runner_id, 0, 0)
 
         col = 0
         #row = 0
 
-        for clothing_data in runner["data"]:
+        for clothing_data in runner_data["intensity"]:
             # for each runner we then have to loop through each intensity
             # and calculate adjusted temperature and clothing
 
@@ -107,18 +105,20 @@ class RunningClothes(QFrame):
         intensity_layout = QGridLayout()
         intensity_layout.setAlignment(QtCore.Qt.AlignTop)
 
-        intensity_frame = QGroupBox(clothing_data["intensity"])
+        intensity_frame = QGroupBox(clothing_data["intensityString"])
 
         item_row = 0
+
         #add all items to the UI but make them hidden
-        for item in all_items["data"]:
-            item_row += 1
-            item_widget = QLabel(all_items["data"][item]["title"])
-            item_widget.hide()
-            intensity_layout.addWidget(item_widget, item_row, 0)
+        for bp in all_items:
+            for item in bp["clothing"]:
+                item_row += 1
+                item_widget = QLabel(item["title"])
+                item_widget.hide()
+                intensity_layout.addWidget(item_widget, item_row, 0)
 
         #add hidden values for future use
-        intensity_type = QLabel("type:" + clothing_data["intensity_type"])
+        intensity_type = QLabel("type:" + clothing_data["intensityString"])
         intensity_type.hide()
         intensity_layout.addWidget(intensity_type, 0, 0)
 
@@ -135,5 +135,5 @@ class RunningClothes(QFrame):
             # once we have the calculated clothing for a runner for an intensity
             # we show it on the UI
             for child in intensity_frame.findChildren(QLabel):
-                if intensity_clothing[body_part] == child.text():
+                if body_part["title"] == child.text():
                     child.show()

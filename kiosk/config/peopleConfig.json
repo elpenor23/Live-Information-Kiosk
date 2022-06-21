@@ -3,14 +3,12 @@
         {
             "id": 1,
             "name": "Runner 1",
-            "gender": "man",
             "feel": "inbetween",
             "color": "green"
         },
         {
             "id": 2,
             "name": "Runner 2",
-            "gender": "woman",
             "feel": "warm",
             "color": "red"
         }

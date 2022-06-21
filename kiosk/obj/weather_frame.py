@@ -76,9 +76,11 @@ class Weather(QFrame):
             self.icon_label.setPixmap(image)
 
         self.currently_label.setText("Current Temp: " + weather_controller.current_temp_formatted + "( " + weather_controller.current_feels_like_formatted + ")")
-        weather_time = datetime.fromtimestamp(weather_controller.current_weather_time)
+        
         ten_minutes_ago = (datetime.now() - timedelta(minutes=10))
-        if weather_time < ten_minutes_ago:
+
+        #if our weather is over ten minutes old show an error to the user
+        if weather_controller.current_weather_time < ten_minutes_ago:
             self.error_label.setVisible(True)
             self.error_label.setText(weather_controller.weather_time_formatted)
         else:
@@ -103,7 +105,7 @@ class Weather(QFrame):
         self.clock_frame.tick()
 
     def update_moon(self):
-        """ Tells the clock to update itself """
+        """ Tells the moon to update itself """
         self.clock_frame.update_moon_phase()
 
     def update_indoor_status(self, data):

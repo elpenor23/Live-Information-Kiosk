@@ -1,5 +1,6 @@
 from lib.utils import open_config_file, get_api_data, PEOPLE_CONFIG_FILENAME, LOCATION_CONFIG_FILENAME
-CLOTHING_API_ENDPOINT = "clothing"
+CLOTHING_API_ENDPOINT = "Clothing"
+CALCULATE_API_ENDPOINT = CLOTHING_API_ENDPOINT + "/Calculate"
 
 class RunningClothesController():
     
@@ -10,7 +11,6 @@ class RunningClothesController():
         #parms
         names = ""
         feels = ""
-        genders = ""
         colors = ""
         ids = ""
         
@@ -28,31 +28,25 @@ class RunningClothesController():
                 feels += ','
             feels += person["feel"]
 
-            if genders != "":
-                genders += ','
-            genders += person["gender"]
-
             if colors != "":
                 colors += ','
             colors += person["color"]
 
         params = {
-            'type': "calculate", 
             "lat": location["latitude"],
             "lon": location["longitude"],
             "ids": ids,
             "feels": feels,
-            "genders": genders,
             "names": names,
             "colors": colors
         }
 
-        results = get_api_data(CLOTHING_API_ENDPOINT, params)
+        results = get_api_data(CALCULATE_API_ENDPOINT, params)
 
         return results
 
     def get_all_items():
-        params = {'type': "allclothes"}
+        params = {}
         all_items = get_api_data(CLOTHING_API_ENDPOINT, params)
         return all_items
 

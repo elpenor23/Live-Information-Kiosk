@@ -33,10 +33,11 @@ def get_api_data(endpoint, params):
     responce_error_text = ""
 
     try:
-        response = requests.get(api_config["local_api_base"] + endpoint, params)
+        uri = api_config["local_api_base"] + endpoint
+        response = requests.get(uri, params)
         results = response.json()
         if response.status_code != 200:
-            error_text = endpoint + " API Status: " + str(response.json())
+            error_text = endpoint + "\n API Status: " + str(response.json())
     except HTTPError as http_err:
         error_text = f"HTTP Error Could not get weather:{http_err}"
     except ConnectionError as http_con_err:
@@ -52,7 +53,7 @@ def get_api_data(endpoint, params):
         responce_error_text = results["error"]
 
     if responce_error_text != "" or error_text != "":
-        log_error("Endpoint: " + endpoint + " | params: " + str(params) + " | API Error: " + error_text + " | Response Error: " + responce_error_text)
+        log_error("ERROR:\nEndpoint: " + endpoint + " \nparams: " + str(params) + " \nAPI Error: " + error_text + " \nResponse Error: " + responce_error_text + "\n")
 
     return results
 

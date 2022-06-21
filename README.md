@@ -36,12 +36,11 @@ To run this you need to update the config files:
 
 ###### clothingConfig.json - 
     Holds clothing options and conditions for the clothing
-    items with no "gender" config apply to everyone, gender it completely optional.
 
 ###### peopleConfig.json - (requires updates) 
     Holds information for the people who you want to display clothing for
     Name - Their name to be displayed (Keep it short depending on the screen size of your display)
-    Gender - works in conjunction with clothingConfig for items specifically for a gender - Not required
+
     Feel - "warm", "inbetween", "cool" - Adjusts clothes on how the person wishes to be 
         (i.e "cool" will add less and "warm" will add more clothes.)
   

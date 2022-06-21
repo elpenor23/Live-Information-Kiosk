@@ -47,14 +47,14 @@ class Clock(QFrame):
 
     def update_moon_phase(self):
         moon_data = MoonPhaseController.get_moon_phase()
-        if "day_length" in moon_data:
-            self.day_length_label.setText(moon_data["day_length"])
+        if "dayLength" in moon_data:
+            self.day_length_label.setText(moon_data["dayLength"])
             
-        if "phase_name" in moon_data:
-            self.moon_phase.setText(moon_data["phase_name"])
+        if "phaseName" in moon_data:
+            self.moon_phase.setText(moon_data["phaseName"])
 
             DIRNAME = os.path.dirname(__file__)       
-            moon_icon = os.path.join(DIRNAME, "../assets/" + moon_data["phase_icon"] + ".png")
+            moon_icon = os.path.join(DIRNAME, "../assets/" + moon_data["phaseIcon"] + ".png")
             image = QPixmap(moon_icon)
             small_image = image.scaled(MOON_ICON_SIZE,
                                         MOON_ICON_SIZE,
