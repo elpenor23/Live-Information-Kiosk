@@ -5,6 +5,7 @@ import requests
 import logging
 from logging.handlers import RotatingFileHandler
 from requests.exceptions import HTTPError
+from datetime import datetime
 
 DIRNAME = os.path.dirname(__file__)
 LOG_FILENAME = os.path.join(DIRNAME, "../log/error.log")
@@ -53,7 +54,7 @@ def get_api_data(endpoint, params):
         responce_error_text = results["error"]
 
     if responce_error_text != "" or error_text != "":
-        log_error("ERROR:\nEndpoint: " + endpoint + " \nparams: " + str(params) + " \nAPI Error: " + error_text + " \nResponse Error: " + responce_error_text + "\n")
+        log_error("ERROR(" + datetime.now().strftime("%Y%m%dT%H:%M:%S") + "):\nEndpoint: " + endpoint + " \nparams: " + str(params) + " \nAPI Error: " + error_text + " \nResponse Error: " + responce_error_text + "\n")
 
     return results
 
