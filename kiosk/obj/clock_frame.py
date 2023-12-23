@@ -24,16 +24,26 @@ class Clock(QFrame):
         self.date_label = QLabel()
         self.day_length_label = QLabel()
         self.day_length_label.setStyleSheet(MOONPHASE_LABLESTYLE)
+        self.sunrise_label = QLabel()
+        self.sunrise_label.setStyleSheet(MOONPHASE_LABLESTYLE)
+        self.sunset_label = QLabel()
+        self.sunset_label.setStyleSheet(MOONPHASE_LABLESTYLE)
         self.moon_phase = QLabel()
         self.moon_phase.setStyleSheet(MOONPHASE_LABLESTYLE)
         self.moon_icon = QLabel()
+        self.spacer_label_1 = QLabel()
+        self.spacer_label_2 = QLabel()
 
         frame_layout.addWidget(self.time_label, 0, 0)
         frame_layout.addWidget(self.day_of_week_label, 1, 0)
         frame_layout.addWidget(self.date_label, 2, 0)
-        frame_layout.addWidget(self.day_length_label, 3, 0)
-        frame_layout.addWidget(self.moon_phase, 4, 0)
-        frame_layout.addWidget(self.moon_icon, 5, 0)
+        frame_layout.addWidget(self.spacer_label_1, 3, 0)
+        frame_layout.addWidget(self.sunrise_label, 4, 0)
+        frame_layout.addWidget(self.sunset_label, 5, 0)
+        frame_layout.addWidget(self.day_length_label, 6, 0)
+        frame_layout.addWidget(self.spacer_label_2, 7, 0)
+        frame_layout.addWidget(self.moon_phase, 8, 0)
+        frame_layout.addWidget(self.moon_icon, 9, 0)
 
         self.setLayout(frame_layout)
         self.update_moon_phase()
@@ -49,6 +59,8 @@ class Clock(QFrame):
         moon_data = MoonPhaseController.get_moon_phase()
         if "dayLength" in moon_data:
             self.day_length_label.setText(moon_data["dayLength"])
+            self.sunrise_label.setText("Rise: 6:47am")
+            self.sunset_label.setText("Set: 4:34pm")
             
         if "phaseName" in moon_data:
             self.moon_phase.setText(moon_data["phaseName"])
