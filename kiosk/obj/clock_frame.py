@@ -8,6 +8,7 @@ from PyQt5.QtGui import QPixmap
 from controllers.moon_phase_controller import MoonPhaseController
 
 LABLESTYLE = "QLabel { color : white; font-size: 30px;}"
+SPACERLABELSTYLE = "QLabel { color : white; font-size: 10px;}"
 MOONPHASE_LABLESTYLE = "QLabel { color : white; font-size: 20px;}"
 MOON_ICON_SIZE = 100
 
@@ -32,7 +33,9 @@ class Clock(QFrame):
         self.moon_phase.setStyleSheet(MOONPHASE_LABLESTYLE)
         self.moon_icon = QLabel()
         self.spacer_label_1 = QLabel()
+        self.spacer_label_1.setStyleSheet(SPACERLABELSTYLE)
         self.spacer_label_2 = QLabel()
+        self.spacer_label_2.setStyleSheet(SPACERLABELSTYLE)
 
         frame_layout.addWidget(self.time_label, 0, 0)
         frame_layout.addWidget(self.day_of_week_label, 1, 0)
