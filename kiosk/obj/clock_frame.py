@@ -42,7 +42,6 @@ class Clock(QFrame):
         frame_layout.addWidget(self.date_label, 2, 0)
         frame_layout.addWidget(self.spacer_label_1, 3, 0)
         frame_layout.addWidget(self.sunrise_label, 4, 0)
-        frame_layout.addWidget(self.sunset_label, 5, 0)
         frame_layout.addWidget(self.day_length_label, 6, 0)
         frame_layout.addWidget(self.spacer_label_2, 7, 0)
         frame_layout.addWidget(self.moon_phase, 8, 0)
@@ -62,8 +61,7 @@ class Clock(QFrame):
         moon_data = MoonPhaseController.get_moon_phase()
         if "dayLength" in moon_data:
             self.day_length_label.setText(moon_data["dayLength"])
-            self.sunrise_label.setText("Rise: 6:47am")
-            self.sunset_label.setText("Set: 4:34pm")
+            self.sunrise_label.setText("6:47am - 4:34pm")
             
         if "phaseName" in moon_data:
             self.moon_phase.setText(moon_data["phaseName"])
