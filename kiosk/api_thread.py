@@ -24,7 +24,10 @@ class APIThread(QtCore.QThread):
             # print("Hitting INDOOR API")
             self.run_indoor_status = False
             data["api"] = "indoor_status"
-            data["return"] = get_api_data(self.config_data["local_indoor_status_endpoint"], {})
+            if self.config_data["local_indoor_status_endpoint"] != "None":
+                data["return"] = get_api_data(self.config_data["local_indoor_status_endpoint"], {})
+            else:
+                data["return"] = {}
         elif self.run_weather:
             # print("Hitting WEATHER API")
             self.run_weather = False

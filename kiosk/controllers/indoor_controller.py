@@ -10,7 +10,11 @@ class IndoorController():
         self.config_data = open_config_file(API_CONFIG_FILE_NAME)
         self.dataHasExpired = False
         self.lastUpdatedOn = datetime.min
-        self.Indoor_Status = Indoor_Status.UNKNOWN
+        if self.config_data["local_indoor_status_endpoint"] == "None":
+            self.Indoor_Status = Indoor_Status.NONE
+        else:
+            self.Indoor_Status = Indoor_Status.UNKNOWN
+
         self.Light_Status = Light_Status.UNKNOWN
 
     def update_statuses(self, data):       

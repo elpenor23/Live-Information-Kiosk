@@ -62,7 +62,7 @@ class Indoor(QFrame):
 
         if indoor_status == Indoor_Status.NONE:
             self.in_use_label.hide()
-            self.manage_icons(indoor_status)
+            self.manage_icons(indoor_status, Light_Status.UNKNOWN)
             return
         elif indoor_status == Indoor_Status.UNKNOWN:
             styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN
