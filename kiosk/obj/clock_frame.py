@@ -8,7 +8,7 @@ from PyQt5.QtGui import QPixmap
 from controllers.moon_phase_controller import MoonPhaseController
 
 LABLESTYLE = "QLabel { color : white; font-size: 30px;}"
-SPACERLABELSTYLE = "QLabel { color : white; font-size: 10px;}"
+SPACERLABELSTYLE = "QLabel {font-size: 5px;}"
 MOONPHASE_LABLESTYLE = "QLabel { color : white; font-size: 20px;}"
 MOON_ICON_SIZE = 100
 
@@ -22,6 +22,7 @@ class Clock(QFrame):
 
         self.time_label = QLabel()
         self.day_of_week_label = QLabel()
+        self.day_of_week_label.setStyleSheet(MOONPHASE_LABLESTYLE)
         self.date_label = QLabel()
         self.day_length_label = QLabel()
         self.day_length_label.setStyleSheet(MOONPHASE_LABLESTYLE)
@@ -32,6 +33,7 @@ class Clock(QFrame):
         self.moon_phase = QLabel()
         self.moon_phase.setStyleSheet(MOONPHASE_LABLESTYLE)
         self.moon_icon = QLabel()
+        
         self.spacer_label_1 = QLabel()
         self.spacer_label_1.setStyleSheet(SPACERLABELSTYLE)
         self.spacer_label_2 = QLabel()
@@ -53,7 +55,7 @@ class Clock(QFrame):
 
     def tick(self):
         """ Updates the date and time of the frame """
-        self.time_label.setText(time.strftime('%I:%M:%S %p')) #hour in 12h format
+        self.time_label.setText(time.strftime('%-I:%M:%S %p')) #hour in 12h format
         self.day_of_week_label.setText(time.strftime('%A'))
         self.date_label.setText(time.strftime("%b %-d %Y"))
 
@@ -61,7 +63,7 @@ class Clock(QFrame):
         moon_data = MoonPhaseController.get_moon_phase()
         if "dayLength" in moon_data:
             self.day_length_label.setText(moon_data["dayLength"])
-            self.sunrise_label.setText("6:47am - 4:34pm")
+            self.sunrise_label.setText(moon_data["dayTimeFormatted"])
             
         if "phaseName" in moon_data:
             self.moon_phase.setText(moon_data["phaseName"])
