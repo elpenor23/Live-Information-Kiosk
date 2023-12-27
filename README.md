@@ -4,10 +4,11 @@ Counter top kiosk meant to show you useful imformation that you need on the regu
 ## Requirements
  - Python3
  - dateutils (pip3 install python-dateutil)
- ## API
- - flask (pip3 install flask)
- - flask_restful (pip3 install flask-restful)
- - flask-sqlalchemy (pip3 install flask-sqlalchemy)
+ ## ~~API~~
+ - ~~flask (pip3 install flask)~~
+ - ~~flask_restful (pip3 install flask-restful)~~
+ - ~~flask-sqlalchemy (pip3 install flask-sqlalchemy)~~
+## Latest API in KioskAPI2 project
  # Kiosk
  - PyQt5 (pip3 install PyQt5)
  - Qt5 defaults (sudo apt-get install qt5-default) *fixes ubuntu xcb bug
