@@ -42,10 +42,10 @@ class Clock(QFrame):
         frame_layout.addWidget(self.time_label, 0, 0)
         frame_layout.addWidget(self.day_of_week_label, 1, 0)
         frame_layout.addWidget(self.date_label, 2, 0)
-        frame_layout.addWidget(self.spacer_label_1, 3, 0)
-        frame_layout.addWidget(self.sunrise_label, 4, 0)
+        #frame_layout.addWidget(self.spacer_label_1, 3, 0)
+        #frame_layout.addWidget(self.sunrise_label, 4, 0)
         frame_layout.addWidget(self.day_length_label, 6, 0)
-        frame_layout.addWidget(self.spacer_label_2, 7, 0)
+        #frame_layout.addWidget(self.spacer_label_2, 7, 0)
         frame_layout.addWidget(self.moon_phase, 8, 0)
         frame_layout.addWidget(self.moon_icon, 9, 0)
 
@@ -63,6 +63,8 @@ class Clock(QFrame):
         moon_data = MoonPhaseController.get_moon_phase()
         if "dayLength" in moon_data:
             self.day_length_label.setText(moon_data["dayLength"])
+            
+        if "dayTimeFormatted" in moon_data:
             self.sunrise_label.setText(moon_data["dayTimeFormatted"])
             
         if "phaseName" in moon_data:

@@ -41,6 +41,8 @@ class Indoor(QFrame):
         self.lights_off_icon_label.setStyleSheet(ICON_STYLESHEET)
         self.warning_lights_icon_label = QLabel()
         self.warning_lights_icon_label.setStyleSheet(ICON_STYLESHEET)
+        #self.datetime_optional = QLabel()
+        #self.datetime_optional.setStyleSheet(ICON_STYLESHEET)
         
         frame_layout.addWidget(self.in_use_label, 0, 0)
         frame_layout.addWidget(self.wifi_icon_label, 0, 1)
@@ -48,14 +50,23 @@ class Indoor(QFrame):
         frame_layout.addWidget(self.lights_on_icon_label, 0, 3)
         frame_layout.addWidget(self.lights_off_icon_label, 0, 3)
         frame_layout.addWidget(self.warning_lights_icon_label, 0, 3)
+        #frame_layout.addWidget(self.datetime_optional, 0, 4)
 
         self.setLayout(frame_layout)
         self.setup_icons()
+
+    def updateDate(self, dateData):
+        """ Date Stuff """
+        self.time_label.setText(time.strftime('%-I:%M:%S %p')) #hour in 12h format
+        self.day_of_week_label.setText(time.strftime('%A'))
+        self.date_label.setText(time.strftime("%b %-d %Y"))
 
     def update(self, data):
         """ Updates the status of the indoor """
         styleSheetToUse = ""
         textToUse = ""
+
+        #self.datetime_optional.hide()
 
         self.indoorController.update_statuses(data)
         indoor_status = self.indoorController.Indoor_Status
@@ -63,6 +74,7 @@ class Indoor(QFrame):
         if indoor_status == Indoor_Status.NONE:
             self.in_use_label.hide()
             self.manage_icons(indoor_status, Light_Status.UNKNOWN)
+            #self.datetime_optional.show()
             return
         elif indoor_status == Indoor_Status.UNKNOWN:
             styleSheetToUse = LABLESTYLE_INDOOR_UNKNOWN
