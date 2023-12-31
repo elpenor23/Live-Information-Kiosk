@@ -22,7 +22,7 @@ class RunningClothes(QFrame):
         self.runner_widget_list = []
         main_layout = QGridLayout()
         self.main_frame = QFrame()
-        self.main_frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
+        #self.main_frame.setFrameStyle(QFrame.StyledPanel | QFrame.Raised)
         self.build_runner_layout()
 
         main_layout.addWidget(self.main_frame, 0, 0)
