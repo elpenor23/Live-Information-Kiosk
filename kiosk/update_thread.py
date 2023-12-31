@@ -37,42 +37,39 @@ class UpdateThread(QtCore.QThread):
         update_indoor_seconds = config["update_indoor_seconds"]
         check_date_seconds = config["check_date_seconds"]
 
-        current_date = datetime.date.today()
-
-        i = 1
+        seconds = 1
 
         #TODO: ON API ERROR PAUSE AND WAIT INSTEAD OF CONSTANTLY HITTING THE API
         while self.keep_going:
             # print("i = " + str(i) + " @ " + str(datetime.datetime.now()))
             
             #just emit things
-            if i % update_clock_seconds == 0:
+            if seconds % update_clock_seconds == 0:
                 self.update_clock.emit()
             
-            if i % update_person_seconds == 0:
+            if seconds % update_person_seconds == 0:
                 self.update_person.emit()
             
-            if i % check_date_seconds == 0:
-                #only update the moon each day
-                if current_date != datetime.date.today():
-                    self.api_thread.run_this("moon")  
+            if seconds % check_date_seconds == 0:
+                self.api_thread.run_this("moon")  
 
              #hit API to get data
-            if (i % update_weather_seconds == 0) or i == 1:
+            if (seconds % update_weather_seconds == 0) or seconds == 1:
                 # print("Calling api thread for: weather @ " + str(datetime.datetime.now()))
                 self.api_thread.run_this("weather")          
 
-            if i % update_indoor_seconds == 0:
+            if seconds % update_indoor_seconds == 0:
                 # print("Calling api thread for: indoor_status @ " + str(datetime.datetime.now()))
                 self.api_thread.run_this("indoor_status")
 
             #make sure we do not overflow int
-            if i < 10800:
-                i += 1
+            if seconds < 10800:
+                seconds += 1
             else:
-                i = 1
-                
-            time.sleep(1)
+                seconds = 1
+            
+            #sleep 1 second and then do it all over again
+            time.sleep(1) 
 
         return
 
