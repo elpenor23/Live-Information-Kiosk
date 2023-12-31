@@ -1,6 +1,8 @@
 from PyQt5 import QtCore
-from datetime import datetime
 from lib.utils import get_api_data, open_config_file, API_CONFIG_FILE_NAME, LOCATION_CONFIG_FILENAME
+from controllers.moon_data_controller import MoonDataController
+from controllers.weather_controller import WeatherController
+from controllers.indoor_status_controller import IndoorStatusController
 
 class APIThread(QtCore.QThread):
     get_data = QtCore.pyqtSignal(dict)
@@ -10,6 +12,7 @@ class APIThread(QtCore.QThread):
         self.keep_going = True
         self.run_weather = False
         self.run_indoor_status = False
+        self.run_moon = False
         self.config_data = open_config_file(API_CONFIG_FILE_NAME)
         self.location_config = open_config_file(LOCATION_CONFIG_FILENAME)
 
@@ -24,15 +27,16 @@ class APIThread(QtCore.QThread):
             # print("Hitting INDOOR API")
             self.run_indoor_status = False
             data["api"] = "indoor_status"
-            if self.config_data["local_indoor_status_endpoint"] != "None":
-                data["return"] = get_api_data(self.config_data["local_indoor_status_endpoint"], {})
-            else:
-                data["return"] = {}
+            data["return"] = IndoorStatusController.get_indoor_status()
         elif self.run_weather:
             # print("Hitting WEATHER API")
             self.run_weather = False
             data["api"] = "weather"
-            data["return"] = get_weather_from_local_api(self.config_data["local_weather_endpoint"], self.location_config["latitude"], self.location_config["longitude"])
+            data["return"] = WeatherController.get_weather_data()
+        elif self.run_moon:
+            self.run_moon = False
+            data["api"] = "weather"
+            data["return"] = MoonDataController.get_moon_phase()
 
         self.get_data.emit(data)
 
@@ -41,6 +45,8 @@ class APIThread(QtCore.QThread):
             self.run_indoor_status = True
         elif api == "weather":
             self.run_weather = True
+        elif api == "moon":
+            self.run_moon = True
 
         self.api_ready = True
 
@@ -50,12 +56,4 @@ class APIThread(QtCore.QThread):
         self.exit()
         return
 
-def get_weather_from_local_api(local_api_weather_endpoint, lat, lon):
-    params = {
-        'lat': lat,
-        'lon': lon,
-    }
 
-    json_results = get_api_data(local_api_weather_endpoint, params)
-
-    return json_results

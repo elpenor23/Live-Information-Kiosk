@@ -5,12 +5,12 @@ and makes it available to the weather frame
 """
 import os
 from datetime import datetime, timedelta
-from lib.utils import open_config_file
-from lib.utils import ICON_CONFIG_FILENAME
+from lib.utils import open_config_file, get_api_data
+from lib.utils import ICON_CONFIG_FILENAME, API_CONFIG_FILE_NAME, LOCATION_CONFIG_FILENAME
 
 DIRNAME = os.path.dirname(__file__)
 DATE_FORMAT = "%m/%d/%Y %H:%M:%S"
-
+#TODO: MAKE Objects for the data the controller should not be and object that holds data
 class WeatherController(object):
     """ Parses the weather data for the frame """
     def __init__(self):
@@ -78,6 +78,15 @@ class WeatherController(object):
 
             #humidity/dewpoint icon
             self.comfort_icon = get_comfort_emoji(self.icon_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, "Clear")
+
+    def get_weather_data():
+
+        api_config = open_config_file(API_CONFIG_FILE_NAME)
+        location_config = open_config_file(LOCATION_CONFIG_FILENAME)
+
+        weather_data = get_api_data(api_config["local_weather_endpoint"], {"lat": location_config["latitude"], "lon": location_config["longitude"]})
+
+        return weather_data
         
 def get_comfort_emoji(comfort_data, current_temp, current_dew_point, weather_main):
     icon = ""

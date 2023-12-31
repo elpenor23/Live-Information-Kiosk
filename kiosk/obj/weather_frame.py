@@ -4,8 +4,8 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout
 from PyQt5.QtGui import QPixmap
-from obj.clock_frame import Clock
-from obj.indoor_frame import Indoor
+from obj.right_frame import RightFrame
+from obj.top_frame import TopFrame
 from datetime import datetime, timedelta
 
 LABLESTYLE = "QLabel { color : white; font-size: 30px;}"
@@ -58,11 +58,11 @@ class Weather(QFrame):
         weather_area.setLayout(frame_layout)
         overall_layout.addWidget(weather_area, 0, 0, QtCore.Qt.AlignLeft)
 
-        self.indoor_frame = Indoor()
-        overall_layout.addWidget(self.indoor_frame, 0, 1, QtCore.Qt.AlignRight)
+        self.top_frame = TopFrame()
+        overall_layout.addWidget(self.top_frame, 0, 1, QtCore.Qt.AlignRight)
 
-        self.clock_frame = Clock()
-        overall_layout.addWidget(self.clock_frame, 0, 2, QtCore.Qt.AlignRight)
+        self.right_frame = RightFrame()
+        overall_layout.addWidget(self.right_frame, 0, 2, QtCore.Qt.AlignRight)
 
         self.setLayout(overall_layout)
 
@@ -102,13 +102,13 @@ class Weather(QFrame):
 
     def update_clock(self):
         """ Tells the clock to update itself """
-        self.clock_frame.tick()
+        self.right_frame.tick()
 
-    def update_moon(self):
+    def update_moon(self, data):
         """ Tells the moon to update itself """
-        self.clock_frame.update_moon_phase()
-        #self.indoor_frame.updateDate()
+        self.right_frame.update_moon_data(data)
+        self.top_frame.update_date(data)
 
     def update_indoor_status(self, data):
         """ tells the indoor to update it's status """
-        self.indoor_frame.update(data)
+        self.top_frame.update_indoor_status(data)

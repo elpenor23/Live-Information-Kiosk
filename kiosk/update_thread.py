@@ -5,6 +5,7 @@
 import time, datetime
 from PyQt5 import QtCore
 from api_thread import APIThread
+from lib.utils import THREAD_CONFIG_FILENAME, open_config_file
 
 class UpdateThread(QtCore.QThread):
     """ This class runs and determines when to update the UI """
@@ -26,13 +27,15 @@ class UpdateThread(QtCore.QThread):
         # every 1 seconds update clock
         # every 10 seconds update indoor status
         # every 30 seconds switch person to view
-        # every 5 minutes update weather
+        # every 1 minutes update weather
         # every hour check if day has changed, if yes check moon phase
-        update_person_seconds = 30
-        update_clock_seconds = 1
-        update_weather_seconds = 60
-        update_indoor_seconds = 10
-        check_date_seconds = 3600
+        
+        config = open_config_file(THREAD_CONFIG_FILENAME)
+        update_person_seconds = config["update_person_seconds"]
+        update_clock_seconds = config["update_clock_seconds"]
+        update_weather_seconds = config["update_weather_seconds"]
+        update_indoor_seconds = config["update_indoor_seconds"]
+        check_date_seconds = config["check_date_seconds"]
 
         current_date = datetime.date.today()
 
@@ -52,7 +55,7 @@ class UpdateThread(QtCore.QThread):
             if i % check_date_seconds == 0:
                 #only update the moon each day
                 if current_date != datetime.date.today():
-                    self.update_moon.emit()
+                    self.api_thread.run_this("moon")  
 
              #hit API to get data
             if (i % update_weather_seconds == 0) or i == 1:
@@ -70,6 +73,7 @@ class UpdateThread(QtCore.QThread):
                 i = 1
                 
             time.sleep(1)
+
         return
 
     def stop(self):

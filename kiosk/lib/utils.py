@@ -13,6 +13,7 @@ API_CONFIG_FILE_NAME = os.path.join(DIRNAME, "../config/apiConfig.json")
 LOCATION_CONFIG_FILENAME = os.path.join(DIRNAME, "../config/locationConfig.json")
 PEOPLE_CONFIG_FILENAME = os.path.join(DIRNAME, "../config/peopleConfig.json")
 ICON_CONFIG_FILENAME = os.path.join(DIRNAME, "../config/iconConfig.json")
+THREAD_CONFIG_FILENAME = os.path.join(DIRNAME, "../config/threadConfig.json")
 
 def open_config_file(config_filename):
     """ Opens the passed in JSON config file read only and returns it as a python dictionary"""
