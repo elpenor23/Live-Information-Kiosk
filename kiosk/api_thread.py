@@ -18,7 +18,7 @@ class APIThread(QtCore.QThread):
 
     def run(self):
         while self.keep_going:
-            if self.run_indoor_status or self.run_weather:
+            if self.run_indoor_status or self.run_weather or self.run_moon:
                 self.run_api()
 
     def run_api(self):
@@ -34,8 +34,9 @@ class APIThread(QtCore.QThread):
             data["api"] = "weather"
             data["return"] = WeatherController.get_weather_data()
         elif self.run_moon:
+            # print("Hitting MOON API")
             self.run_moon = False
-            data["api"] = "weather"
+            data["api"] = "moon"
             data["return"] = MoonDataController.get_moon_phase()
 
         self.get_data.emit(data)

@@ -13,7 +13,7 @@ class UpdateThread(QtCore.QThread):
     update_person = QtCore.pyqtSignal()
     update_weather_and_clothes = QtCore.pyqtSignal(dict)
     update_indoor = QtCore.pyqtSignal(dict)
-    update_moon = QtCore.pyqtSignal()
+    update_moon = QtCore.pyqtSignal(dict)
         
     def __init__(self):
         QtCore.QThread.__init__(self)
@@ -50,10 +50,11 @@ class UpdateThread(QtCore.QThread):
             if seconds % update_person_seconds == 0:
                 self.update_person.emit()
             
+            #hit API to get data
             if seconds % check_date_seconds == 0:
+                # print("Calling api thread for: moon @ " + str(datetime.datetime.now()))
                 self.api_thread.run_this("moon")  
 
-             #hit API to get data
             if (seconds % update_weather_seconds == 0) or seconds == 1:
                 # print("Calling api thread for: weather @ " + str(datetime.datetime.now()))
                 self.api_thread.run_this("weather")          
@@ -86,5 +87,7 @@ class UpdateThread(QtCore.QThread):
             self.update_indoor.emit(data["return"])
         elif data["api"] == "weather":
             self.update_weather_and_clothes.emit(data["return"])
+        elif data["api"] == "moon":
+            self.update_moon.emit(data["return"])
 
         return

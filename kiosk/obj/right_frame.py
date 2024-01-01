@@ -79,7 +79,7 @@ class RightFrame(QFrame):
         else:
             self.moon_phase.setText("Moon API Error!")
 
-    def update_date(self, moon_data):
+    def update_date(self, data):
         if IndoorStatusController.has_indoor():
             self.day_time_label.hide()
             self.date_label.show()
@@ -87,8 +87,8 @@ class RightFrame(QFrame):
             self.day_time_label.show()
             self.date_label.hide()
 
-        if "dayLength" in moon_data:
-            self.day_length_label.setText(moon_data["dayLength"])
+        if "dayLength" in data:
+            self.day_length_label.setText(data["dayLength"])
             
-        if "dayTimeFormatted" in moon_data:
-            self.day_time_label.setText(moon_data["dayTimeFormatted"])
+        if "dayTimeFormatted" in data:
+            self.day_time_label.setText(data["dayTimeFormatted"])

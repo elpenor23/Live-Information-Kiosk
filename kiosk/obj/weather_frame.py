@@ -107,7 +107,7 @@ class Weather(QFrame):
     def update_moon(self, data):
         """ Tells the moon to update itself """
         self.right_frame.update_moon_data(data)
-        self.top_frame.update_date(data)
+        self.top_frame.update_date()
 
     def update_indoor_status(self, data):
         """ tells the indoor to update it's status """
