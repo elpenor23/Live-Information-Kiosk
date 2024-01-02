@@ -3,7 +3,7 @@
 
 import time, os
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout
+from PyQt5.QtWidgets import QLabel, QFrame, QGridLayout, QProgressBar
 from PyQt5.QtGui import QPixmap
 from controllers.moon_data_controller import MoonDataController
 from controllers.indoor_status_controller import IndoorStatusController
@@ -11,6 +11,13 @@ from controllers.indoor_status_controller import IndoorStatusController
 LABLESTYLE = "QLabel { color : white; font-size: 30px;}"
 SPACERLABELSTYLE = "QLabel {font-size: 5px;}"
 MOONPHASE_LABLESTYLE = "QLabel { color : white; font-size: 20px;}"
+
+STATUSSTYLE_OFF = "QProgressBar {border: 4px solid red;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: red;}"
+STATUSSTYLE_LOW = "QProgressBar {border: 4px solid orange;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: orange;}"
+STATUSSTYLE_OK = "QProgressBar {border: 4px solid gold;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: gold;}"
+STATUSSTYLE_GOOD = "QProgressBar {border: 4px solid green;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: green;}"
+STATUSSTYLE_FULL_POWER = "QProgressBar {border: 4px solid purple;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: purple;}"
+
 MOON_ICON_SIZE = 100
 
 class RightFrame(QFrame):
@@ -38,14 +45,21 @@ class RightFrame(QFrame):
         self.moon_phase = QLabel()
         self.moon_phase.setStyleSheet(MOONPHASE_LABLESTYLE)
         self.moon_icon = QLabel()
+
+        self.status = QProgressBar()
+        self.status.setStyleSheet(STATUSSTYLE_OK)
+        self.status.setGeometry(0, 0, 2000, 10)
+        self.status.setValue(0)
+        self.status.setOrientation(QtCore.Qt.Vertical)
         
         frame_layout.addWidget(self.time_label, 0, 0)
         frame_layout.addWidget(self.day_of_week_label, 1, 0)
         frame_layout.addWidget(self.date_label, 2, 0)
         frame_layout.addWidget(self.day_time_label, 3, 0)
-        frame_layout.addWidget(self.day_length_label, 6, 0)
-        frame_layout.addWidget(self.moon_phase, 8, 0)
-        frame_layout.addWidget(self.moon_icon, 9, 0)
+        frame_layout.addWidget(self.day_length_label, 4, 0)
+        frame_layout.addWidget(self.moon_phase, 5, 0)
+        frame_layout.addWidget(self.moon_icon, 6, 0)
+        frame_layout.addWidget(self.status, 0, 1, 7, 1)
 
         self.main_frame.setLayout(frame_layout)
         main_layout.addWidget(self.main_frame)
@@ -63,6 +77,9 @@ class RightFrame(QFrame):
     def update_moon_data(self, moon_data):
         self.update_moon_phase(moon_data)
         self.update_date(moon_data)
+
+    def update_solar_data(self, solar_data):
+        self.update_solar_bar(solar_data["percet_power_generated"])
 
     def update_moon_phase(self, moon_data):                
         if "phaseName" in moon_data:
@@ -92,3 +109,24 @@ class RightFrame(QFrame):
             
         if "dayTimeFormatted" in data:
             self.day_time_label.setText(data["dayTimeFormatted"])
+
+    def update_solar_bar(self, percent_power):
+        style_to_use = STATUSSTYLE_OFF
+
+        if percent_power > 0 and percent_power < 33:
+            style_to_use = STATUSSTYLE_LOW
+        if percent_power >= 33 and percent_power < 66:
+            style_to_use = STATUSSTYLE_OK
+        if percent_power >= 66 and percent_power < 100:
+            style_to_use = STATUSSTYLE_GOOD
+        if percent_power >= 100:
+            style_to_use = STATUSSTYLE_FULL_POWER
+
+        #just to make sure we do not break the status bar
+        #it would be cool if the number could go over 100 
+        # but it can not.
+        if percent_power > 100:
+            percent_power = 100
+
+        self.status.setStyleSheet(style_to_use)
+        self.status.setValue(percent_power)

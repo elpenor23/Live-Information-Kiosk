@@ -1,7 +1,8 @@
 {
     "local_api_base": "https://<your_api_here>/api/",
-    "local_indoor_status_endpoint": "IndoorStatus",
+    "local_indoor_status_endpoint": "None",
     "local_weather_endpoint": "Weather",
     "local_clothing_endpoint": "Clothing",
-    "local_moon_phase_endpoint": "MoonPhase"
+    "local_moon_phase_endpoint": "MoonPhase",
+    "local_solar_endpoint": "Solar"
 }

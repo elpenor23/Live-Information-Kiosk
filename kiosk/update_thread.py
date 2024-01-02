@@ -9,11 +9,9 @@ from lib.utils import THREAD_CONFIG_FILENAME, open_config_file
 
 class UpdateThread(QtCore.QThread):
     """ This class runs and determines when to update the UI """
-    update_clock = QtCore.pyqtSignal()
-    update_person = QtCore.pyqtSignal()
-    update_weather_and_clothes = QtCore.pyqtSignal(dict)
-    update_indoor = QtCore.pyqtSignal(dict)
-    update_moon = QtCore.pyqtSignal(dict)
+
+    update_data = QtCore.pyqtSignal(dict)
+    update_signal = QtCore.pyqtSignal(str)
         
     def __init__(self):
         QtCore.QThread.__init__(self)
@@ -23,19 +21,14 @@ class UpdateThread(QtCore.QThread):
         self.api_thread.start()
 
     def run(self):
-        """ main function for the thread. tells the UI when to update """
-        # every 1 seconds update clock
-        # every 10 seconds update indoor status
-        # every 30 seconds switch person to view
-        # every 1 minutes update weather
-        # every hour check if day has changed, if yes check moon phase
-        
+        """ main function for the thread. tells the UI when to update """       
         config = open_config_file(THREAD_CONFIG_FILENAME)
         update_person_seconds = config["update_person_seconds"]
         update_clock_seconds = config["update_clock_seconds"]
         update_weather_seconds = config["update_weather_seconds"]
         update_indoor_seconds = config["update_indoor_seconds"]
         check_date_seconds = config["check_date_seconds"]
+        check_solar_seconds = config["check_solar_in_seconds"]
 
         seconds = 1
 
@@ -45,10 +38,10 @@ class UpdateThread(QtCore.QThread):
             
             #just emit things
             if seconds % update_clock_seconds == 0:
-                self.update_clock.emit()
+                self.update_signal.emit("clock")
             
             if seconds % update_person_seconds == 0:
-                self.update_person.emit()
+                self.update_signal.emit("person")
             
             #hit API to get data
             if seconds % check_date_seconds == 0:
@@ -62,6 +55,10 @@ class UpdateThread(QtCore.QThread):
             if seconds % update_indoor_seconds == 0:
                 # print("Calling api thread for: indoor_status @ " + str(datetime.datetime.now()))
                 self.api_thread.run_this("indoor_status")
+
+            if seconds % check_solar_seconds == 0:
+                print("Calling api thread for: solar @ " + str(datetime.datetime.now()))
+                self.api_thread.run_this("solar")  
 
             #make sure we do not overflow int
             if seconds < 10800:
@@ -83,11 +80,6 @@ class UpdateThread(QtCore.QThread):
 
     def thread_callback_return(self, data):
         # print("results returned for: " + data["api"] + " @ " + str(datetime.datetime.now()))
-        if data["api"] == "indoor_status":
-            self.update_indoor.emit(data["return"])
-        elif data["api"] == "weather":
-            self.update_weather_and_clothes.emit(data["return"])
-        elif data["api"] == "moon":
-            self.update_moon.emit(data["return"])
+        self.update_data.emit(data)
 
         return

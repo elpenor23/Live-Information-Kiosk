@@ -48,32 +48,36 @@ class AppUI(QWidget):
 
         # kick off the thread
         self.update_thread = UpdateThread()
-        self.update_thread.update_clock.connect(self.callback_update_clock)
-        self.update_thread.update_moon.connect(self.callback_update_moon)
-        self.update_thread.update_indoor.connect(self.callback_update_indoor)
-        self.update_thread.update_weather_and_clothes.connect(self.callback_update_weather_and_clothes)
-        self.update_thread.update_person.connect(self.callback_update_person)
+        self.update_thread.update_data.connect(self.callback_update_data)
+        self.update_thread.update_signal.connect(self.callback_update_signal)
         self.update_thread.start()
 
-    def callback_update_clock(self):
-        """callback for updating the clock from the timing thread"""
-        self.weather_frame.update_clock()
+    #CALLBACKS FROM Update Thread
+    def callback_update_signal(self, todo):
+        match todo:
+            case "clock":
+                self.weather_frame.update_clock()
+            case "person":
+                self.update_person()
 
-    def callback_update_moon(self, data):
-        """callback for updating the clock from the timing thread"""
-        self.weather_frame.update_moon(data)
+    def callback_update_data(self, data):
+        match data["api"]:
+            case "moon":
+                self.weather_frame.update_moon(data["return"])
+            case "solar":
+                self.weather_frame.update_solar(data["return"])
+            case "indoor":
+                self.weather_frame.update_indoor_status(data["return"])
+            case "weather":
+                self.update_weather_and_clothes(data["return"])
 
-    def callback_update_indoor(self, data):
-        """callback for updating the indoor from the timing thread"""
-        self.weather_frame.update_indoor_status(data)
 
-    def callback_update_person(self):
+    def update_person(self):
         """
         Callback for updateing the person frame from the timing thread.
         Makes the current visible person invisible and the next person visible.
         Loops around when it hits the end of the person list.
         """
-        #TODO: Move this into running clothes frame
         people = self.running_clothes_frame.runner_widget_list
         number_of_people = len(people)
         j = 0
@@ -89,9 +93,8 @@ class AppUI(QWidget):
 
         people[index_to_set_visible].setVisible(True)
 
-    def callback_update_weather_and_clothes(self, data):
+    def update_weather_and_clothes(self, data):
         """callback to update the weather and clothing from the timeing thread"""
-        #TODO: Move this into weather / running clothes frame
         self.weather_controller.parse_weather(data)
         self.weather_frame.update_display(self.weather_controller)
         
@@ -100,7 +103,6 @@ class AppUI(QWidget):
 
     def update_clothing(self, running_frame):
         """Loops through the UI and hides the displayed clothing"""
-        #TODO: Move this into running clothes frame
         running_sub_frame = running_frame.findChild(QFrame)
         runner_frames = running_sub_frame.findChildren(QFrame)
         new_running_clothes_data = RunningClothesController.get_runner_data()

@@ -112,3 +112,7 @@ class Weather(QFrame):
     def update_indoor_status(self, data):
         """ tells the indoor to update it's status """
         self.top_frame.update_indoor_status(data)
+
+    def update_solar(self, data):
+        """ Tells the solar to update itself """
+        self.right_frame.update_solar_data(data)
