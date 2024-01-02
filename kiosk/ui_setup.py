@@ -54,22 +54,20 @@ class AppUI(QWidget):
 
     #CALLBACKS FROM Update Thread
     def callback_update_signal(self, todo):
-        match todo:
-            case "clock":
-                self.weather_frame.update_clock()
-            case "person":
-                self.update_person()
+        if todo == "clock":
+            self.weather_frame.update_clock()
+        elif todo == "person":
+            self.update_person()
 
     def callback_update_data(self, data):
-        match data["api"]:
-            case "moon":
+        if data["api"] == "moon":
                 self.weather_frame.update_moon(data["return"])
-            case "solar":
-                self.weather_frame.update_solar(data["return"])
-            case "indoor":
-                self.weather_frame.update_indoor_status(data["return"])
-            case "weather":
-                self.update_weather_and_clothes(data["return"])
+        elif data["api"] == "solar":
+            self.weather_frame.update_solar(data["return"])
+        elif data["api"] == "indoor":
+            self.weather_frame.update_indoor_status(data["return"])
+        elif data["api"] == "weather":
+            self.update_weather_and_clothes(data["return"])
 
 
     def update_person(self):
