@@ -10,7 +10,7 @@ class APIThread(QtCore.QThread):
     def __init__(self):
         QtCore.QThread.__init__(self)
         self.keep_going = True
-        self.things_to_run = []
+        self.things_to_run = ["moon", "solar", "weather"]
 
     def run(self):
         while self.keep_going:
