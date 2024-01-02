@@ -12,7 +12,7 @@ LABLESTYLE = "QLabel { color : white; font-size: 30px;}"
 SPACERLABELSTYLE = "QLabel {font-size: 5px;}"
 MOONPHASE_LABLESTYLE = "QLabel { color : white; font-size: 20px;}"
 
-STATUSSTYLE_OFF = "QProgressBar {border: 4px solid red;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: red;}"
+STATUSSTYLE_OFF = "QProgressBar {border: 4px solid red;border-radius: 5px;text-align: center;background-color: red;color: black;} QProgressBar::chunk {background-color: red;}"
 STATUSSTYLE_LOW = "QProgressBar {border: 4px solid orange;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: orange;}"
 STATUSSTYLE_OK = "QProgressBar {border: 4px solid gold;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: gold;}"
 STATUSSTYLE_GOOD = "QProgressBar {border: 4px solid green;border-radius: 5px;text-align: center;background-color: white;color: black;} QProgressBar::chunk {background-color: green;}"
@@ -28,7 +28,6 @@ class RightFrame(QFrame):
 
         main_layout = QGridLayout()
         self.main_frame = QFrame()
-        #self.main_frame.setStyleSheet("border: 1px solid white;")
 
         frame_layout = QGridLayout()
         frame_layout.setAlignment(QtCore.Qt.AlignTop)
