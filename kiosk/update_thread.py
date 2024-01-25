@@ -57,7 +57,7 @@ class UpdateThread(QtCore.QThread):
                 self.api_thread.run_this("indoor_status")
 
             if seconds % check_solar_seconds == 0:
-                print("Calling api thread for: solar @ " + str(datetime.datetime.now()))
+                #print("Calling api thread for: solar @ " + str(datetime.datetime.now()))
                 self.api_thread.run_this("solar")  
 
             #make sure we do not overflow int

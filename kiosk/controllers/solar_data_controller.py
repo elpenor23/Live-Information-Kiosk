@@ -14,9 +14,14 @@ class SolarDataController():
         return processed_solar_data
     
     def process_solar_data(solar_data):
-        if solar_data["maxPower"] > 0:
-            solar_data["percet_power_generated"] = round((solar_data["currentPower"]/solar_data["maxPower"]) * 100)
+        if "maxPower" in solar_data:
+            if solar_data["maxPower"] > 0:
+                solar_data["percet_power_generated"] = round((solar_data["currentPower"]/solar_data["maxPower"]) * 100)
+            else:
+                solar_data["percet_power_generated"] = 0
         else:
+            solar_data["maxPower"] = 10000
+            solar_data["currentPower"] = 0
             solar_data["percet_power_generated"] = 0
 
         return solar_data
