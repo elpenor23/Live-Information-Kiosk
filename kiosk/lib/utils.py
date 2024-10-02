@@ -101,5 +101,5 @@ def format_summary_text(summary_text,max_length):
     
     # summary = summary.replace("Low:", "\nLow:")
         
-    return summary.strip() + "\n"
+    return summary.strip()
     
