@@ -16,11 +16,11 @@ class AppUI(QWidget):
         self.init_ui()
 
     #####################################
-    # Start - Build All section of the UI
+    # Start - Build All sections of the UI
     #####################################
     # Add all the sections to the main window
     def init_ui(self):
-        """ Initializes all the secions in the layout """
+        """ Initializes all the sections in the layout """
 
         window_layout = QGridLayout()
         window_layout.setAlignment(QtCore.Qt.AlignTop)
@@ -43,7 +43,7 @@ class AppUI(QWidget):
         self.setLayout(window_layout)
         self.move(300, 150)
         self.show()
-        #start Fullscreen
+        #start Full screen
         self.showFullScreen()
 
         # kick off the thread
@@ -72,7 +72,7 @@ class AppUI(QWidget):
 
     def update_person(self):
         """
-        Callback for updateing the person frame from the timing thread.
+        Callback for updating the person frame from the timing thread.
         Makes the current visible person invisible and the next person visible.
         Loops around when it hits the end of the person list.
         """
@@ -123,7 +123,7 @@ class AppUI(QWidget):
                         running_frame.show_correct_clothing(intensity, new_intensity_clothes_data)
 
     def get_hidden_data(self, frame):
-        """Gets data from hidden lables in frames"""
+        """Gets data from hidden labels in frames"""
         data = {}
         for label in frame.findChildren(QLabel):
             if ":" in label.text():

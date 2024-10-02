@@ -4,6 +4,7 @@ parses the weather data from the api
 and makes it available to the weather frame
 """
 import os
+import re
 from datetime import datetime, timedelta
 from lib.utils import open_config_file, get_api_data
 from lib.utils import ICON_CONFIG_FILENAME, API_CONFIG_FILE_NAME, LOCATION_CONFIG_FILENAME
@@ -52,14 +53,14 @@ class WeatherController(object):
             self.weather_time_formatted = formattedWeather['weatherTimeFormatted']
 
             #summary and forecast
-            self.summary_text = formattedWeather['todaySummary']
-            self.forecast_text = formattedWeather['tommorrowForecast']
+            self.summary_text = re.sub("(.{25})", "\\1\n", formattedWeather['todaySummary'], 0, re.DOTALL)
+            self.forecast_text = re.sub("(.{25})", "\\1\n", formattedWeather['tommorrowForecast'], 0, re.DOTALL)
 
             #weather icon
             icon_id = formattedWeather['currentIconId']
             self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id + "@4x.png")
 
-            #humidity/dewpoint icon
+            #humidity/dew point icon
             self.comfort_icon = get_comfort_emoji(self.icon_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, formattedWeather['currentMain'])
         else:
             #temp and formatted temp
@@ -76,7 +77,7 @@ class WeatherController(object):
             icon_id = "high-priority.png"
             self.weather_icon = os.path.join(DIRNAME, "../assets/" + icon_id)
 
-            #humidity/dewpoint icon
+            #humidity/dew point icon
             self.comfort_icon = get_comfort_emoji(self.icon_config["comfort_data"], self.current_temp_int, self.current_dew_point_int, "Clear")
 
     def get_weather_data():
