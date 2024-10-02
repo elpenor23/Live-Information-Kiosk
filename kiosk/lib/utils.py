@@ -91,6 +91,8 @@ def format_summary_text(summary_text,max_length):
     
     if sum_part!= "":  # add the last part of the summary if it's not empty
         summary += sum_part.strip() + "\n"
+    
+    summary.replace("Low:", "\nLow:")
         
     return summary.strip() + "\n"
     
