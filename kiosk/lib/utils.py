@@ -81,6 +81,7 @@ def log_error(message):
 def format_summary_text(summary_text,max_length):
     sum_lst = summary_text.split()
     summary = ""
+    sum_part = ""
     
     for i in sum_lst:
         sum_part += i + " "
