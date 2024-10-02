@@ -6,7 +6,7 @@ and makes it available to the weather frame
 import os
 import re
 from datetime import datetime, timedelta
-from lib.utils import open_config_file, get_api_data
+from lib.utils import open_config_file, get_api_data, format_summary_text
 from lib.utils import ICON_CONFIG_FILENAME, API_CONFIG_FILE_NAME, LOCATION_CONFIG_FILENAME
 
 DIRNAME = os.path.dirname(__file__)
@@ -53,8 +53,8 @@ class WeatherController(object):
             self.weather_time_formatted = formattedWeather['weatherTimeFormatted']
 
             #summary and forecast
-            self.summary_text = re.sub("(.{35})", "\\1\n", formattedWeather['todaySummary'], 0, re.DOTALL)
-            self.forecast_text = re.sub("(.{35})", "\\1\n", formattedWeather['tommorrowForecast'], 0, re.DOTALL)
+            self.summary_text = format_summary_text(formattedWeather['todaySummary'], 45)
+            self.forecast_text = format_summary_text(formattedWeather['tommorrowForecast'], 45) 
 
             #weather icon
             icon_id = formattedWeather['currentIconId']

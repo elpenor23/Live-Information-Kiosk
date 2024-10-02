@@ -77,3 +77,16 @@ def log_error(message):
         # logger = get_logger()
         # logger.critical(message)
         print(message)
+
+def format_summary_text(summary_text,max_length):
+    sum_lst = summary_text.split()
+    summary = ""
+    
+    for i in sum_lst:
+        sum_part += i + " "
+        if len(sum_part) >= max_length:
+            summary += sum_part + "\n"
+            sum_part = ""
+    
+    return summary.strip()
+    
