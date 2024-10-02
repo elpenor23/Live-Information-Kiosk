@@ -93,6 +93,7 @@ def format_summary_text(summary_text,max_length):
         summary += sum_part.strip() + "\n"
     
     summary.replace("Low:", "\nLow:")
+    print(summary)  # print the formatted summary for debugging purposes before returning it.
         
     return summary.strip() + "\n"
     
