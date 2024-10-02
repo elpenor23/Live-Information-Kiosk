@@ -53,8 +53,8 @@ class WeatherController(object):
             self.weather_time_formatted = formattedWeather['weatherTimeFormatted']
 
             #summary and forecast
-            self.summary_text = re.sub("(.{25})", "\\1\n", formattedWeather['todaySummary'], 0, re.DOTALL)
-            self.forecast_text = re.sub("(.{25})", "\\1\n", formattedWeather['tommorrowForecast'], 0, re.DOTALL)
+            self.summary_text = re.sub("(.{35})", "\\1\n", formattedWeather['todaySummary'], 0, re.DOTALL)
+            self.forecast_text = re.sub("(.{35})", "\\1\n", formattedWeather['tommorrowForecast'], 0, re.DOTALL)
 
             #weather icon
             icon_id = formattedWeather['currentIconId']
