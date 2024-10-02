@@ -84,12 +84,19 @@ def format_summary_text(summary_text,max_length):
     sum_part = ""
     
     for i in sum_lst:
+        # we want the Low and high to be on their own line
+        # so we need to reset things when Low shows up.
+        # but then continue normally
+        if i.startswith("Low:"):
+            summary += sum_part + "\n"
+            sum_part = ""
+            
         sum_part += i + " "
-        if len(sum_part) >= max_length | i.startswith("Low:"):
+        if len(sum_part) >= max_length:
             summary += sum_part + "\n"
             sum_part = ""
     
-    if sum_part!= "":  # add the last part of the summary if it's not empty
+    if sum_part != "":  # add the last part of the summary if it's not empty
         summary += sum_part.strip() + "\n"
     
     # summary = summary.replace("Low:", "\nLow:")
