@@ -85,14 +85,14 @@ def format_summary_text(summary_text,max_length):
     
     for i in sum_lst:
         sum_part += i + " "
-        if len(sum_part) >= max_length:
+        if len(sum_part) >= max_length | i.startswith("Low:"):
             summary += sum_part + "\n"
             sum_part = ""
     
-    if sum_part!= "":  # add the last part of the summary if it's not empty
-        summary += sum_part.strip() + "\n"
+    # if sum_part!= "":  # add the last part of the summary if it's not empty
+    #     summary += sum_part.strip() + "\n"
     
-    summary = summary.replace("Low:", "\nLow:")
+    # summary = summary.replace("Low:", "\nLow:")
         
     return summary.strip() + "\n"
     
