@@ -55,7 +55,7 @@ class WeatherController(object):
             #summary and forecast
             #TODO: bold just the words Today and Tomorrow for clarity
             self.summary_text = format_summary_text(formattedWeather['todaySummary'], 45)
-            self.forecast_text = format_summary_text(formattedWeather['tommorrowForecast'], 45) 
+            self.forecast_text = format_summary_text(formattedWeather['tomorrowForecast'], 45) 
 
             #weather icon
             icon_id = formattedWeather['currentIconId']
